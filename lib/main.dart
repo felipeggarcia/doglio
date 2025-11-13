@@ -4,7 +4,7 @@
 // - Flutter marketplace for pet products sales
 // - Portfolio project demonstrating technical expertise
 // - Focus on Clean Architecture, scalability and impeccable code
-// - Backend: Firebase (Firestore, Auth, Storage)
+// - Backend: Laravel REST API
 // - Features: catalog, cart, checkout, admin dashboard
 // - Internationalization: English/Portuguese support
 //
@@ -12,8 +12,7 @@
 // - Rigorous Clean Architecture (Domain/Data/Presentation)
 // - Repository Pattern with abstractions
 // - Either for error handling
-// - Riverpod for state management
-// - GetIt for dependency injection
+// - Simple state management with ChangeNotifier
 // - ALWAYS check for reusability before creating new code
 // - Respect defined folder structure
 

@@ -11,7 +11,8 @@ import '../../domain/use_cases/login_use_case.dart';
 import '../../domain/use_cases/register_use_case.dart';
 import '../../domain/use_cases/forgot_password_use_case.dart';
 import '../../data/repositories/auth_repository_impl.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/datasources/laravel_auth_datasource.dart';
+import '../../../../core/config/api_config.dart';
 
 /// Simple authentication provider without external state management
 ///
@@ -31,7 +32,7 @@ class AuthProvider extends ChangeNotifier {
   }
 
   // Dependencies
-  late final AuthRemoteDatasource _remoteDatasource;
+  late final LaravelAuthDatasource _remoteDatasource;
   late final AuthRepository _repository;
   late final LoginUseCase _loginUseCase;
   late final RegisterUseCase _registerUseCase;
@@ -50,7 +51,9 @@ class AuthProvider extends ChangeNotifier {
 
   /// Initialize dependencies
   void _initializeDependencies() {
-    _remoteDatasource = AuthRemoteDatasourceImpl();
+    _remoteDatasource = LaravelAuthDatasource(
+      baseUrl: ApiConfig.baseUrl,
+    );
     _repository = AuthRepositoryImpl(_remoteDatasource);
     _loginUseCase = LoginUseCase(_repository);
     _registerUseCase = RegisterUseCase(_repository);

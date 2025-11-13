@@ -68,7 +68,8 @@ class _LoginPageState extends State<LoginPage> {
           backgroundColor: AppColors.success,
         ),
       );
-      // TODO: Navigate to main app
+      // Navigate to home page
+      context.goToHome();
     }
   }
 

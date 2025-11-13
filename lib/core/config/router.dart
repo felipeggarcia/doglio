@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
+import '../../features/auth/presentation/pages/home_page.dart';
 
 /// Route paths constants
 abstract class AppRoutes {
@@ -43,6 +44,7 @@ class AppRouter {
         AppRoutes.login: (context) => const LoginPage(),
         AppRoutes.register: (context) => const RegisterPage(),
         AppRoutes.forgotPassword: (context) => const ForgotPasswordPage(),
+        AppRoutes.home: (context) => const HomePage(),
         // Additional routes will be added here
       },
     );
