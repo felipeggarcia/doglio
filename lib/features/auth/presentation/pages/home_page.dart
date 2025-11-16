@@ -34,11 +34,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Welcome section
-              const Icon(
-                Icons.pets,
-                size: 80,
-                color: Colors.orange,
-              ),
+              const Icon(Icons.pets, size: 80, color: Colors.orange),
               const SizedBox(height: 24),
               Text(
                 'Bem-vindo, ${user?.name ?? 'Usuário'}!',
@@ -48,12 +44,12 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 user?.email ?? '',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 48),
-              
+
               // User info card
               Card(
                 child: Padding(
@@ -78,8 +74,8 @@ class HomePage extends StatelessWidget {
                         subtitle: Text(
                           user?.role.name.toUpperCase() ?? 'N/A',
                           style: TextStyle(
-                            color: user?.role.name == 'admin' 
-                                ? Colors.red 
+                            color: user?.role.name == 'admin'
+                                ? Colors.red
                                 : Colors.blue,
                             fontWeight: FontWeight.bold,
                           ),
@@ -90,7 +86,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Action buttons
               SizedBox(
                 width: double.infinity,
@@ -114,7 +110,7 @@ class HomePage extends StatelessWidget {
 
   void _handleLogout(BuildContext context) async {
     final authProvider = AuthProvider.instance;
-    
+
     // Show confirmation dialog
     final confirmed = await showDialog<bool>(
       context: context,
@@ -136,7 +132,7 @@ class HomePage extends StatelessWidget {
 
     if (confirmed == true && context.mounted) {
       await authProvider.signOut();
-      
+
       if (context.mounted) {
         Navigator.pushReplacementNamed(context, AppRoutes.login);
       }

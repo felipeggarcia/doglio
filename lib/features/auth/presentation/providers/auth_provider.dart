@@ -51,9 +51,7 @@ class AuthProvider extends ChangeNotifier {
 
   /// Initialize dependencies
   void _initializeDependencies() {
-    _remoteDatasource = LaravelAuthDatasource(
-      baseUrl: ApiConfig.baseUrl,
-    );
+    _remoteDatasource = LaravelAuthDatasource(baseUrl: ApiConfig.baseUrl);
     _repository = AuthRepositoryImpl(_remoteDatasource);
     _loginUseCase = LoginUseCase(_repository);
     _registerUseCase = RegisterUseCase(_repository);

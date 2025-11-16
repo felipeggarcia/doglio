@@ -1,7 +1,7 @@
 /// Authentication remote datasource contract
 ///
 /// This abstract class defines the contract for remote authentication operations.
-/// It abstracts the specific implementation details (Firebase, REST API, etc).
+/// It abstracts the specific implementation details (Laravel API, REST API, etc).
 library;
 
 import '../models/user_model.dart';
@@ -59,7 +59,7 @@ abstract class AuthRemoteDatasource {
 /// Implementation of AuthRemoteDatasource using simulation
 ///
 /// This is a mock implementation for development/testing.
-/// In production, this would be replaced with Firebase implementation.
+/// In production, this would be replaced with Laravel API implementation.
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   // Simulated user database
   final Map<String, UserModel> _users = {

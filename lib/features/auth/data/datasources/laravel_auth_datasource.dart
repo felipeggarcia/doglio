@@ -15,10 +15,8 @@ import 'auth_remote_datasource.dart';
 ///
 /// This class handles real Laravel API authentication operations.
 class LaravelAuthDatasource implements AuthRemoteDatasource {
-  LaravelAuthDatasource({
-    required this.baseUrl,
-    http.Client? httpClient,
-  }) : _httpClient = httpClient ?? http.Client();
+  LaravelAuthDatasource({required this.baseUrl, http.Client? httpClient})
+    : _httpClient = httpClient ?? http.Client();
 
   final String baseUrl;
   final http.Client _httpClient;
@@ -28,7 +26,7 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
   /// Get authentication token
   Future<String?> get _authToken async {
     if (_token != null) return _token;
-    
+
     final prefs = await SharedPreferences.getInstance();
     _token = prefs.getString('auth_token');
     return _token;
@@ -72,16 +70,13 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       final response = await _httpClient.post(
         Uri.parse('$baseUrl/api/auth/login'),
         headers: await _getHeaders(),
-        body: jsonEncode({
-          'email': email,
-          'password': password,
-        }),
+        body: jsonEncode({'email': email, 'password': password}),
       );
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         await _saveToken(data['token']);
-        
+
         _currentUser = UserModel.fromJson(data['user']);
         return _currentUser!;
       } else if (response.statusCode == 401) {
@@ -119,7 +114,7 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       if (response.statusCode == 201) {
         final data = jsonDecode(response.body);
         await _saveToken(data['token']);
-        
+
         _currentUser = UserModel.fromJson(data['user']);
         return _currentUser!;
       } else if (response.statusCode == 422) {
@@ -127,10 +122,14 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
         if (error['errors']?['email'] != null) {
           throw const EmailAlreadyInUseException();
         }
-        throw domain.UnknownAuthException(error['message'] ?? 'Validation failed');
+        throw domain.UnknownAuthException(
+          error['message'] ?? 'Validation failed',
+        );
       } else {
         final error = jsonDecode(response.body);
-        throw domain.UnknownAuthException(error['message'] ?? 'Registration failed');
+        throw domain.UnknownAuthException(
+          error['message'] ?? 'Registration failed',
+        );
       }
     } catch (e) {
       if (e is domain.AuthException) rethrow;
@@ -144,9 +143,7 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       final response = await _httpClient.post(
         Uri.parse('$baseUrl/api/auth/forgot-password'),
         headers: await _getHeaders(),
-        body: jsonEncode({
-          'email': email,
-        }),
+        body: jsonEncode({'email': email}),
       );
 
       if (response.statusCode == 200) {
@@ -155,7 +152,9 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
         throw const UserNotFoundException();
       } else {
         final error = jsonDecode(response.body);
-        throw domain.UnknownAuthException(error['message'] ?? 'Password reset failed');
+        throw domain.UnknownAuthException(
+          error['message'] ?? 'Password reset failed',
+        );
       }
     } catch (e) {
       if (e is domain.AuthException) rethrow;
@@ -298,7 +297,9 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       }
     } catch (e) {
       if (e is domain.AuthException) rethrow;
-      throw domain.UnknownAuthException('Token refresh failed: ${e.toString()}');
+      throw domain.UnknownAuthException(
+        'Token refresh failed: ${e.toString()}',
+      );
     }
   }
 }

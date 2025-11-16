@@ -19,36 +19,21 @@ class EnvironmentConfig {
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
       case Environment.development:
-        return 'https://doglio-dev.firebaseapp.com';
+        return 'http://localhost:8000';
       case Environment.staging:
-        return 'https://doglio-staging.firebaseapp.com';
+        return 'https://api-staging.doglio.com';
       case Environment.production:
-        return 'https://doglio-prod.firebaseapp.com';
+        return 'https://api.doglio.com';
     }
   }
 
-  // Firebase Project IDs
-  static String get firebaseProjectId {
-    switch (_currentEnvironment) {
-      case Environment.development:
-        return 'doglio-dev';
-      case Environment.staging:
-        return 'doglio-staging';
-      case Environment.production:
-        return 'doglio-prod';
-    }
+  // API Timeout Configuration
+  static int get apiTimeout {
+    return 30; // seconds
   }
 
-  // Storage Configuration
-  static String get firebaseStorageBucket {
-    switch (_currentEnvironment) {
-      case Environment.development:
-        return 'doglio-dev.appspot.com';
-      case Environment.staging:
-        return 'doglio-staging.appspot.com';
-      case Environment.production:
-        return 'doglio-prod.appspot.com';
-    }
+  static bool get enableApiLogging {
+    return _currentEnvironment == Environment.development;
   }
 
   // Debug Configuration
