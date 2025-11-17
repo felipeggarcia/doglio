@@ -122,10 +122,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
-        onPressed: () => context.goToLogin(),
-      ),
+      iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
       title: Text(
         'Reset Password',
         style: theme.textTheme.titleMedium?.copyWith(

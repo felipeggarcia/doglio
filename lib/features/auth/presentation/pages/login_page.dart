@@ -90,10 +90,7 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
-          onPressed: () => context.goToStoreHome(),
-        ),
+        iconTheme: IconThemeData(color: theme.colorScheme.primary),
       ),
       body: SafeArea(
         child: Center(

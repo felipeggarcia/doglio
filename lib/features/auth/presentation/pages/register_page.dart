@@ -402,10 +402,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
-        onPressed: () => context.goToLogin(),
-      ),
+      iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
       title: Text(
         'Create Account',
         style: theme.textTheme.titleMedium?.copyWith(
