@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
       // Navigate to home page
-      context.goToHome();
+      context.goToUserHome();
     }
   }
 
@@ -87,6 +87,14 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.background,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.colorScheme.primary),
+          onPressed: () => context.goToStoreHome(),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

@@ -25,7 +25,7 @@ class DoglioApp extends StatelessWidget {
       themeMode: ThemeMode.system,
 
       // Navigation configuration
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.storeHome,
       onGenerateRoute: AppRouter.router.onGenerateRoute,
 
       // Localization configuration (placeholder)

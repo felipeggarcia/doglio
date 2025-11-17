@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import '../providers/auth_provider.dart';
 import '../../../../core/config/router.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class UserHomePage extends StatelessWidget {
+  const UserHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

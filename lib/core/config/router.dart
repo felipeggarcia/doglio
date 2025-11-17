@@ -1,24 +1,27 @@
 /// Application routes configuration for Doglio Marketplace
 ///
-/// This file defines all routes using GoRouter for declarative navigation.
-/// Routes include authentication flows and main application screens.
+/// This file defines all routes using simple MaterialPageRoute navigation.
 library;
 
 import 'package:flutter/material.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
-import '../../features/auth/presentation/pages/home_page.dart';
+import '../../features/auth/presentation/pages/user_home_page.dart';
+import '../../features/store/presentation/pages/store_home_page.dart';
 
 /// Route paths constants
 abstract class AppRoutes {
+  // Store routes
+  static const String storeHome = '/';
+
   // Authentication routes
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
+  static const String userHome = '/user-home';
 
   // Main application routes
-  static const String home = '/';
   static const String profile = '/profile';
   static const String cart = '/cart';
   static const String search = '/search';
@@ -37,14 +40,14 @@ class AppRouter {
   static final router = _createRouter();
 
   static _createRouter() {
-    // Simple implementation without GoRouter dependency
     return AppRouterConfig(
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.storeHome,
       routes: {
+        AppRoutes.storeHome: (context) => const StoreHomePage(),
         AppRoutes.login: (context) => const LoginPage(),
         AppRoutes.register: (context) => const RegisterPage(),
         AppRoutes.forgotPassword: (context) => const ForgotPasswordPage(),
-        AppRoutes.home: (context) => const HomePage(),
+        AppRoutes.userHome: (context) => const UserHomePage(),
         // Additional routes will be added here
       },
     );
@@ -101,9 +104,10 @@ extension AppNavigationContext on BuildContext {
   }
 
   // Convenience navigation methods
+  void goToStoreHome() => goToRoute(AppRoutes.storeHome);
   void goToLogin() => goToRoute(AppRoutes.login);
   void goToRegister() => goToRoute(AppRoutes.register);
-  void goToHome() => goToRoute(AppRoutes.home);
+  void goToUserHome() => goToRoute(AppRoutes.userHome);
   void goToProfile() => goToRoute(AppRoutes.profile);
   void goToCart() => goToRoute(AppRoutes.cart);
 
