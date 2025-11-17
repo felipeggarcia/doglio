@@ -9,6 +9,8 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/user_home_page.dart';
 import '../../features/store/presentation/pages/store_home_page.dart';
+import '../../features/store/presentation/pages/product_detail_page.dart';
+import '../../features/store/domain/entities/product.dart';
 
 /// Route paths constants
 abstract class AppRoutes {
@@ -114,4 +116,13 @@ extension AppNavigationContext on BuildContext {
   void pushLogin() => pushRoute(AppRoutes.login);
   void pushRegister() => pushRoute(AppRoutes.register);
   void pushForgotPassword() => pushRoute(AppRoutes.forgotPassword);
+
+  /// Navigate to product details
+  void pushProductDetail(Product product) {
+    Navigator.of(this).push(
+      MaterialPageRoute(
+        builder: (context) => ProductDetailPage(product: product),
+      ),
+    );
+  }
 }

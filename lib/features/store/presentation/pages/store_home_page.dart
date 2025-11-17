@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/config/router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/api_config.dart';
+import '../../domain/entities/product.dart';
 import '../providers/store_provider.dart';
 
 class StoreHomePage extends StatefulWidget {
@@ -247,11 +248,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                               index,
                             ) {
                               final product = _storeProvider.products[index];
-                              return _buildProductCard(
-                                product.name,
-                                'R\$ ${product.price}',
-                                product.primaryImage?.imagePath,
-                              );
+                              return _buildProductCard(product);
                             }, childCount: _storeProvider.products.length),
                           ),
                         ),
@@ -315,13 +312,15 @@ class _StoreHomePageState extends State<StoreHomePage> {
     );
   }
 
-  Widget _buildProductCard(String name, String price, String? imageUrl) {
+  Widget _buildProductCard(Product product) {
+    final imageUrl = product.primaryImage?.imagePath;
+
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to product details
+          context.pushProductDetail(product);
         },
         borderRadius: BorderRadius.circular(12),
         child: Column(
@@ -394,7 +393,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    product.name,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -404,7 +403,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    price,
+                    'R\$ ${product.price}',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
