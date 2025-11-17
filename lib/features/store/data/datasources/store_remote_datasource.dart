@@ -50,19 +50,16 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         '${ApiConfig.baseUrl}/products',
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
-      print('🔵 [PRODUCTS] Chamando URL: $uri');
-
+      print('[StoreRemoteDatasource] Fetching products from: $uri');
       final response = await _httpClient.get(uri, headers: _getHeaders());
-
-      print('🔵 [PRODUCTS] Status Code: ${response.statusCode}');
-      print('🔵 [PRODUCTS] Response Body: ${response.body}');
+      print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final products = (data['data'] as List)
             .map((json) => ProductModel.fromJson(json))
             .toList();
-        print('🔵 [PRODUCTS] Produtos carregados: ${products.length}');
+        print('[StoreRemoteDatasource] Products parsed: ${products.length}');
         return products;
       } else {
         throw Exception(
@@ -70,7 +67,7 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         );
       }
     } catch (e) {
-      print('🔴 [PRODUCTS ERROR] $e');
+      print('[StoreRemoteDatasource] Error loading products: $e');
       throw Exception('Error loading products: $e');
     }
   }
@@ -91,19 +88,18 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         '${ApiConfig.baseUrl}/categories',
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
-      print('🟢 [CATEGORIES] Chamando URL: $uri');
-
+      print('[StoreRemoteDatasource] Fetching categories from: $uri');
       final response = await _httpClient.get(uri, headers: _getHeaders());
-
-      print('🟢 [CATEGORIES] Status Code: ${response.statusCode}');
-      print('🟢 [CATEGORIES] Response Body: ${response.body}');
+      print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final categories = (data['data'] as List)
             .map((json) => CategoryModel.fromJson(json))
             .toList();
-        print('🟢 [CATEGORIES] Categorias carregadas: ${categories.length}');
+        print(
+          '[StoreRemoteDatasource] Categories parsed: ${categories.length}',
+        );
         return categories;
       } else {
         throw Exception(
@@ -111,7 +107,7 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         );
       }
     } catch (e) {
-      print('🔴 [CATEGORIES ERROR] $e');
+      print('[StoreRemoteDatasource] Error loading categories: $e');
       throw Exception('Error loading categories: $e');
     }
   }

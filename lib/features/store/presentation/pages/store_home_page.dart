@@ -25,6 +25,10 @@ class _StoreHomePageState extends State<StoreHomePage> {
   void initState() {
     super.initState();
     _storeProvider = StoreProvider.instance;
+    // Load data after the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _storeProvider.loadInitialData();
+    });
   }
 
   @override
@@ -43,13 +47,26 @@ class _StoreHomePageState extends State<StoreHomePage> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: AppColors.primary,
-            title: const Text(
-              'Doglio',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-              ),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/logo/logo.png',
+                  height: 32,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const SizedBox.shrink();
+                  },
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Doglio',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
             ),
             actions: [
               IconButton(
@@ -64,7 +81,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
               IconButton(
                 icon: const Icon(Icons.person_outline, color: Colors.white),
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRoutes.login);
+                  context.pushLogin();
                 },
               ),
             ],
@@ -154,88 +171,93 @@ class _StoreHomePageState extends State<StoreHomePage> {
 
               // Products Section
               Expanded(
-                child: CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.all(16),
-                      sliver: SliverToBoxAdapter(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Featured Products',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                // TODO: View all products
-                              },
-                              icon: const Icon(Icons.arrow_forward),
-                              label: const Text('View all'),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (_storeProvider.isLoadingProducts)
-                      const SliverFillRemaining(
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    else if (_storeProvider.error != null)
-                      SliverFillRemaining(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await _storeProvider.refresh();
+                  },
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.all(16),
+                        sliver: SliverToBoxAdapter(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Icon(
-                                Icons.error_outline,
-                                size: 48,
-                                color: Colors.red,
+                              const Text(
+                                'Featured Products',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              const SizedBox(height: 16),
-                              Text(_storeProvider.error!),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () => _storeProvider.refresh(),
-                                child: const Text('Try again'),
+                              TextButton.icon(
+                                onPressed: () {
+                                  _storeProvider.clearFilters();
+                                },
+                                icon: const Icon(Icons.arrow_forward),
+                                label: const Text('View all'),
                               ),
                             ],
                           ),
                         ),
-                      )
-                    else if (_storeProvider.products.isEmpty)
-                      const SliverFillRemaining(
-                        child: Center(child: Text('No products available')),
-                      )
-                    else
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        sliver: SliverGrid(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.75,
-                                crossAxisSpacing: 12,
-                                mainAxisSpacing: 12,
-                              ),
-                          delegate: SliverChildBuilderDelegate((
-                            context,
-                            index,
-                          ) {
-                            final product = _storeProvider.products[index];
-                            return _buildProductCard(
-                              product.name,
-                              'R\$ ${product.price}',
-                              product.primaryImage?.imagePath,
-                            );
-                          }, childCount: _storeProvider.products.length),
-                        ),
                       ),
-                    const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
-                  ],
+                      if (_storeProvider.isLoadingProducts)
+                        const SliverFillRemaining(
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      else if (_storeProvider.error != null)
+                        SliverFillRemaining(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.error_outline,
+                                  size: 48,
+                                  color: Colors.red,
+                                ),
+                                const SizedBox(height: 16),
+                                Text(_storeProvider.error!),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () => _storeProvider.refresh(),
+                                  child: const Text('Try again'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else if (_storeProvider.products.isEmpty)
+                        const SliverFillRemaining(
+                          child: Center(child: Text('No products available')),
+                        )
+                      else
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          sliver: SliverGrid(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.75,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 12,
+                                ),
+                            delegate: SliverChildBuilderDelegate((
+                              context,
+                              index,
+                            ) {
+                              final product = _storeProvider.products[index];
+                              return _buildProductCard(
+                                product.name,
+                                'R\$ ${product.price}',
+                                product.primaryImage?.imagePath,
+                              );
+                            }, childCount: _storeProvider.products.length),
+                          ),
+                        ),
+                      const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -313,33 +335,46 @@ class _StoreHomePageState extends State<StoreHomePage> {
                     top: Radius.circular(12),
                   ),
                 ),
-                child: imageUrl != null
+                child: imageUrl != null && imageUrl.isNotEmpty
                     ? ClipRRect(
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(12),
                         ),
-                        child: Image.network(
-                          '${ApiConfig.baseUrl.replaceAll('/api/v1', '')}$imageUrl',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Center(
-                              child: Icon(
-                                Icons.pets,
-                                size: 48,
-                                color: Colors.grey[400],
-                              ),
-                            );
-                          },
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                    : null,
-                              ),
+                        child: Builder(
+                          builder: (context) {
+                            final fullUrl = imageUrl.startsWith('http')
+                                ? imageUrl
+                                : '${ApiConfig.baseStorageUrl}$imageUrl';
+                            return Image.network(
+                              fullUrl,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Center(
+                                  child: Icon(
+                                    Icons.pets,
+                                    size: 48,
+                                    color: Colors.grey[400],
+                                  ),
+                                );
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value:
+                                            loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  },
                             );
                           },
                         ),

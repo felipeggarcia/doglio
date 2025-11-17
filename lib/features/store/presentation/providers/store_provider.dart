@@ -1,8 +1,14 @@
-/// Store provider for managing products and categories state
+/// Store provider for managing products and categories state (Presentation layer)
+///
+/// This provider manages UI state and uses domain use cases.
+/// It should NOT have business logic - that belongs in use cases.
 library;
 
 import 'package:flutter/foundation.dart' hide Category;
 import '../../domain/entities/product.dart';
+import '../../domain/usecases/get_products_usecase.dart';
+import '../../domain/usecases/get_categories_usecase.dart';
+import '../../data/repositories/store_repository_impl.dart';
 import '../../data/datasources/store_remote_datasource.dart';
 
 class StoreProvider extends ChangeNotifier {
@@ -14,11 +20,17 @@ class StoreProvider extends ChangeNotifier {
   }
 
   StoreProvider._internal() {
-    _datasource = StoreRemoteDatasourceImpl();
-    loadInitialData();
+    // Dependency injection (in a real app, use a DI framework)
+    final remoteDatasource = StoreRemoteDatasourceImpl();
+    final repository = StoreRepositoryImpl(remoteDatasource: remoteDatasource);
+    _getProductsUseCase = GetProductsUseCase(repository);
+    _getCategoriesUseCase = GetCategoriesUseCase(repository);
+    // Don't load data here - let the widget trigger it
   }
 
-  late final StoreRemoteDatasource _datasource;
+  // Use cases (domain layer dependencies)
+  late final GetProductsUseCase _getProductsUseCase;
+  late final GetCategoriesUseCase _getCategoriesUseCase;
 
   // State
   bool _isLoadingProducts = false;
@@ -44,19 +56,22 @@ class StoreProvider extends ChangeNotifier {
     await Future.wait([loadCategories(), loadProducts()]);
   }
 
-  /// Load categories from API
+  /// Load categories from API using use case
   Future<void> loadCategories({bool? isHighlighted}) async {
     _isLoadingCategories = true;
     _error = null;
     notifyListeners();
 
     try {
-      _categories = await _datasource.getCategories(
+      print('[StoreProvider] Loading categories...');
+      _categories = await _getCategoriesUseCase(
         isHighlighted: isHighlighted,
         withCount: true,
       );
+      print('[StoreProvider] Categories loaded: ${_categories.length}');
       _error = null;
     } catch (e) {
+      print('[StoreProvider] Error loading categories: $e');
       _error = 'Error loading categories: $e';
       _categories = [];
     } finally {
@@ -65,7 +80,7 @@ class StoreProvider extends ChangeNotifier {
     }
   }
 
-  /// Load products from API
+  /// Load products from API using use case
   Future<void> loadProducts({
     String? categoryId,
     bool? isHighlighted,
@@ -76,13 +91,16 @@ class StoreProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _products = await _datasource.getProducts(
+      print('[StoreProvider] Loading products...');
+      _products = await _getProductsUseCase(
         categoryId: categoryId ?? _selectedCategoryId,
         isHighlighted: isHighlighted,
         search: search ?? (_searchQuery.isNotEmpty ? _searchQuery : null),
       );
+      print('[StoreProvider] Products loaded: ${_products.length}');
       _error = null;
     } catch (e) {
+      print('[StoreProvider] Error loading products: $e');
       _error = 'Error loading products: $e';
       _products = [];
     } finally {
@@ -93,7 +111,6 @@ class StoreProvider extends ChangeNotifier {
 
   /// Filter products by category
   void filterByCategory(String? categoryId) {
-    print('🔵 [FILTER] Filtering by category: $categoryId');
     if (_selectedCategoryId != categoryId) {
       _selectedCategoryId = categoryId;
       loadProducts(categoryId: categoryId);
@@ -108,7 +125,6 @@ class StoreProvider extends ChangeNotifier {
 
   /// Clear filters and reload all products
   void clearFilters() {
-    print('🔵 [FILTER] Clearing all filters');
     _selectedCategoryId = null;
     _searchQuery = '';
     loadProducts();

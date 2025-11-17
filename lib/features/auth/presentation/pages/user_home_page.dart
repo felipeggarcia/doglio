@@ -37,7 +37,7 @@ class UserHomePage extends StatelessWidget {
               const Icon(Icons.pets, size: 80, color: Colors.orange),
               const SizedBox(height: 24),
               Text(
-                'Bem-vindo, ${user?.name ?? 'Usuário'}!',
+                'Welcome, ${user?.name ?? 'User'}!',
                 style: Theme.of(context).textTheme.headlineMedium,
                 textAlign: TextAlign.center,
               ),
@@ -58,7 +58,7 @@ class UserHomePage extends StatelessWidget {
                     children: [
                       ListTile(
                         leading: const Icon(Icons.person),
-                        title: const Text('Nome'),
+                        title: const Text('Name'),
                         subtitle: Text(user?.name ?? 'N/A'),
                       ),
                       const Divider(),
@@ -70,7 +70,7 @@ class UserHomePage extends StatelessWidget {
                       const Divider(),
                       ListTile(
                         leading: const Icon(Icons.shield),
-                        title: const Text('Tipo de Conta'),
+                        title: const Text('Account Type'),
                         subtitle: Text(
                           user?.role.name.toUpperCase() ?? 'N/A',
                           style: TextStyle(
@@ -93,7 +93,7 @@ class UserHomePage extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: () => _handleLogout(context),
                   icon: const Icon(Icons.logout),
-                  label: const Text('Sair da Conta'),
+                  label: const Text('Sign Out'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: Colors.red,
@@ -115,16 +115,16 @@ class UserHomePage extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirmar Logout'),
-        content: const Text('Tem certeza que deseja sair da sua conta?'),
+        title: const Text('Confirm Logout'),
+        content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancelar'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sair'),
+            child: const Text('Sign Out'),
           ),
         ],
       ),

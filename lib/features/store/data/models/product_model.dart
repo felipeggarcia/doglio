@@ -58,9 +58,12 @@ class ProductImageModel extends ProductImage {
   });
 
   factory ProductImageModel.fromJson(Map<String, dynamic> json) {
+    // API pode retornar 'url' ou 'image_path'
+    final imagePath =
+        (json['url'] as String?) ?? (json['image_path'] as String?) ?? '';
     return ProductImageModel(
       id: json['id'] as String,
-      imagePath: json['image_path'] as String? ?? '',
+      imagePath: imagePath,
       order: json['order'] as int? ?? 0,
       isPrimary: json['is_primary'] as bool? ?? false,
     );

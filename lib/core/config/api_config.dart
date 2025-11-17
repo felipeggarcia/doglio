@@ -10,6 +10,9 @@ class ApiConfig {
   /// Production: Use your deployed API URL
   static const String baseUrl = 'http://10.0.2.2:8000/api/v1';
 
+  /// Base URL for storage assets (images, files, etc)
+  static const String baseStorageUrl = 'http://10.0.2.2:8000';
+
   /// API timeout duration
   static const Duration timeout = Duration(seconds: 30);
 

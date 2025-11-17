@@ -6,9 +6,9 @@ library;
 
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/user.dart';
-import '../../domain/use_cases/login_use_case.dart';
-import '../../domain/use_cases/register_use_case.dart';
-import '../../domain/use_cases/forgot_password_use_case.dart';
+import '../../domain/usecases/login_use_case.dart';
+import '../../domain/usecases/register_use_case.dart';
+import '../../domain/usecases/forgot_password_use_case.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 
