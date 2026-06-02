@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/router.dart';
 import '../widgets/auth_form.dart';
@@ -56,15 +57,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           _emailSent = true;
           _isLoading = false;
         });
-        _showMessage('Password reset email sent successfully!');
+        _showMessage(context.l10n.passwordResetEmailSent);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showMessage(
-          'Failed to send reset email. Please try again.',
-          isError: true,
-        );
+        _showMessage(context.l10n.passwordResetFailed, isError: true);
       }
     }
   }
@@ -78,15 +76,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       if (mounted) {
         setState(() => _isLoading = false);
-        _showMessage('Password reset email sent again!');
+        _showMessage(context.l10n.emailResent);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showMessage(
-          'Failed to resend email. Please try again.',
-          isError: true,
-        );
+        _showMessage(context.l10n.emailResendFailed, isError: true);
       }
     }
   }
@@ -101,7 +96,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       body: SafeArea(
         child: AuthLoadingOverlay(
           isLoading: _isLoading,
-          message: _emailSent ? 'Resending email...' : 'Sending reset email...',
+          message: _emailSent
+              ? context.l10n.resendingEmail
+              : context.l10n.sendingResetEmail,
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -124,7 +121,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       elevation: 0,
       iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
       title: Text(
-        'Reset Password',
+        context.l10n.resetPassword,
         style: theme.textTheme.titleMedium?.copyWith(
           color: theme.colorScheme.onSurface,
           fontWeight: FontWeight.w600,
@@ -167,7 +164,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Column(
       children: [
         Text(
-          'Forgot Password?',
+          context.l10n.forgotPassword,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
@@ -178,7 +175,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         const SizedBox(height: 8),
 
         Text(
-          'Enter your email address and we\'ll send you a link to reset your password.',
+          context.l10n.forgotPasswordSubtitle,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -208,17 +205,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Widget _buildEmailField() {
     return AuthFormField(
       controller: _emailController,
-      label: 'Email Address',
-      hint: 'Enter your email address',
+      label: context.l10n.email,
+      hint: context.l10n.emailHint,
       prefixIcon: Icons.email_outlined,
       keyboardType: TextInputType.emailAddress,
-      validator: Validators.email,
+      validator: (value) => Validators.email(value, context),
     );
   }
 
   Widget _buildSendResetButton() {
     return DoglioButton(
-      text: 'Send Reset Link',
+      text: context.l10n.sendResetLink,
       onPressed: _isLoading ? null : _handleSendResetEmail,
       type: DoglioButtonType.primary,
       size: DoglioButtonSize.large,
@@ -230,11 +227,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Remember your password? ', style: theme.textTheme.bodyMedium),
+        Text(context.l10n.rememberPassword, style: theme.textTheme.bodyMedium),
         GestureDetector(
           onTap: () => context.goToLogin(),
           child: Text(
-            'Sign In',
+            context.l10n.signIn,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,
@@ -293,7 +290,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Widget _buildSuccessTitle(ThemeData theme) {
     return Text(
-      'Email Sent!',
+      context.l10n.emailSent,
       style: theme.textTheme.headlineMedium?.copyWith(
         fontWeight: FontWeight.bold,
         color: theme.colorScheme.onSurface,
@@ -306,7 +303,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     return Column(
       children: [
         Text(
-          'We\'ve sent a password reset link to:',
+          context.l10n.passwordResetLinkSent,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -343,7 +340,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Check your email and click the link to reset your password. The link will expire in 1 hour.',
+            context.l10n.checkEmailInstructions,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -370,7 +367,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Widget _buildResendButton() {
     return DoglioButton(
-      text: 'Resend Email',
+      text: context.l10n.resendEmail,
       onPressed: _isLoading ? null : _handleResendEmail,
       type: DoglioButtonType.outline,
       size: DoglioButtonSize.large,
@@ -380,7 +377,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   Widget _buildBackToLoginButton() {
     return DoglioButton(
-      text: 'Back to Sign In',
+      text: context.l10n.backToSignIn,
       onPressed: () => context.goToLogin(),
       type: DoglioButtonType.text,
       size: DoglioButtonSize.large,

@@ -1,0 +1,23 @@
+# Flutter Localization Configuration
+# Configuração de localização do Flutter
+
+# ARB directory containing translation files
+arb-dir: lib/l10n
+
+# Template ARB file (base translations)
+template-arb-file: app_en.arb
+
+# Output directory for generated localization files
+output-dir: lib/generated/l10n
+
+# Output localization file name
+output-localization-file: app_localizations.dart
+
+# Class name for generated localizations
+output-class: AppLocalizations
+
+# Preferred supported locales
+preferred-supported-locales: ["pt_BR"]
+
+# Use deferred loading
+use-deferred-loading: false

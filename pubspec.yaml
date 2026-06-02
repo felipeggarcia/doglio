@@ -30,31 +30,69 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^1.2.0
-  shared_preferences: ^2.2.2
-  cached_network_image: ^3.3.1
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
+  # HTTP & Network
+  dio: ^5.7.0                     # Modern HTTP client (substitui http)
+  cached_network_image: ^3.3.1    # Image caching
+
+  # State Management
+  flutter_riverpod: ^2.5.1        # Riverpod for Flutter (pode usar sem code generation)
+  # riverpod_annotation: ^2.3.5   # Annotations (desabilitado até resolver conflitos de build)
+
+  # Navegação
+  go_router: ^17.2.3              # Declarative routing
+
+  # Functional Programming & Error Handling
+  fpdart: ^1.2.0                  # Either pattern and functional utilities
+
+  # Code Generation
+  freezed_annotation: ^3.1.0      # Immutable classes annotations
+  json_annotation: ^4.12.0        # JSON serialization annotations
+
+  # Utils
+  logger: ^2.7.0                  # Better logging
+  intl: ^0.20.2                   # Internationalization (versão requerida pelo Flutter)
+  shared_preferences: ^2.5.5      # Local storage (atualizado)
+  flutter_secure_storage: ^9.2.2  # Secure storage for tokens
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: ^0.13.1
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  # App Icons
+  flutter_launcher_icons: ^0.14.4
+
+  # Code Generation
+  build_runner: ^2.15.0           # Code generation runner
+  freezed: ^3.2.5                 # Immutable classes generator
+  json_serializable: ^6.8.0       # JSON serialization generator (versão compatível)
+  # riverpod_generator: ^2.4.3    # Riverpod providers generator (conflito temporário - pode usar Riverpod sem geração)
+
+  # Testing
+  mockito: ^5.4.4                 # Mocking framework
+  mocktail: ^1.0.4                # Alternative mocking library
+
+  # Linting
+  flutter_lints: ^6.0.0           # Flutter recommended lints
+  # custom_lint: ^0.7.4           # Custom lint rules (conflito temporário com analyzer)
+  # riverpod_lint: ^2.3.15        # Riverpod-specific lints (depende de custom_lint)
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+# Flutter Internationalization (i18n)
+flutter_gen: true
+
 # The following section is specific to Flutter packages.
 flutter:
+  # Enable code generation for localization
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

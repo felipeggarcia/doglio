@@ -5,8 +5,10 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/app_theme.dart';
 import 'core/config/router.dart';
+import 'generated/l10n/app_localizations.dart';
 
 /// The root widget for the Doglio Marketplace application
 class DoglioApp extends StatelessWidget {
@@ -28,10 +30,19 @@ class DoglioApp extends StatelessWidget {
       initialRoute: AppRoutes.storeHome,
       onGenerateRoute: AppRouter.router.onGenerateRoute,
 
-      // Localization configuration (placeholder)
-      // locale: const Locale('en'),
-      // localizationsDelegates: AppLocalizations.localizationsDelegates,
-      // supportedLocales: AppLocalizations.supportedLocales,
+      // Localization configuration
+      locale: const Locale('pt', 'BR'),
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'), // Português Brasil (padrão)
+        Locale('pt'), // Fallback técnico (mesmo conteúdo do pt_BR)
+        Locale('en'), // Inglês
+      ],
 
       // Builder for additional configuration
       builder: (context, child) {

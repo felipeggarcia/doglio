@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/router.dart';
 import '../widgets/auth_form.dart';
@@ -212,30 +213,30 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget _buildNameField() {
     return AuthFormField(
       controller: _nameController,
-      label: 'Full Name',
-      hint: 'Enter your full name',
+      label: context.l10n.fullName,
+      hint: context.l10n.fullNameHint,
       prefixIcon: Icons.person_outline,
       keyboardType: TextInputType.name,
-      validator: (value) => Validators.required(value, 'Full name'),
+      validator: (value) => Validators.name(value, context),
     );
   }
 
   Widget _buildEmailField() {
     return AuthFormField(
       controller: _emailController,
-      label: 'Email',
-      hint: 'Enter your email address',
+      label: context.l10n.email,
+      hint: context.l10n.emailHint,
       prefixIcon: Icons.email_outlined,
       keyboardType: TextInputType.emailAddress,
-      validator: Validators.email,
+      validator: (value) => Validators.email(value, context),
     );
   }
 
   Widget _buildPasswordField() {
     return AuthFormField(
       controller: _passwordController,
-      label: 'Password',
-      hint: 'Create a strong password',
+      label: context.l10n.password,
+      hint: context.l10n.createPassword,
       prefixIcon: Icons.lock_outline,
       obscureText: _obscurePassword,
       suffixIcon: IconButton(
@@ -250,7 +251,7 @@ class _RegisterPageState extends State<RegisterPage> {
           });
         },
       ),
-      validator: Validators.password,
+      validator: (value) => Validators.password(value, context),
     );
   }
 

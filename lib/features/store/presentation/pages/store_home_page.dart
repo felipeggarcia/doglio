@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/config/router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/api_config.dart';
+import '../../../../core/utils/l10n_helper.dart';
 import '../../domain/entities/product.dart';
 import '../providers/store_provider.dart';
 
@@ -96,7 +97,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
-                    hintText: 'Search products...',
+                    hintText: context.l10n.searchProducts,
                     prefixIcon: const Icon(Icons.search),
                     filled: true,
                     fillColor: Colors.white,
@@ -118,11 +119,11 @@ class _StoreHomePageState extends State<StoreHomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        'Categories',
-                        style: TextStyle(
+                        context.l10n.categories,
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -130,11 +131,15 @@ class _StoreHomePageState extends State<StoreHomePage> {
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
-                      height: 100,
+                      height: 36,
                       child: _storeProvider.isLoadingCategories
-                          ? const Center(child: CircularProgressIndicator())
+                          ? const Center(
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
                           : _storeProvider.categories.isEmpty
-                          ? const Center(child: Text('No categories available'))
+                          ? Center(
+                              child: Text(context.l10n.noCategoriesAvailable),
+                            )
                           : ListView.builder(
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.symmetric(
@@ -147,9 +152,8 @@ class _StoreHomePageState extends State<StoreHomePage> {
                                 final isSelected =
                                     _storeProvider.selectedCategoryId ==
                                     category.id;
-                                return _buildCategoryCard(
+                                return _buildCategoryChip(
                                   category.name,
-                                  Icons.pets,
                                   isSelected: isSelected,
                                   onTap: () {
                                     if (isSelected) {
@@ -184,9 +188,9 @@ class _StoreHomePageState extends State<StoreHomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                'Featured Products',
-                                style: TextStyle(
+                              Text(
+                                context.l10n.featuredProducts,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -196,7 +200,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                                   _storeProvider.clearFilters();
                                 },
                                 icon: const Icon(Icons.arrow_forward),
-                                label: const Text('View all'),
+                                label: Text(context.l10n.viewAll),
                               ),
                             ],
                           ),
@@ -222,26 +226,28 @@ class _StoreHomePageState extends State<StoreHomePage> {
                                 const SizedBox(height: 16),
                                 ElevatedButton(
                                   onPressed: () => _storeProvider.refresh(),
-                                  child: const Text('Try again'),
+                                  child: Text(context.l10n.tryAgain),
                                 ),
                               ],
                             ),
                           ),
                         )
                       else if (_storeProvider.products.isEmpty)
-                        const SliverFillRemaining(
-                          child: Center(child: Text('No products available')),
+                        SliverFillRemaining(
+                          child: Center(
+                            child: Text(context.l10n.noProductsAvailable),
+                          ),
                         )
                       else
                         SliverPadding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           sliver: SliverGrid(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.75,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 12,
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 0.62,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
                                 ),
                             delegate: SliverChildBuilderDelegate((
                               context,
@@ -264,48 +270,29 @@ class _StoreHomePageState extends State<StoreHomePage> {
     );
   }
 
-  Widget _buildCategoryCard(
-    String name,
-    IconData icon, {
+  Widget _buildCategoryChip(
+    String name, {
     bool isSelected = false,
     VoidCallback? onTap,
   }) {
-    return Container(
-      width: 80,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: Card(
-        elevation: isSelected ? 4 : 2,
-        color: isSelected ? AppColors.primary : null,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: isSelected
-              ? const BorderSide(color: AppColors.primary, width: 2)
-              : BorderSide.none,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primary : Colors.grey[100],
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? AppColors.primary : Colors.grey[300]!,
+          ),
         ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 32,
-                color: isSelected ? Colors.white : AppColors.primary,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  color: isSelected ? Colors.white : null,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+        child: Text(
+          name,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+            color: isSelected ? Colors.white : Colors.black87,
           ),
         ),
       ),
@@ -326,90 +313,192 @@ class _StoreHomePageState extends State<StoreHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Imagem com badges
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
-                  ),
-                ),
-                child: imageUrl != null && imageUrl.isNotEmpty
-                    ? ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                        child: Builder(
-                          builder: (context) {
-                            final fullUrl = imageUrl.startsWith('http')
-                                ? imageUrl
-                                : '${ApiConfig.baseStorageUrl}$imageUrl';
-                            return Image.network(
-                              fullUrl,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Center(
-                                  child: Icon(
-                                    Icons.pets,
-                                    size: 48,
-                                    color: Colors.grey[400],
-                                  ),
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(12),
+                      ),
+                    ),
+                    child: imageUrl != null && imageUrl.isNotEmpty
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(12),
+                            ),
+                            child: Builder(
+                              builder: (context) {
+                                final fullUrl = ApiConfig.normalizeImageUrl(
+                                  imageUrl,
                                 );
-                              },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
+                                return Image.network(
+                                  fullUrl,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  headers: const {
+                                    'Host': ApiConfig.virtualHost,
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
                                     return Center(
-                                      child: CircularProgressIndicator(
-                                        value:
-                                            loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                            : null,
+                                      child: Icon(
+                                        Icons.pets,
+                                        size: 48,
+                                        color: Colors.grey[400],
                                       ),
                                     );
                                   },
-                            );
-                          },
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                loadingProgress
+                                                        .expectedTotalBytes !=
+                                                    null
+                                                ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                : null,
+                                          ),
+                                        );
+                                      },
+                                );
+                              },
+                            ),
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.pets,
+                              size: 48,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                  ),
+                  // Badge: Fora de estoque
+                  if (!product.inStock)
+                    Positioned(
+                      top: 8,
+                      left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
                         ),
-                      )
-                    : Center(
-                        child: Icon(
-                          Icons.pets,
-                          size: 48,
-                          color: Colors.grey[400],
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          context.l10n.outOfStock,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
+                    ),
+                  // Badge: Promoção
+                  if (product.hasPromotion)
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 3,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          '-${product.promotion!.discountValue.toStringAsFixed(0)}%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
+            // Info do produto
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 11,
                       fontWeight: FontWeight.w600,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'R\$ ${product.price}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
+                  const SizedBox(height: 2),
+                  // Preço com promoção
+                  if (product.hasPromotion) ...[
+                    Text(
+                      'R\$ ${product.price}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[500],
+                        decoration: TextDecoration.lineThrough,
+                      ),
                     ),
-                  ),
+                    Text(
+                      'R\$ ${product.displayPrice}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ] else
+                    Text(
+                      'R\$ ${product.displayPrice}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  // Rating
+                  if (product.averageRating != null) ...[
+                    const SizedBox(height: 2),
+                    Row(
+                      children: [
+                        const Icon(Icons.star, color: Colors.amber, size: 11),
+                        const SizedBox(width: 2),
+                        Text(
+                          product.averageRating!.toStringAsFixed(1),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        Text(
+                          ' (${product.reviewsCount})',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),

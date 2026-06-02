@@ -4,11 +4,14 @@
 /// throughout the application.
 library;
 
+import 'package:flutter/widgets.dart';
+import 'l10n_helper.dart';
+
 class Validators {
   // Email validation
-  static String? email(String? value) {
+  static String? email(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return context.l10n.emailRequired;
     }
 
     final emailRegex = RegExp(
@@ -16,156 +19,166 @@ class Validators {
     );
 
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email address';
+      return context.l10n.emailInvalid;
     }
 
     return null;
   }
 
   // Password validation
-  static String? password(String? value) {
+  static String? password(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return context.l10n.passwordRequired;
     }
 
     if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
+      return context.l10n.passwordTooShort(6);
     }
 
     // Check for at least one uppercase letter
     if (!value.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter';
+      return context.l10n.passwordMustHaveUppercase;
     }
 
     // Check for at least one lowercase letter
     if (!value.contains(RegExp(r'[a-z]'))) {
-      return 'Password must contain at least one lowercase letter';
+      return context.l10n.passwordMustHaveLowercase;
     }
 
     // Check for at least one digit
     if (!value.contains(RegExp(r'[0-9]'))) {
-      return 'Password must contain at least one number';
+      return context.l10n.passwordMustHaveNumber;
     }
 
     return null;
   }
 
   // Confirm password validation
-  static String? confirmPassword(String? value, String? originalPassword) {
+  static String? confirmPassword(
+    String? value,
+    String? originalPassword,
+    BuildContext context,
+  ) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return context.l10n.confirmPasswordRequired;
     }
 
     if (value != originalPassword) {
-      return 'Passwords do not match';
+      return context.l10n.passwordsDoNotMatch;
     }
 
     return null;
   }
 
   // Required field validation
-  static String? required(String? value, [String? fieldName]) {
+  static String? required(
+    String? value,
+    BuildContext context, [
+    String? fieldName,
+  ]) {
     if (value == null || value.trim().isEmpty) {
-      return '${fieldName ?? 'This field'} is required';
+      return fieldName != null
+          ? context.l10n.fieldRequired(fieldName)
+          : context.l10n.passwordRequired;
     }
     return null;
   }
 
   // Name validation
-  static String? name(String? value) {
+  static String? name(String? value, BuildContext context) {
     if (value == null || value.trim().isEmpty) {
-      return 'Name is required';
+      return context.l10n.nameRequired;
     }
 
     if (value.trim().length < 2) {
-      return 'Name must be at least 2 characters long';
+      return context.l10n.nameTooShort(2);
     }
 
     if (value.trim().length > 50) {
-      return 'Name must not exceed 50 characters';
+      return context.l10n.nameTooLong(50);
     }
 
     // Check for valid characters (letters, spaces, hyphens, apostrophes)
     final nameRegex = RegExp(r"^[a-zA-ZÀ-ÿ\s\-']+$");
     if (!nameRegex.hasMatch(value.trim())) {
-      return 'Name contains invalid characters';
+      return context.l10n.nameInvalidCharacters;
     }
 
     return null;
   }
 
   // Phone number validation
-  static String? phoneNumber(String? value) {
+  static String? phoneNumber(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required';
+      return context.l10n.phoneRequired;
     }
 
     // Remove all non-digit characters
     final digitsOnly = value.replaceAll(RegExp(r'[^\d]'), '');
 
     if (digitsOnly.length < 10 || digitsOnly.length > 15) {
-      return 'Please enter a valid phone number';
+      return context.l10n.phoneInvalid;
     }
 
     return null;
   }
 
   // Price validation
-  static String? price(String? value) {
+  static String? price(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Price is required';
+      return context.l10n.priceRequired;
     }
 
     final price = double.tryParse(value);
     if (price == null) {
-      return 'Please enter a valid price';
+      return context.l10n.priceInvalid;
     }
 
     if (price < 0) {
-      return 'Price must be positive';
+      return context.l10n.priceMustBePositive;
     }
 
     if (price > 999999.99) {
-      return 'Price is too high';
+      return context.l10n.priceTooHigh;
     }
 
     return null;
   }
 
   // Quantity validation
-  static String? quantity(String? value) {
+  static String? quantity(String? value, BuildContext context) {
     if (value == null || value.isEmpty) {
-      return 'Quantity is required';
+      return context.l10n.quantityRequired;
     }
 
     final quantity = int.tryParse(value);
     if (quantity == null) {
-      return 'Please enter a valid quantity';
+      return context.l10n.quantityInvalid;
     }
 
     if (quantity < 0) {
-      return 'Quantity must be positive';
+      return context.l10n.quantityMustBePositive;
     }
 
     if (quantity > 99999) {
-      return 'Quantity is too high';
+      return context.l10n.quantityTooHigh;
     }
 
     return null;
   }
 
   // Product description validation
-  static String? productDescription(String? value) {
+  static String? productDescription(String? value, BuildContext context) {
     if (value == null || value.trim().isEmpty) {
-      return 'Description is required';
+      return context.l10n.descriptionRequired;
     }
 
     if (value.trim().length < 10) {
-      return 'Description must be at least 10 characters long';
+      return context.l10n.descriptionTooShort(10);
     }
 
     if (value.trim().length > 1000) {
-      return 'Description must not exceed 1000 characters';
+      return context.l10n.descriptionTooLong(1000);
     }
 
     return null;

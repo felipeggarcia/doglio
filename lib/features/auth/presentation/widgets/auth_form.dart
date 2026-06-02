@@ -71,14 +71,14 @@ class AuthFormField extends StatelessWidget {
                     prefixIcon,
                     color: enabled
                         ? theme.colorScheme.onSurfaceVariant
-                        : theme.colorScheme.onSurfaceVariant.withOpacity(0.5),
+                        : theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
                   )
                 : null,
             suffixIcon: suffixIcon,
             filled: true,
             fillColor: enabled
                 ? theme.colorScheme.surfaceContainerHighest
-                : theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
+                : theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: theme.colorScheme.outline),
@@ -105,7 +105,7 @@ class AuthFormField extends StatelessWidget {
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
-                color: theme.colorScheme.outline.withOpacity(0.5),
+                color: theme.colorScheme.outline.withValues(alpha: 0.5),
               ),
             ),
             contentPadding: const EdgeInsets.symmetric(
@@ -113,7 +113,7 @@ class AuthFormField extends StatelessWidget {
               vertical: 12,
             ),
             hintStyle: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant.withOpacity(0.7),
+              color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),
           ),
         ),
@@ -144,7 +144,7 @@ class AuthLoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withOpacity(0.5),
+            color: Colors.black.withValues(alpha: 0.5),
             child: Center(
               child: Card(
                 child: Padding(

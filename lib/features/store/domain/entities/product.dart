@@ -9,11 +9,18 @@ class Product {
   final String name;
   final String description;
   final String price;
-  final int stockQuantity;
+  final String? originalPrice;
+  final String? effectivePrice;
+  final String? discountAmount;
+  final bool inStock;
   final bool isHighlighted;
+  final bool isActive;
+  final Promotion? promotion;
   final ProductImage? primaryImage;
   final List<ProductImage> images;
   final List<Category> categories;
+  final double? averageRating;
+  final int reviewsCount;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -22,16 +29,26 @@ class Product {
     required this.name,
     required this.description,
     required this.price,
-    required this.stockQuantity,
+    this.originalPrice,
+    this.effectivePrice,
+    this.discountAmount,
+    required this.inStock,
     required this.isHighlighted,
+    required this.isActive,
+    this.promotion,
     this.primaryImage,
     required this.images,
     required this.categories,
+    this.averageRating,
+    this.reviewsCount = 0,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  bool get inStock => stockQuantity > 0;
+  /// Preço a exibir: usa effectivePrice se houver promoção, senão price
+  String get displayPrice => effectivePrice ?? price;
+
+  bool get hasPromotion => promotion != null && effectivePrice != null;
 
   @override
   bool operator ==(Object other) =>
@@ -56,11 +73,26 @@ class ProductImage {
   });
 }
 
+class Promotion {
+  final String id;
+  final String name;
+  final String type;
+  final double discountValue;
+
+  const Promotion({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.discountValue,
+  });
+}
+
 class Category {
   final String id;
   final String name;
   final String slug;
   final bool isHighlighted;
+  final bool isActive;
   final int? productsCount;
 
   const Category({
@@ -68,6 +100,7 @@ class Category {
     required this.name,
     required this.slug,
     required this.isHighlighted,
+    this.isActive = true,
     this.productsCount,
   });
 

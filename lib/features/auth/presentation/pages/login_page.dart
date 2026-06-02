@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
 import '../../../../core/utils/validators.dart';
+import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/router.dart';
 import '../widgets/auth_form.dart';
@@ -63,8 +64,8 @@ class _LoginPageState extends State<LoginPage> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login successful!'),
+        SnackBar(
+          content: Text(context.l10n.loginSuccess),
           backgroundColor: AppColors.success,
         ),
       );
@@ -86,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: theme.colorScheme.background,
+      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -145,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       children: [
         Text(
-          'Welcome Back!',
+          context.l10n.welcomeBack,
           style: theme.textTheme.headlineSmall?.copyWith(
             color: theme.colorScheme.onSurface,
             fontWeight: FontWeight.w600,
@@ -155,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
         const SizedBox(height: 8),
 
         Text(
-          'Sign in to access your account',
+          context.l10n.loginSubtitle,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -170,11 +171,11 @@ class _LoginPageState extends State<LoginPage> {
         // Email Field
         AuthFormField(
           controller: _emailController,
-          label: 'Email',
-          hint: 'Enter your email address',
+          label: context.l10n.email,
+          hint: context.l10n.emailHint,
           keyboardType: TextInputType.emailAddress,
           prefixIcon: Icons.email_outlined,
-          validator: Validators.email,
+          validator: (value) => Validators.email(value, context),
           enabled: !_authController.isLoading,
         ),
 
@@ -183,8 +184,8 @@ class _LoginPageState extends State<LoginPage> {
         // Password Field
         AuthFormField(
           controller: _passwordController,
-          label: 'Password',
-          hint: 'Enter your password',
+          label: context.l10n.password,
+          hint: context.l10n.passwordHint,
           obscureText: _obscurePassword,
           prefixIcon: Icons.lock_outlined,
           suffixIcon: IconButton(
@@ -197,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
               setState(() => _obscurePassword = !_obscurePassword);
             },
           ),
-          validator: (value) => Validators.required(value, 'Password'),
+          validator: (value) => Validators.required(value, context),
           enabled: !_authController.isLoading,
         ),
       ],
@@ -206,7 +207,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return DoglioButton(
-      text: _authController.isLoading ? 'Signing in...' : 'Sign In',
+      text: _authController.isLoading
+          ? context.l10n.signingIn
+          : context.l10n.signIn,
       onPressed: _authController.isLoading ? null : _handleLogin,
       type: DoglioButtonType.primary,
       size: DoglioButtonSize.large,
@@ -219,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
       onPressed: _authController.isLoading ? null : _handleForgotPassword,
       child: Text(
-        'Forgot Password?',
+        context.l10n.forgotPassword,
         style: TextStyle(
           color: theme.colorScheme.primary,
           fontWeight: FontWeight.w500,
@@ -233,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Don't have an account? ",
+          context.l10n.dontHaveAccount,
           style: theme.textTheme.bodyMedium?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -246,7 +249,7 @@ class _LoginPageState extends State<LoginPage> {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
           child: Text(
-            'Sign Up',
+            context.l10n.signUp,
             style: TextStyle(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,

@@ -7,6 +7,7 @@ library;
 import 'package:flutter/material.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/l10n_helper.dart';
 import '../../domain/entities/product.dart';
 
 class ProductDetailPage extends StatefulWidget {
@@ -47,10 +48,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   }
 
   String _getFullImageUrl(String imagePath) {
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    return '${ApiConfig.baseStorageUrl}$imagePath';
+    return ApiConfig.normalizeImageUrl(imagePath);
   }
 
   @override
@@ -148,6 +146,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               child: Image.network(
                 _getFullImageUrl(images[index]),
                 fit: BoxFit.cover,
+                headers: const {'Host': ApiConfig.virtualHost},
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey[200],
@@ -210,10 +209,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       borderRadius: BorderRadius.circular(4),
                       color: _currentImageIndex == index
                           ? Colors.white
-                          : Colors.white.withOpacity(0.5),
+                          : Colors.white.withValues(alpha: 0.5),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
+                          color: Colors.black.withValues(alpha: 0.3),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),
@@ -235,7 +234,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             child: Center(
               child: _currentImageIndex > 0
                   ? Material(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                       child: InkWell(
                         onTap: () {
@@ -266,7 +265,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             child: Center(
               child: _currentImageIndex < images.length - 1
                   ? Material(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                       child: InkWell(
                         onTap: () {
@@ -329,7 +328,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -337,7 +336,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       Icon(Icons.star, size: 16, color: AppColors.primary),
                       const SizedBox(width: 4),
                       Text(
-                        'Featured',
+                        context.l10n.featured,
                         style: TextStyle(
                           color: AppColors.primary,
                           fontWeight: FontWeight.w600,
@@ -367,8 +366,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           const SizedBox(width: 8),
           Text(
             widget.product.inStock
-                ? 'In Stock (${widget.product.stockQuantity} available)'
-                : 'Out of Stock',
+                ? context.l10n.inStock
+                : context.l10n.outOfStock,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: widget.product.inStock ? Colors.green : Colors.red,
               fontWeight: FontWeight.w600,
@@ -386,7 +385,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Categories',
+            context.l10n.categories,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -399,7 +398,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             children: widget.product.categories.map((category) {
               return Chip(
                 label: Text(category.name),
-                backgroundColor: AppColors.primary.withOpacity(0.1),
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
                 labelStyle: TextStyle(
                   color: AppColors.primary,
                   fontWeight: FontWeight.w500,
@@ -420,7 +419,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Description',
+            context.l10n.description,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.black87,
@@ -430,7 +429,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           Text(
             widget.product.description.isNotEmpty
                 ? widget.product.description
-                : 'No description available',
+                : context.l10n.noDescriptionAvailable,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: Colors.black87,
               height: 1.6,
@@ -448,7 +447,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -2),
           ),
@@ -463,9 +462,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 onPressed: widget.product.inStock
                     ? () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Cart feature coming soon!'),
-                            duration: Duration(seconds: 2),
+                          SnackBar(
+                            content: Text(context.l10n.addToCart),
+                            duration: const Duration(seconds: 2),
                           ),
                         );
                       }
@@ -486,7 +485,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     const Icon(Icons.shopping_cart_outlined, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      widget.product.inStock ? 'Add to Cart' : 'Unavailable',
+                      widget.product.inStock
+                          ? context.l10n.addToCart
+                          : context.l10n.unavailable,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,

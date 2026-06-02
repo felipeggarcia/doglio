@@ -27,7 +27,11 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
   final http.Client _httpClient;
 
   Map<String, String> _getHeaders() {
-    return {'Content-Type': 'application/json', 'Accept': 'application/json'};
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Host': ApiConfig.virtualHost,
+    };
   }
 
   @override
@@ -51,7 +55,9 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
       print('[StoreRemoteDatasource] Fetching products from: $uri');
-      final response = await _httpClient.get(uri, headers: _getHeaders());
+      final response = await _httpClient
+          .get(uri, headers: _getHeaders())
+          .timeout(const Duration(seconds: 10));
       print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
@@ -89,7 +95,9 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
       print('[StoreRemoteDatasource] Fetching categories from: $uri');
-      final response = await _httpClient.get(uri, headers: _getHeaders());
+      final response = await _httpClient
+          .get(uri, headers: _getHeaders())
+          .timeout(const Duration(seconds: 10));
       print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
