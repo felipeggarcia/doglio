@@ -17,13 +17,11 @@
 // - Respect defined folder structure
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'app.dart';
 
 /// Application entry point
 void main() async {
-  // Initialize app dependencies and services
   await DoglioAppInitializer.initialize();
-
-  // Run the app
-  runApp(const DoglioApp());
+  runApp(const ProviderScope(child: DoglioApp()));
 }

@@ -1,7 +1,4 @@
 /// User entity for Doglio Marketplace
-///
-/// This file defines the core User entity used throughout the domain layer.
-/// It represents a user in the system (both customers and admins).
 library;
 
 enum UserRole { user, admin }
@@ -12,22 +9,20 @@ class User {
     required this.email,
     required this.name,
     required this.role,
-    required this.isActive,
-    required this.createdAt,
-    this.profileImageUrl,
-    this.phoneNumber,
-    this.lastLoginAt,
+    this.city,
+    this.state,
+    this.cpfCnpj,
+    this.birthDate,
   });
 
   final String id;
   final String email;
   final String name;
   final UserRole role;
-  final bool isActive;
-  final DateTime createdAt;
-  final String? profileImageUrl;
-  final String? phoneNumber;
-  final DateTime? lastLoginAt;
+  final String? city;
+  final String? state;
+  final String? cpfCnpj;
+  final String? birthDate;
 
   bool get isAdmin => role == UserRole.admin;
   bool get isCustomer => role == UserRole.user;
@@ -37,22 +32,20 @@ class User {
     String? email,
     String? name,
     UserRole? role,
-    bool? isActive,
-    DateTime? createdAt,
-    String? profileImageUrl,
-    String? phoneNumber,
-    DateTime? lastLoginAt,
+    String? city,
+    String? state,
+    String? cpfCnpj,
+    String? birthDate,
   }) {
     return User(
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
       role: role ?? this.role,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+      city: city ?? this.city,
+      state: state ?? this.state,
+      cpfCnpj: cpfCnpj ?? this.cpfCnpj,
+      birthDate: birthDate ?? this.birthDate,
     );
   }
 
@@ -66,7 +59,5 @@ class User {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'User(id: $id, email: $email, name: $name, role: $role)';
-  }
+  String toString() => 'User(id: $id, email: $email, name: $name, role: $role)';
 }
