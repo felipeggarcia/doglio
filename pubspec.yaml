@@ -60,6 +60,7 @@ dependencies:
   intl: ^0.20.2                   # Internationalization (versão requerida pelo Flutter)
   shared_preferences: ^2.5.5      # Local storage (atualizado)
   flutter_secure_storage: ^9.2.2  # Secure storage for tokens
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:
