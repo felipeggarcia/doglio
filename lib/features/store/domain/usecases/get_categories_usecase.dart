@@ -1,9 +1,8 @@
 /// Use case for getting categories (Domain layer)
-///
-/// This use case encapsulates the business logic for retrieving categories.
-/// It depends only on the repository interface, not on implementations.
 library;
 
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../entities/product.dart';
 import '../repositories/store_repository.dart';
 
@@ -12,13 +11,11 @@ class GetCategoriesUseCase {
 
   GetCategoriesUseCase(this.repository);
 
-  Future<List<Category>> call({
+  Future<Either<Failure, List<Category>>> call({
     bool? isHighlighted,
     bool withCount = false,
-  }) async {
-    return await repository.getCategories(
-      isHighlighted: isHighlighted,
-      withCount: withCount,
-    );
-  }
+  }) => repository.getCategories(
+    isHighlighted: isHighlighted,
+    withCount: withCount,
+  );
 }

@@ -1,9 +1,10 @@
 /// Store repository implementation (Data layer)
-///
-/// This class implements the repository interface defined in the domain layer.
-/// It bridges the domain layer with the data layer (datasources).
 library;
 
+import 'dart:async';
+import 'dart:io';
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/repositories/store_repository.dart';
 import '../datasources/store_remote_datasource.dart';
@@ -14,7 +15,7 @@ class StoreRepositoryImpl implements StoreRepository {
   StoreRepositoryImpl({required this.remoteDatasource});
 
   @override
-  Future<List<Product>> getProducts({
+  Future<Either<Failure, List<Product>>> getProducts({
     String? categoryId,
     bool? isHighlighted,
     String? search,
@@ -27,17 +28,18 @@ class StoreRepositoryImpl implements StoreRepository {
         search: search,
         perPage: perPage,
       );
-      // Models extend entities, so they can be returned directly
-      return products;
+      return right(products);
+    } on TimeoutException {
+      return left(const TimeoutFailure());
+    } on SocketException catch (e) {
+      return left(NetworkFailure(e.message));
     } catch (e) {
-      // In a real app, you might want to handle errors more gracefully
-      // or convert them to domain-specific exceptions
-      rethrow;
+      return left(UnknownFailure(e.toString()));
     }
   }
 
   @override
-  Future<List<Category>> getCategories({
+  Future<Either<Failure, List<Category>>> getCategories({
     bool? isHighlighted,
     bool withCount = false,
   }) async {
@@ -46,10 +48,13 @@ class StoreRepositoryImpl implements StoreRepository {
         isHighlighted: isHighlighted,
         withCount: withCount,
       );
-      // Models extend entities, so they can be returned directly
-      return categories;
+      return right(categories);
+    } on TimeoutException {
+      return left(const TimeoutFailure());
+    } on SocketException catch (e) {
+      return left(NetworkFailure(e.message));
     } catch (e) {
-      rethrow;
+      return left(UnknownFailure(e.toString()));
     }
   }
 }

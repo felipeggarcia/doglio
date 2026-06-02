@@ -1,9 +1,8 @@
 /// Use case for getting product details by ID (Domain layer)
-///
-/// This use case encapsulates the business logic for retrieving a single product.
-/// It depends only on the repository interface, not on implementations.
 library;
 
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../entities/product.dart';
 import '../repositories/store_repository.dart';
 
@@ -12,13 +11,14 @@ class GetProductDetailsUseCase {
 
   GetProductDetailsUseCase(this.repository);
 
-  Future<Product?> call(String productId) async {
-    final products = await repository.getProducts();
-
-    try {
-      return products.firstWhere((product) => product.id == productId);
-    } catch (e) {
-      return null;
-    }
+  Future<Either<Failure, Product?>> call(String productId) async {
+    final result = await repository.getProducts();
+    return result.map((products) {
+      try {
+        return products.firstWhere((p) => p.id == productId);
+      } catch (_) {
+        return null;
+      }
+    });
   }
 }

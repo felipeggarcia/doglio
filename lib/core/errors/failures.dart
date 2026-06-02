@@ -1,79 +1,81 @@
-/// Failure classes for error handling in Doglio Marketplace
-///
-/// This file defines failure objects used throughout the application
-/// following the Either pattern for clean error handling.
+/// Domain failures — erros tipados para toda a aplicação
+/// Usa Dart 3 sealed classes para pattern matching exaustivo.
 library;
 
-/// Base class for all failures
-abstract class Failure {
-  const Failure(this.message);
+sealed class Failure {
+  const Failure();
 
+  /// Mensagem amigável para exibir na UI
+  String get userMessage => switch (this) {
+    NetworkFailure() => 'Sem conexão. Verifique sua internet.',
+    TimeoutFailure() => 'Tempo limite esgotado. Tente novamente.',
+    ServerFailure(:final statusCode) =>
+      'Erro no servidor ($statusCode). Tente mais tarde.',
+    UnauthorizedFailure() => 'Sessão expirada. Faça login novamente.',
+    ForbiddenFailure() => 'Acesso negado.',
+    NotFoundFailure() => 'Recurso não encontrado.',
+    ValidationFailure(:final errors) =>
+      errors.values.expand((e) => e).join('\n'),
+    UnknownFailure(:final message) => message,
+    // Legacy subtypes kept por compatibilidade
+    AuthFailure(:final message) => message,
+    CacheFailure(:final message) => message,
+  };
+}
+
+/// Sem conexão de rede
+final class NetworkFailure extends Failure {
+  const NetworkFailure([this.message = '']);
   final String message;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Failure && other.message == message;
-  }
-
-  @override
-  int get hashCode => message.hashCode;
-
-  @override
-  String toString() => 'Failure: $message';
 }
 
-/// Server failure - when server returns an error
-class ServerFailure extends Failure {
-  const ServerFailure(super.message);
+/// Timeout da requisição
+final class TimeoutFailure extends Failure {
+  const TimeoutFailure();
 }
 
-/// Network failure - when there's no internet connection
-class NetworkFailure extends Failure {
-  const NetworkFailure(super.message);
+/// Erro HTTP do servidor (4xx/5xx)
+final class ServerFailure extends Failure {
+  const ServerFailure(this.statusCode, this.message);
+  final int statusCode;
+  final String message;
 }
 
-/// Authentication failure - when auth operations fail
-class AuthFailure extends Failure {
-  const AuthFailure(super.message);
+/// 401 - token inválido ou expirado
+final class UnauthorizedFailure extends Failure {
+  const UnauthorizedFailure();
 }
 
-/// Validation failure - when input validation fails
-class ValidationFailure extends Failure {
-  const ValidationFailure(super.message);
+/// 403 - sem permissão
+final class ForbiddenFailure extends Failure {
+  const ForbiddenFailure();
 }
 
-/// Cache failure - when local storage operations fail
-class CacheFailure extends Failure {
-  const CacheFailure(super.message);
+/// 404 - recurso não existe
+final class NotFoundFailure extends Failure {
+  const NotFoundFailure();
 }
 
-/// Database failure - when database operations fail
-class DatabaseFailure extends Failure {
-  const DatabaseFailure(super.message);
+/// Erros de validação (422)
+final class ValidationFailure extends Failure {
+  const ValidationFailure(this.errors);
+  final Map<String, List<String>> errors;
 }
 
-/// Permission failure - when permissions are denied
-class PermissionFailure extends Failure {
-  const PermissionFailure(super.message);
+/// Erro de autenticação genérico
+final class AuthFailure extends Failure {
+  const AuthFailure(this.message);
+  final String message;
 }
 
-/// Product failure - when product operations fail
-class ProductFailure extends Failure {
-  const ProductFailure(super.message);
+/// Falha de cache / storage local
+final class CacheFailure extends Failure {
+  const CacheFailure(this.message);
+  final String message;
 }
 
-/// Cart failure - when cart operations fail
-class CartFailure extends Failure {
-  const CartFailure(super.message);
-}
-
-/// Payment failure - when payment operations fail
-class PaymentFailure extends Failure {
-  const PaymentFailure(super.message);
-}
-
-/// Unknown failure - for unexpected errors
-class UnknownFailure extends Failure {
-  const UnknownFailure(super.message);
+/// Erro desconhecido / inesperado
+final class UnknownFailure extends Failure {
+  const UnknownFailure(this.message);
+  final String message;
 }

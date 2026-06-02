@@ -1,7 +1,4 @@
 /// Store provider for managing products and categories state (Presentation layer)
-///
-/// This provider manages UI state and uses domain use cases.
-/// It should NOT have business logic - that belongs in use cases.
 library;
 
 import 'package:flutter/foundation.dart' hide Category;
@@ -62,22 +59,28 @@ class StoreProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    try {
-      print('[StoreProvider] Loading categories...');
-      _categories = await _getCategoriesUseCase(
-        isHighlighted: isHighlighted,
-        withCount: true,
-      );
-      print('[StoreProvider] Categories loaded: ${_categories.length}');
-      _error = null;
-    } catch (e) {
-      print('[StoreProvider] Error loading categories: $e');
-      _error = 'Error loading categories: $e';
-      _categories = [];
-    } finally {
-      _isLoadingCategories = false;
-      notifyListeners();
-    }
+    final result = await _getCategoriesUseCase(
+      isHighlighted: isHighlighted,
+      withCount: true,
+    );
+
+    result.fold(
+      (failure) {
+        print(
+          '[StoreProvider] Error loading categories: ${failure.userMessage}',
+        );
+        _error = failure.userMessage;
+        _categories = [];
+      },
+      (categories) {
+        print('[StoreProvider] Categories loaded: ${categories.length}');
+        _categories = categories;
+        _error = null;
+      },
+    );
+
+    _isLoadingCategories = false;
+    notifyListeners();
   }
 
   /// Load products from API using use case
@@ -90,23 +93,27 @@ class StoreProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
 
-    try {
-      print('[StoreProvider] Loading products...');
-      _products = await _getProductsUseCase(
-        categoryId: categoryId ?? _selectedCategoryId,
-        isHighlighted: isHighlighted,
-        search: search ?? (_searchQuery.isNotEmpty ? _searchQuery : null),
-      );
-      print('[StoreProvider] Products loaded: ${_products.length}');
-      _error = null;
-    } catch (e) {
-      print('[StoreProvider] Error loading products: $e');
-      _error = 'Error loading products: $e';
-      _products = [];
-    } finally {
-      _isLoadingProducts = false;
-      notifyListeners();
-    }
+    final result = await _getProductsUseCase(
+      categoryId: categoryId ?? _selectedCategoryId,
+      isHighlighted: isHighlighted,
+      search: search ?? (_searchQuery.isNotEmpty ? _searchQuery : null),
+    );
+
+    result.fold(
+      (failure) {
+        print('[StoreProvider] Error loading products: ${failure.userMessage}');
+        _error = failure.userMessage;
+        _products = [];
+      },
+      (products) {
+        print('[StoreProvider] Products loaded: ${products.length}');
+        _products = products;
+        _error = null;
+      },
+    );
+
+    _isLoadingProducts = false;
+    notifyListeners();
   }
 
   /// Filter products by category

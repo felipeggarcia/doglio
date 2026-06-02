@@ -16,7 +16,7 @@ class DoglioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       // App configuration
       title: 'Doglio - Pet Products Marketplace',
       debugShowCheckedModeBanner: false,
@@ -26,9 +26,8 @@ class DoglioApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
 
-      // Navigation configuration
-      initialRoute: AppRoutes.storeHome,
-      onGenerateRoute: AppRouter.router.onGenerateRoute,
+      // Navigation configuration (go_router)
+      routerConfig: appRouter,
 
       // Localization configuration
       locale: const Locale('pt', 'BR'),
