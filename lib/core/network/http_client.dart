@@ -1,6 +1,4 @@
-/// HTTP client wrapper for Doglio API
-///
-/// Provides consistent headers, authentication, and error handling
+/// HTTP client wrapper for Doglio API — com Host header para Laragon
 library;
 
 import 'dart:convert';
@@ -22,7 +20,11 @@ class DoglioHttpClient {
 
   /// Get base headers for all requests
   Map<String, String> _getBaseHeaders() {
-    return {'Content-Type': 'application/json', 'Accept': 'application/json'};
+    return {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Host': ApiConfig.virtualHost,
+    };
   }
 
   /// Get headers with authentication token

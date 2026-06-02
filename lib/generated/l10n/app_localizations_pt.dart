@@ -494,6 +494,134 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get monthDec => 'Dez';
+
+  @override
+  String get myAccount => 'Minha Conta';
+
+  @override
+  String drawerWelcome(String name) {
+    return 'Bem-vindo, $name!';
+  }
+
+  @override
+  String get myFavorites => 'Meus Favoritos';
+
+  @override
+  String get myAddresses => 'Meus Endereços';
+
+  @override
+  String get favorites => 'Favoritos';
+
+  @override
+  String get noFavorites => 'Você ainda não tem favoritos';
+
+  @override
+  String get addToFavorites => 'Adicionar aos favoritos';
+
+  @override
+  String get removeFromFavorites => 'Remover dos favoritos';
+
+  @override
+  String get favoriteAdded => 'Adicionado aos favoritos';
+
+  @override
+  String get favoriteRemoved => 'Removido dos favoritos';
+
+  @override
+  String get orders => 'Pedidos';
+
+  @override
+  String get noOrders => 'Você ainda não fez nenhum pedido';
+
+  @override
+  String get orderDetails => 'Detalhes do Pedido';
+
+  @override
+  String get orderDate => 'Data';
+
+  @override
+  String get orderTotal => 'Total do pedido';
+
+  @override
+  String get orderHistory => 'Histórico';
+
+  @override
+  String get orderItems => 'Itens';
+
+  @override
+  String get orderStatusPending => 'Pendente';
+
+  @override
+  String get orderStatusProcessing => 'Em processamento';
+
+  @override
+  String get orderStatusShipped => 'Enviado';
+
+  @override
+  String get orderStatusDelivered => 'Entregue';
+
+  @override
+  String get orderStatusCancelled => 'Cancelado';
+
+  @override
+  String get paymentInfo => 'Pagamento';
+
+  @override
+  String get deliveryInfo => 'Entrega';
+
+  @override
+  String get deliveryPickup => 'Retirada na loja';
+
+  @override
+  String get deliveryHome => 'Entrega em domicílio';
+
+  @override
+  String get addresses => 'Endereços';
+
+  @override
+  String get noAddresses => 'Nenhum endereço cadastrado';
+
+  @override
+  String get addAddress => 'Adicionar endereço';
+
+  @override
+  String get editAddress => 'Editar endereço';
+
+  @override
+  String get deleteAddress => 'Excluir endereço';
+
+  @override
+  String get primaryAddress => 'Principal';
+
+  @override
+  String get setPrimaryAddress => 'Definir como principal';
+
+  @override
+  String get addressLabel => 'Identificação (ex: Casa, Trabalho)';
+
+  @override
+  String get addressStreet => 'Rua';
+
+  @override
+  String get addressNumber => 'Número';
+
+  @override
+  String get addressComplement => 'Complemento (opcional)';
+
+  @override
+  String get addressCity => 'Cidade';
+
+  @override
+  String get addressState => 'Estado';
+
+  @override
+  String get addressZip => 'CEP';
+
+  @override
+  String get addressSaved => 'Endereço salvo com sucesso';
+
+  @override
+  String get addressDeleted => 'Endereço excluído';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -986,4 +1114,132 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get monthDec => 'Dez';
+
+  @override
+  String get myAccount => 'Minha Conta';
+
+  @override
+  String drawerWelcome(String name) {
+    return 'Bem-vindo, $name!';
+  }
+
+  @override
+  String get myFavorites => 'Meus Favoritos';
+
+  @override
+  String get myAddresses => 'Meus Endereços';
+
+  @override
+  String get favorites => 'Favoritos';
+
+  @override
+  String get noFavorites => 'Você ainda não tem favoritos';
+
+  @override
+  String get addToFavorites => 'Adicionar aos favoritos';
+
+  @override
+  String get removeFromFavorites => 'Remover dos favoritos';
+
+  @override
+  String get favoriteAdded => 'Adicionado aos favoritos';
+
+  @override
+  String get favoriteRemoved => 'Removido dos favoritos';
+
+  @override
+  String get orders => 'Pedidos';
+
+  @override
+  String get noOrders => 'Você ainda não fez nenhum pedido';
+
+  @override
+  String get orderDetails => 'Detalhes do Pedido';
+
+  @override
+  String get orderDate => 'Data';
+
+  @override
+  String get orderTotal => 'Total do pedido';
+
+  @override
+  String get orderHistory => 'Histórico';
+
+  @override
+  String get orderItems => 'Itens';
+
+  @override
+  String get orderStatusPending => 'Pendente';
+
+  @override
+  String get orderStatusProcessing => 'Em processamento';
+
+  @override
+  String get orderStatusShipped => 'Enviado';
+
+  @override
+  String get orderStatusDelivered => 'Entregue';
+
+  @override
+  String get orderStatusCancelled => 'Cancelado';
+
+  @override
+  String get paymentInfo => 'Pagamento';
+
+  @override
+  String get deliveryInfo => 'Entrega';
+
+  @override
+  String get deliveryPickup => 'Retirada na loja';
+
+  @override
+  String get deliveryHome => 'Entrega em domicílio';
+
+  @override
+  String get addresses => 'Endereços';
+
+  @override
+  String get noAddresses => 'Nenhum endereço cadastrado';
+
+  @override
+  String get addAddress => 'Adicionar endereço';
+
+  @override
+  String get editAddress => 'Editar endereço';
+
+  @override
+  String get deleteAddress => 'Excluir endereço';
+
+  @override
+  String get primaryAddress => 'Principal';
+
+  @override
+  String get setPrimaryAddress => 'Definir como principal';
+
+  @override
+  String get addressLabel => 'Identificação (ex: Casa, Trabalho)';
+
+  @override
+  String get addressStreet => 'Rua';
+
+  @override
+  String get addressNumber => 'Número';
+
+  @override
+  String get addressComplement => 'Complemento (opcional)';
+
+  @override
+  String get addressCity => 'Cidade';
+
+  @override
+  String get addressState => 'Estado';
+
+  @override
+  String get addressZip => 'CEP';
+
+  @override
+  String get addressSaved => 'Endereço salvo com sucesso';
+
+  @override
+  String get addressDeleted => 'Endereço excluído';
 }

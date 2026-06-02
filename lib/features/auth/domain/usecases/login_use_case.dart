@@ -29,12 +29,6 @@ class LoginUseCase extends UseCase<User, LoginParams> with ParamsValidation {
         password: params.password,
       );
 
-      // 3. Additional business logic (if needed)
-      // For example: check if account is active, log login attempt, etc.
-      if (!user.isActive) {
-        throw const AccountInactiveException();
-      }
-
       return user;
     } catch (e) {
       // 4. Handle and re-throw appropriate exceptions
@@ -92,8 +86,3 @@ class LoginParams {
   int get hashCode => email.hashCode ^ password.hashCode ^ rememberMe.hashCode;
 }
 
-/// Exception thrown when account is inactive
-class AccountInactiveException extends AuthException {
-  const AccountInactiveException()
-    : super('Account is inactive. Please contact support.', 'account-inactive');
-}

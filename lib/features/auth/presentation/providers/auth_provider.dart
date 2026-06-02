@@ -7,12 +7,12 @@ library;
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/base_use_case.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../../domain/usecases/register_use_case.dart';
 import '../../domain/usecases/forgot_password_use_case.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/datasources/laravel_auth_datasource.dart';
-import '../../../../core/config/api_config.dart';
 
 /// Simple authentication provider without external state management
 ///
@@ -51,11 +51,21 @@ class AuthProvider extends ChangeNotifier {
 
   /// Initialize dependencies
   void _initializeDependencies() {
-    _remoteDatasource = LaravelAuthDatasource(baseUrl: ApiConfig.baseUrl);
+    _remoteDatasource = LaravelAuthDatasource();
     _repository = AuthRepositoryImpl(_remoteDatasource);
     _loginUseCase = LoginUseCase(_repository);
     _registerUseCase = RegisterUseCase(_repository);
     _forgotPasswordUseCase = ForgotPasswordUseCase(_repository);
+    restoreSession();
+  }
+
+  /// Restore user session from persisted token (called on app start)
+  Future<void> restoreSession() async {
+    final user = await _remoteDatasource.getCurrentUser();
+    if (user != null) {
+      _currentUser = user;
+      notifyListeners();
+    }
   }
 
   /// Performs user login
@@ -152,6 +162,12 @@ class AuthProvider extends ChangeNotifier {
     _clearError();
   }
 
+  /// Syncs an already-authenticated user (called after login via AuthController)
+  void setUser(User user) {
+    _currentUser = user;
+    notifyListeners();
+  }
+
   // Private methods
   void _setLoading(bool loading) {
     _isLoading = loading;
@@ -168,25 +184,29 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Converts exceptions to user-friendly error messages
+  /// Converts exceptions to user-friendly error messages in Portuguese
   String _getErrorMessage(dynamic exception) {
-    switch (exception.runtimeType.toString()) {
-      case 'InvalidParametersException':
-        return exception.message;
-      case 'InvalidCredentialsException':
-        return 'Invalid email or password. Please try again.';
-      case 'UserNotFoundException':
-        return 'No account found with this email address.';
-      case 'EmailAlreadyInUseException':
-        return 'An account with this email already exists.';
-      case 'WeakPasswordException':
-        return 'Password is too weak. Please use a stronger password.';
-      case 'NetworkException':
-        return 'Network error. Please check your connection.';
-      case 'AccountInactiveException':
-        return 'Your account is inactive. Please contact support.';
-      default:
-        return 'An unexpected error occurred. Please try again.';
+    if (exception is InvalidParametersException) {
+      return exception.message;
     }
+    if (exception is InvalidCredentialsException) {
+      return 'E-mail ou senha inválidos.';
+    }
+    if (exception is UserNotFoundException) {
+      return 'Nenhuma conta encontrada com este e-mail.';
+    }
+    if (exception is EmailAlreadyInUseException) {
+      return 'Já existe uma conta com este e-mail.';
+    }
+    if (exception is AccountInactiveException) {
+      return 'Sua conta foi desativada. Entre em contato com o suporte.';
+    }
+    if (exception is WeakPasswordException) {
+      return 'Senha muito fraca. Use uma senha mais segura.';
+    }
+    if (exception is NetworkException) {
+      return 'Erro de conexão. Verifique sua internet.';
+    }
+    return 'Ocorreu um erro inesperado. Tente novamente.';
   }
 }

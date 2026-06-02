@@ -9,8 +9,10 @@ import '../../../../core/config/router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/utils/l10n_helper.dart';
+import '../../../../features/auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/product.dart';
 import '../providers/store_provider.dart';
+import '../widgets/app_drawer.dart';
 
 class StoreHomePage extends StatefulWidget {
   const StoreHomePage({super.key});
@@ -46,6 +48,13 @@ class _StoreHomePageState extends State<StoreHomePage> {
       builder: (context, _) {
         return Scaffold(
           backgroundColor: Colors.white,
+          endDrawer: ListenableBuilder(
+            listenable: AuthProvider.instance,
+            builder: (context, _) =>
+                AuthProvider.instance.isAuthenticated
+                    ? const AppDrawer()
+                    : const SizedBox.shrink(),
+          ),
           appBar: AppBar(
             elevation: 0,
             backgroundColor: AppColors.primary,
@@ -80,11 +89,17 @@ class _StoreHomePageState extends State<StoreHomePage> {
                   // TODO: Navigate to cart
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.person_outline, color: Colors.white),
-                onPressed: () {
-                  context.pushLogin();
-                },
+              Builder(
+                builder: (innerContext) => IconButton(
+                  icon: const Icon(Icons.person_outline, color: Colors.white),
+                  onPressed: () {
+                    if (AuthProvider.instance.isAuthenticated) {
+                      Scaffold.of(innerContext).openEndDrawer();
+                    } else {
+                      innerContext.pushLogin();
+                    }
+                  },
+                ),
               ),
             ],
           ),

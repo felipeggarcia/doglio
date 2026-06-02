@@ -6,11 +6,15 @@ library;
 
 import 'package:flutter/foundation.dart';
 import '../../domain/entities/user.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/base_use_case.dart';
 import '../../domain/usecases/login_use_case.dart';
 import '../../domain/usecases/register_use_case.dart';
 import '../../domain/usecases/forgot_password_use_case.dart';
 import '../../data/repositories/auth_repository_impl.dart';
-import '../../data/datasources/auth_remote_datasource.dart';
+import '../../data/datasources/laravel_auth_datasource.dart';
+import '../providers/auth_provider.dart';
+
 
 /// Authentication controller following Clean Architecture
 ///
@@ -22,7 +26,7 @@ class AuthController extends ChangeNotifier {
   }
 
   // Dependencies
-  late final AuthRemoteDatasource _remoteDatasource;
+  late final LaravelAuthDatasource _remoteDatasource;
   late final AuthRepositoryImpl _repository;
   late final LoginUseCase _loginUseCase;
   late final RegisterUseCase _registerUseCase;
@@ -39,9 +43,8 @@ class AuthController extends ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isAuthenticated => _currentUser != null;
 
-  /// Initialize dependencies using dependency injection pattern
   void _initializeDependencies() {
-    _remoteDatasource = AuthRemoteDatasourceImpl();
+    _remoteDatasource = LaravelAuthDatasource();
     _repository = AuthRepositoryImpl(_remoteDatasource);
     _loginUseCase = LoginUseCase(_repository);
     _registerUseCase = RegisterUseCase(_repository);
@@ -69,6 +72,7 @@ class AuthController extends ChangeNotifier {
 
       final user = await _loginUseCase(params);
       _currentUser = user;
+      AuthProvider.instance.setUser(user);
       _setLoading(false);
       return true;
     } catch (e) {
@@ -167,26 +171,30 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Converts exceptions to user-friendly error messages
+  /// Converts exceptions to user-friendly error messages in Portuguese
   String _getErrorMessage(dynamic exception) {
-    switch (exception.runtimeType.toString()) {
-      case 'InvalidParametersException':
-        return exception.message;
-      case 'InvalidCredentialsException':
-        return 'Invalid email or password. Please try again.';
-      case 'UserNotFoundException':
-        return 'No account found with this email address.';
-      case 'EmailAlreadyInUseException':
-        return 'An account with this email already exists.';
-      case 'WeakPasswordException':
-        return 'Password is too weak. Please use a stronger password.';
-      case 'NetworkException':
-        return 'Network error. Please check your connection.';
-      case 'AccountInactiveException':
-        return 'Your account is inactive. Please contact support.';
-      default:
-        return 'An unexpected error occurred. Please try again.';
+    if (exception is InvalidParametersException) {
+      return exception.message;
     }
+    if (exception is InvalidCredentialsException) {
+      return 'E-mail ou senha inválidos.';
+    }
+    if (exception is UserNotFoundException) {
+      return 'Nenhuma conta encontrada com este e-mail.';
+    }
+    if (exception is EmailAlreadyInUseException) {
+      return 'Já existe uma conta com este e-mail.';
+    }
+    if (exception is AccountInactiveException) {
+      return 'Sua conta foi desativada. Entre em contato com o suporte.';
+    }
+    if (exception is WeakPasswordException) {
+      return 'Senha muito fraca. Use uma senha mais segura.';
+    }
+    if (exception is NetworkException) {
+      return 'Erro de conexão. Verifique sua internet.';
+    }
+    return 'Ocorreu um erro inesperado. Tente novamente.';
   }
 
 }

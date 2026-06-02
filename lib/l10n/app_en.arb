@@ -195,5 +195,56 @@
   "monthSep": "Sep",
   "monthOct": "Oct",
   "monthNov": "Nov",
-  "monthDec": "Dec"
+  "monthDec": "Dec",
+
+  "myAccount": "My Account",
+  "drawerWelcome": "Welcome, {name}!",
+  "@drawerWelcome": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "myFavorites": "My Favorites",
+  "myAddresses": "My Addresses",
+
+  "favorites": "Favorites",
+  "noFavorites": "You have no favorites yet",
+  "addToFavorites": "Add to favorites",
+  "removeFromFavorites": "Remove from favorites",
+  "favoriteAdded": "Added to favorites",
+  "favoriteRemoved": "Removed from favorites",
+
+  "orders": "Orders",
+  "noOrders": "You haven't placed any orders yet",
+  "orderDetails": "Order Details",
+  "orderDate": "Date",
+  "orderTotal": "Order total",
+  "orderHistory": "History",
+  "orderItems": "Items",
+  "orderStatusPending": "Pending",
+  "orderStatusProcessing": "Processing",
+  "orderStatusShipped": "Shipped",
+  "orderStatusDelivered": "Delivered",
+  "orderStatusCancelled": "Cancelled",
+  "paymentInfo": "Payment",
+  "deliveryInfo": "Delivery",
+  "deliveryPickup": "Store pickup",
+  "deliveryHome": "Home delivery",
+
+  "addresses": "Addresses",
+  "noAddresses": "No addresses saved yet",
+  "addAddress": "Add address",
+  "editAddress": "Edit address",
+  "deleteAddress": "Delete address",
+  "primaryAddress": "Primary",
+  "setPrimaryAddress": "Set as primary",
+  "addressLabel": "Label (e.g., Home, Work)",
+  "addressStreet": "Street",
+  "addressNumber": "Number",
+  "addressComplement": "Complement (optional)",
+  "addressCity": "City",
+  "addressState": "State",
+  "addressZip": "ZIP code",
+  "addressSaved": "Address saved successfully",
+  "addressDeleted": "Address deleted"
 }

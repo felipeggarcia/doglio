@@ -492,4 +492,132 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get monthDec => 'Dec';
+
+  @override
+  String get myAccount => 'My Account';
+
+  @override
+  String drawerWelcome(String name) {
+    return 'Welcome, $name!';
+  }
+
+  @override
+  String get myFavorites => 'My Favorites';
+
+  @override
+  String get myAddresses => 'My Addresses';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get noFavorites => 'You have no favorites yet';
+
+  @override
+  String get addToFavorites => 'Add to favorites';
+
+  @override
+  String get removeFromFavorites => 'Remove from favorites';
+
+  @override
+  String get favoriteAdded => 'Added to favorites';
+
+  @override
+  String get favoriteRemoved => 'Removed from favorites';
+
+  @override
+  String get orders => 'Orders';
+
+  @override
+  String get noOrders => 'You haven\'t placed any orders yet';
+
+  @override
+  String get orderDetails => 'Order Details';
+
+  @override
+  String get orderDate => 'Date';
+
+  @override
+  String get orderTotal => 'Order total';
+
+  @override
+  String get orderHistory => 'History';
+
+  @override
+  String get orderItems => 'Items';
+
+  @override
+  String get orderStatusPending => 'Pending';
+
+  @override
+  String get orderStatusProcessing => 'Processing';
+
+  @override
+  String get orderStatusShipped => 'Shipped';
+
+  @override
+  String get orderStatusDelivered => 'Delivered';
+
+  @override
+  String get orderStatusCancelled => 'Cancelled';
+
+  @override
+  String get paymentInfo => 'Payment';
+
+  @override
+  String get deliveryInfo => 'Delivery';
+
+  @override
+  String get deliveryPickup => 'Store pickup';
+
+  @override
+  String get deliveryHome => 'Home delivery';
+
+  @override
+  String get addresses => 'Addresses';
+
+  @override
+  String get noAddresses => 'No addresses saved yet';
+
+  @override
+  String get addAddress => 'Add address';
+
+  @override
+  String get editAddress => 'Edit address';
+
+  @override
+  String get deleteAddress => 'Delete address';
+
+  @override
+  String get primaryAddress => 'Primary';
+
+  @override
+  String get setPrimaryAddress => 'Set as primary';
+
+  @override
+  String get addressLabel => 'Label (e.g., Home, Work)';
+
+  @override
+  String get addressStreet => 'Street';
+
+  @override
+  String get addressNumber => 'Number';
+
+  @override
+  String get addressComplement => 'Complement (optional)';
+
+  @override
+  String get addressCity => 'City';
+
+  @override
+  String get addressState => 'State';
+
+  @override
+  String get addressZip => 'ZIP code';
+
+  @override
+  String get addressSaved => 'Address saved successfully';
+
+  @override
+  String get addressDeleted => 'Address deleted';
 }

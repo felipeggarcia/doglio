@@ -67,10 +67,10 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(
           content: Text(context.l10n.loginSuccess),
           backgroundColor: AppColors.success,
+          behavior: SnackBarBehavior.floating,
         ),
       );
-      // Navigate to home page
-      context.goToUserHome();
+      context.goToStoreHome();
     }
   }
 

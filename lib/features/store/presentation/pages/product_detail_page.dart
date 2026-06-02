@@ -5,21 +5,23 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
+import '../../../favorites/presentation/providers/favorites_provider.dart';
 import '../../domain/entities/product.dart';
 
-class ProductDetailPage extends StatefulWidget {
+class ProductDetailPage extends ConsumerStatefulWidget {
   final Product product;
 
   const ProductDetailPage({super.key, required this.product});
 
   @override
-  State<ProductDetailPage> createState() => _ProductDetailPageState();
+  ConsumerState<ProductDetailPage> createState() => _ProductDetailPageState();
 }
 
-class _ProductDetailPageState extends State<ProductDetailPage> {
+class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   int _currentImageIndex = 0;
   final PageController _pageController = PageController();
 
@@ -66,6 +68,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             pinned: true,
             backgroundColor: AppColors.primary,
             iconTheme: const IconThemeData(color: Colors.white),
+            actions: [
+              _FavoriteButton(product: widget.product),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: _buildImageGallery(images),
             ),
@@ -500,6 +505,40 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _FavoriteButton extends ConsumerWidget {
+  const _FavoriteButton({required this.product});
+  final Product product;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFav = ref.watch(
+      favoritesProvider.select(
+        (state) => state.valueOrNull?.any((f) => f.product.id == product.id) ??
+            false,
+      ),
+    );
+
+    return IconButton(
+      icon: Icon(
+        isFav ? Icons.favorite : Icons.favorite_border,
+        color: Colors.white,
+      ),
+      onPressed: () async {
+        final notifier = ref.read(favoritesProvider.notifier);
+        await notifier.toggle(product.id);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(isFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      },
     );
   }
 }

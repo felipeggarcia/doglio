@@ -104,3 +104,8 @@ class NetworkException extends AuthException {
 class UnknownAuthException extends AuthException {
   const UnknownAuthException(String message) : super(message, 'unknown-error');
 }
+
+class AccountInactiveException extends AuthException {
+  const AccountInactiveException()
+    : super('Account is inactive', 'account-inactive');
+}
