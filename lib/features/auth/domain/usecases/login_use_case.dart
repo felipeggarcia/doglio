@@ -1,67 +1,41 @@
-/// Login use case for Doglio Marketplace
-///
-/// This use case encapsulates the business logic for user authentication.
-/// It validates credentials and handles the login process.
 library;
 
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 import 'base_use_case.dart';
 
-/// Use case for user login
-///
-/// This encapsulates all business logic related to user authentication,
-/// including validation and error handling.
-class LoginUseCase extends UseCase<User, LoginParams> with ParamsValidation {
+class LoginUseCase extends UseCase<Either<Failure, User>, LoginParams>
+    with ParamsValidation {
   const LoginUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
 
   @override
-  Future<User> call(LoginParams params) async {
-    // 1. Validate parameters
-    _validateParams(params);
-
-    // 2. Attempt authentication
-    try {
-      final user = await _authRepository.signInWithEmailAndPassword(
-        email: params.email,
-        password: params.password,
-      );
-
-      return user;
-    } catch (e) {
-      // 4. Handle and re-throw appropriate exceptions
-      if (e is AuthException) {
-        rethrow;
-      }
-      throw UnknownAuthException(e.toString());
-    }
-  }
-
-  /// Validates login parameters
-  void _validateParams(LoginParams params) {
+  Future<Either<Failure, User>> call(LoginParams params) async {
     if (!isNotEmpty(params.email)) {
-      throw const InvalidParametersException('Email is required');
+      return const Left(ValidationFailure({'email': ['E-mail é obrigatório']}));
     }
-
     if (!isValidEmail(params.email)) {
-      throw const InvalidParametersException('Invalid email format');
+      return const Left(ValidationFailure({'email': ['E-mail inválido']}));
     }
-
     if (!isNotEmpty(params.password)) {
-      throw const InvalidParametersException('Password is required');
+      return const Left(
+          ValidationFailure({'password': ['Senha é obrigatória']}));
+    }
+    if (params.password.length < 6) {
+      return const Left(
+          ValidationFailure({'password': ['Mínimo 6 caracteres']}));
     }
 
-    if (params.password.length < 6) {
-      throw const InvalidParametersException(
-        'Password must be at least 6 characters',
-      );
-    }
+    return _authRepository.signInWithEmailAndPassword(
+      email: params.email.trim(),
+      password: params.password,
+    );
   }
 }
 
-/// Parameters for login use case
 class LoginParams {
   const LoginParams({
     required this.email,
@@ -85,4 +59,3 @@ class LoginParams {
   @override
   int get hashCode => email.hashCode ^ password.hashCode ^ rememberMe.hashCode;
 }
-

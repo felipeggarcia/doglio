@@ -1,103 +1,58 @@
-/// Register use case for Doglio Marketplace
-///
-/// This use case encapsulates the business logic for user registration.
-/// It validates user data and handles the account creation process.
 library;
 
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 import 'base_use_case.dart';
 
-/// Use case for user registration
-///
-/// This encapsulates all business logic related to user registration,
-/// including validation, password confirmation, and account creation.
-class RegisterUseCase extends UseCase<User, RegisterParams>
+class RegisterUseCase extends UseCase<Either<Failure, User>, RegisterParams>
     with ParamsValidation {
   const RegisterUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
 
   @override
-  Future<User> call(RegisterParams params) async {
-    // 1. Validate parameters
-    _validateParams(params);
-
-    // 2. Attempt registration
-    try {
-      final user = await _authRepository.createUserWithEmailAndPassword(
-        name: params.name.trim(),
-        email: params.email.toLowerCase().trim(),
-        password: params.password,
-      );
-
-      // 3. Additional business logic (if needed)
-      // For example: send welcome email, create user profile, etc.
-
-      return user;
-    } catch (e) {
-      // 4. Handle and re-throw appropriate exceptions
-      if (e is AuthException) {
-        rethrow;
-      }
-      throw UnknownAuthException(e.toString());
-    }
-  }
-
-  /// Validates registration parameters
-  void _validateParams(RegisterParams params) {
-    // Name validation
+  Future<Either<Failure, User>> call(RegisterParams params) async {
     if (!isNotEmpty(params.name)) {
-      throw const InvalidParametersException('Name is required');
+      return const Left(ValidationFailure({'name': ['Nome é obrigatório']}));
     }
-
     if (!isValidName(params.name)) {
-      throw const InvalidParametersException(
-        'Name must contain only letters and spaces',
-      );
+      return const Left(
+          ValidationFailure({'name': ['Use apenas letras e espaços']}));
     }
-
-    if (params.name.trim().length < 2) {
-      throw const InvalidParametersException(
-        'Name must be at least 2 characters',
-      );
-    }
-
-    // Email validation
     if (!isNotEmpty(params.email)) {
-      throw const InvalidParametersException('Email is required');
+      return const Left(ValidationFailure({'email': ['E-mail é obrigatório']}));
     }
-
     if (!isValidEmail(params.email)) {
-      throw const InvalidParametersException('Invalid email format');
+      return const Left(ValidationFailure({'email': ['E-mail inválido']}));
     }
-
-    // Password validation
     if (!isNotEmpty(params.password)) {
-      throw const InvalidParametersException('Password is required');
+      return const Left(
+          ValidationFailure({'password': ['Senha é obrigatória']}));
     }
-
     if (!isValidPassword(params.password)) {
-      throw const InvalidParametersException(
-        'Password must be at least 8 characters with uppercase, lowercase, and number',
-      );
+      return const Left(ValidationFailure({
+        'password': ['Mínimo 8 caracteres com maiúscula, minúscula e número']
+      }));
     }
-
-    // Confirm password validation
     if (params.password != params.confirmPassword) {
-      throw const InvalidParametersException('Passwords do not match');
+      return const Left(
+          ValidationFailure({'confirmPassword': ['Senhas não coincidem']}));
+    }
+    if (!params.acceptTerms) {
+      return const Left(
+          ValidationFailure({'terms': ['Aceite os termos para continuar']}));
     }
 
-    // Terms acceptance validation
-    if (!params.acceptTerms) {
-      throw const InvalidParametersException(
-        'You must accept the terms and conditions',
-      );
-    }
+    return _authRepository.createUserWithEmailAndPassword(
+      name: params.name.trim(),
+      email: params.email.toLowerCase().trim(),
+      password: params.password,
+    );
   }
 }
 
-/// Parameters for register use case
 class RegisterParams {
   const RegisterParams({
     required this.name,

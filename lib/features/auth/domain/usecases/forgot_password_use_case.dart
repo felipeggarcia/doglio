@@ -1,58 +1,32 @@
-/// Forgot password use case for Doglio Marketplace
-///
-/// This use case encapsulates the business logic for password reset.
-/// It validates email and handles the password reset process.
 library;
 
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/failures.dart';
 import '../entities/user.dart';
 import '../repositories/auth_repository.dart';
 import 'base_use_case.dart';
 
-/// Use case for password reset
-///
-/// This encapsulates all business logic related to password reset,
-/// including email validation and reset email sending.
-class ForgotPasswordUseCase extends UseCase<void, ForgotPasswordParams>
+class ForgotPasswordUseCase
+    extends UseCase<Either<Failure, void>, ForgotPasswordParams>
     with ParamsValidation {
   const ForgotPasswordUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
 
   @override
-  Future<void> call(ForgotPasswordParams params) async {
-    // 1. Validate parameters
-    _validateParams(params);
-
-    // 2. Attempt to send reset email
-    try {
-      await _authRepository.sendPasswordResetEmail(
-        email: params.email.toLowerCase().trim(),
-      );
-
-      // 3. Additional business logic (if needed)
-      // For example: log reset attempt, rate limiting, etc.
-    } catch (e) {
-      // 4. Handle and re-throw appropriate exceptions
-      if (e is AuthException) {
-        rethrow;
-      }
-      throw UnknownAuthException(e.toString());
-    }
-  }
-
-  /// Validates forgot password parameters
-  void _validateParams(ForgotPasswordParams params) {
+  Future<Either<Failure, void>> call(ForgotPasswordParams params) async {
     if (!isNotEmpty(params.email)) {
-      throw const InvalidParametersException('Email is required');
+      return const Left(ValidationFailure({'email': ['E-mail é obrigatório']}));
     }
-
     if (!isValidEmail(params.email)) {
-      throw const InvalidParametersException('Invalid email format');
+      return const Left(ValidationFailure({'email': ['E-mail inválido']}));
     }
+    return _authRepository.sendPasswordResetEmail(
+      email: params.email.toLowerCase().trim(),
+    );
   }
 }
 
-/// Parameters for forgot password use case
 class ForgotPasswordParams {
   const ForgotPasswordParams({required this.email});
 
@@ -69,40 +43,20 @@ class ForgotPasswordParams {
   int get hashCode => email.hashCode;
 }
 
-/// Use case for getting current authenticated user
-class GetCurrentUserUseCase extends UseCaseNoParams<User?> {
+class GetCurrentUserUseCase extends UseCaseNoParams<Either<Failure, User?>> {
   const GetCurrentUserUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
 
   @override
-  Future<User?> call() async {
-    try {
-      return await _authRepository.getCurrentUser();
-    } catch (e) {
-      if (e is AuthException) {
-        rethrow;
-      }
-      throw UnknownAuthException(e.toString());
-    }
-  }
+  Future<Either<Failure, User?>> call() => _authRepository.getCurrentUser();
 }
 
-/// Use case for signing out
-class SignOutUseCase extends UseCaseNoParams<void> {
+class SignOutUseCase extends UseCaseNoParams<Either<Failure, void>> {
   const SignOutUseCase(this._authRepository);
 
   final AuthRepository _authRepository;
 
   @override
-  Future<void> call() async {
-    try {
-      await _authRepository.signOut();
-    } catch (e) {
-      if (e is AuthException) {
-        rethrow;
-      }
-      throw UnknownAuthException(e.toString());
-    }
-  }
+  Future<Either<Failure, void>> call() => _authRepository.signOut();
 }

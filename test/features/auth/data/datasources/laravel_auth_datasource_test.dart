@@ -5,8 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:doglio/core/storage/secure_storage.dart';
 import 'package:doglio/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:doglio/features/auth/data/datasources/laravel_auth_datasource.dart';
-import 'package:doglio/features/auth/domain/repositories/auth_repository.dart'
-    hide InvalidCredentialsException;
+import 'package:doglio/features/auth/domain/repositories/auth_repository.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 

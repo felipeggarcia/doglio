@@ -5,7 +5,6 @@
 library;
 
 import '../models/user_model.dart';
-import '../../domain/repositories/auth_repository.dart';
 
 /// Remote datasource contract for authentication operations
 ///
@@ -55,17 +54,4 @@ abstract class AuthRemoteDatasource {
   Future<void> refreshToken();
 }
 
-/// Authentication exceptions (imported from domain)
-class UserNotFoundException extends AuthException {
-  const UserNotFoundException() : super('User not found', 'user-not-found');
-}
-
-class InvalidCredentialsException extends AuthException {
-  const InvalidCredentialsException()
-    : super('Invalid credentials', 'invalid-credentials');
-}
-
-class EmailAlreadyInUseException extends AuthException {
-  const EmailAlreadyInUseException()
-    : super('Email already in use', 'email-already-in-use');
-}
+// AuthException subclasses ficam em auth_repository.dart (domain layer)

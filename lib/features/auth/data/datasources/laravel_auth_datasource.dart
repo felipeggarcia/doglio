@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import '../../../../core/config/api_config.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../models/user_model.dart';
-import '../../domain/repositories/auth_repository.dart' as domain;
+import '../../domain/repositories/auth_repository.dart';
 import 'auth_remote_datasource.dart';
 
 /// Laravel API implementation of [AuthRemoteDatasource]
@@ -57,17 +57,17 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       } else if (response.statusCode == 401) {
         throw const InvalidCredentialsException();
       } else if (response.statusCode == 403) {
-        throw const domain.AccountInactiveException();
+        throw const AccountInactiveException();
       } else {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
-        throw domain.UnknownAuthException(
+        throw UnknownAuthException(
           body['message'] as String? ?? 'Login failed',
         );
       }
-    } on domain.AuthException {
+    } on AuthException {
       rethrow;
     } catch (e) {
-      throw domain.UnknownAuthException('Network error: $e');
+      throw UnknownAuthException('Network error: $e');
     }
   }
 
@@ -104,19 +104,19 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
             true) {
           throw const EmailAlreadyInUseException();
         }
-        throw domain.UnknownAuthException(
+        throw UnknownAuthException(
           body['message'] as String? ?? 'Validation failed',
         );
       } else {
         final body = jsonDecode(response.body) as Map<String, dynamic>;
-        throw domain.UnknownAuthException(
+        throw UnknownAuthException(
           body['message'] as String? ?? 'Registration failed',
         );
       }
-    } on domain.AuthException {
+    } on AuthException {
       rethrow;
     } catch (e) {
-      throw domain.UnknownAuthException('Network error: $e');
+      throw UnknownAuthException('Network error: $e');
     }
   }
 
@@ -134,13 +134,13 @@ class LaravelAuthDatasource implements AuthRemoteDatasource {
       if (response.statusCode == 200) return;
       if (response.statusCode == 404) throw const UserNotFoundException();
       final body = jsonDecode(response.body) as Map<String, dynamic>;
-      throw domain.UnknownAuthException(
+      throw UnknownAuthException(
         body['message'] as String? ?? 'Password reset failed',
       );
-    } on domain.AuthException {
+    } on AuthException {
       rethrow;
     } catch (e) {
-      throw domain.UnknownAuthException('Network error: $e');
+      throw UnknownAuthException('Network error: $e');
     }
   }
 
