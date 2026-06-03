@@ -1,26 +1,24 @@
-/// Registration page for Doglio Marketplace
-///
-/// This page handles new user account creation.
-/// Users can register as customers or select admin role if authorized.
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
-import '../../../../core/utils/validators.dart';
-import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/l10n_helper.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/config/router.dart';
+import '../providers/auth_notifier.dart';
 import '../widgets/auth_form.dart';
 import '../widgets/auth_logo_section.dart';
 
-class RegisterPage extends StatefulWidget {
+class RegisterPage extends ConsumerStatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  ConsumerState<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends ConsumerState<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -41,53 +39,69 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  void _showMessage(String message, {bool isError = false}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError ? AppColors.error : AppColors.success,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
   Future<void> _handleRegister() async {
     if (!_formKey.currentState!.validate()) return;
     if (!_acceptTerms) {
-      _showMessage('Please accept the terms and conditions', isError: true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.pleaseAcceptTerms),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
       return;
     }
 
     setState(() => _isLoading = true);
 
-    try {
-      // Simulate registration API call
-      await Future.delayed(const Duration(seconds: 2));
+    final result = await ref.read(authProvider.notifier).register(
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+          confirmPassword: _confirmPasswordController.text,
+          acceptTerms: _acceptTerms,
+        );
 
-      if (mounted) {
-        _showMessage('Account created successfully!');
-        // Navigate to login page
-        context.goToLogin();
-      }
-    } catch (e) {
-      if (mounted) {
-        _showMessage('Registration failed. Please try again.', isError: true);
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    result.fold(
+      (failure) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(failure.userMessage),
+          backgroundColor: Theme.of(context).colorScheme.error,
+          behavior: SnackBarBehavior.floating,
+        ),
+      ),
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Conta criada com sucesso!'),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        context.goToStoreHome();
+      },
+    );
   }
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return context.l10n.confirmPasswordRequired;
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return context.l10n.passwordsDoNotMatch;
     }
     return null;
+  }
+
+  AppBar _buildAppBar(ThemeData theme) {
+    return AppBar(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      iconTheme: IconThemeData(color: theme.colorScheme.primary),
+    );
   }
 
   @override
@@ -100,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: SafeArea(
         child: AuthLoadingOverlay(
           isLoading: _isLoading,
-          message: 'Creating your account...',
+          message: context.l10n.signingIn,
           child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -112,27 +126,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Logo Section
                       const AuthLogoSection(size: 180),
-
                       const SizedBox(height: 24),
-
-                      // Welcome Text
                       _buildWelcomeSection(theme),
-
                       const SizedBox(height: 32),
-
-                      // Registration Form
                       _buildRegistrationForm(theme),
-
                       const SizedBox(height: 24),
-
-                      // Social Registration
-                      _buildSocialSection(theme),
-
-                      const SizedBox(height: 24),
-
-                      // Login Link
                       _buildLoginSection(theme),
                     ],
                   ),
@@ -149,18 +148,16 @@ class _RegisterPageState extends State<RegisterPage> {
     return Column(
       children: [
         Text(
-          'Join Doglio',
+          context.l10n.joinDoglio,
           style: theme.textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: theme.colorScheme.onSurface,
           ),
           textAlign: TextAlign.center,
         ),
-
         const SizedBox(height: 8),
-
         Text(
-          'Create your account to start shopping',
+          context.l10n.registerSubtitle,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -177,104 +174,73 @@ class _RegisterPageState extends State<RegisterPage> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            // Full Name Field
-            _buildNameField(),
-
+            AuthFormField(
+              controller: _nameController,
+              label: context.l10n.fullName,
+              hint: context.l10n.fullNameHint,
+              prefixIcon: Icons.person_outline,
+              keyboardType: TextInputType.name,
+              validator: (value) => Validators.name(value, context),
+              enabled: !_isLoading,
+            ),
             const SizedBox(height: 20),
-
-            // Email Field
-            _buildEmailField(),
-
+            AuthFormField(
+              controller: _emailController,
+              label: context.l10n.email,
+              hint: context.l10n.emailHint,
+              prefixIcon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) => Validators.email(value, context),
+              enabled: !_isLoading,
+            ),
             const SizedBox(height: 20),
-
-            // Password Field
-            _buildPasswordField(),
-
+            AuthFormField(
+              controller: _passwordController,
+              label: context.l10n.password,
+              hint: context.l10n.createPassword,
+              prefixIcon: Icons.lock_outline,
+              obscureText: _obscurePassword,
+              suffixIcon: IconButton(
+                icon: Icon(_obscurePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
+              ),
+              validator: (value) => Validators.password(value, context),
+              enabled: !_isLoading,
+            ),
             const SizedBox(height: 20),
-
-            // Confirm Password Field
-            _buildConfirmPasswordField(),
-
+            AuthFormField(
+              controller: _confirmPasswordController,
+              label: context.l10n.confirmPassword,
+              hint: context.l10n.confirmPasswordHint,
+              prefixIcon: Icons.lock_outline,
+              obscureText: _obscureConfirmPassword,
+              suffixIcon: IconButton(
+                icon: Icon(_obscureConfirmPassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined),
+                onPressed: () => setState(
+                    () => _obscureConfirmPassword = !_obscureConfirmPassword),
+              ),
+              validator: _validateConfirmPassword,
+              enabled: !_isLoading,
+            ),
             const SizedBox(height: 20),
-
-            // Terms and Conditions
             _buildTermsSection(theme),
-
             const SizedBox(height: 24),
-
-            // Register Button
-            _buildRegisterButton(),
+            DoglioButton(
+              text: context.l10n.createAccount,
+              onPressed: _isLoading ? null : _handleRegister,
+              type: DoglioButtonType.primary,
+              size: DoglioButtonSize.large,
+              isLoading: _isLoading,
+              fullWidth: true,
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildNameField() {
-    return AuthFormField(
-      controller: _nameController,
-      label: context.l10n.fullName,
-      hint: context.l10n.fullNameHint,
-      prefixIcon: Icons.person_outline,
-      keyboardType: TextInputType.name,
-      validator: (value) => Validators.name(value, context),
-    );
-  }
-
-  Widget _buildEmailField() {
-    return AuthFormField(
-      controller: _emailController,
-      label: context.l10n.email,
-      hint: context.l10n.emailHint,
-      prefixIcon: Icons.email_outlined,
-      keyboardType: TextInputType.emailAddress,
-      validator: (value) => Validators.email(value, context),
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return AuthFormField(
-      controller: _passwordController,
-      label: context.l10n.password,
-      hint: context.l10n.createPassword,
-      prefixIcon: Icons.lock_outline,
-      obscureText: _obscurePassword,
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscurePassword
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscurePassword = !_obscurePassword;
-          });
-        },
-      ),
-      validator: (value) => Validators.password(value, context),
-    );
-  }
-
-  Widget _buildConfirmPasswordField() {
-    return AuthFormField(
-      controller: _confirmPasswordController,
-      label: 'Confirm Password',
-      hint: 'Confirm your password',
-      prefixIcon: Icons.lock_outline,
-      obscureText: _obscureConfirmPassword,
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscureConfirmPassword
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscureConfirmPassword = !_obscureConfirmPassword;
-          });
-        },
-      ),
-      validator: _validateConfirmPassword,
     );
   }
 
@@ -283,34 +249,26 @@ class _RegisterPageState extends State<RegisterPage> {
       children: [
         Checkbox(
           value: _acceptTerms,
-          onChanged: (value) {
-            setState(() {
-              _acceptTerms = value ?? false;
-            });
-          },
+          onChanged: (value) => setState(() => _acceptTerms = value ?? false),
         ),
         Expanded(
           child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _acceptTerms = !_acceptTerms;
-              });
-            },
+            onTap: () => setState(() => _acceptTerms = !_acceptTerms),
             child: Text.rich(
               TextSpan(
-                text: 'I agree to the ',
+                text: 'Aceito os ',
                 style: theme.textTheme.bodyMedium,
                 children: [
                   TextSpan(
-                    text: 'Terms of Service',
+                    text: context.l10n.termsOfService,
                     style: TextStyle(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const TextSpan(text: ' and '),
+                  const TextSpan(text: ' e '),
                   TextSpan(
-                    text: 'Privacy Policy',
+                    text: context.l10n.privacyPolicy,
                     style: TextStyle(
                       color: theme.colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -325,93 +283,30 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildRegisterButton() {
-    return DoglioButton(
-      text: 'Create Account',
-      onPressed: _isLoading ? null : _handleRegister,
-      type: DoglioButtonType.primary,
-      size: DoglioButtonSize.large,
-      isLoading: _isLoading,
-    );
-  }
-
-  Widget _buildSocialSection(ThemeData theme) {
-    return Column(
-      children: [
-        Text(
-          'Or register with',
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          textAlign: TextAlign.center,
-        ),
-
-        const SizedBox(height: 16),
-
-        // Social Login Buttons
-        _buildSocialButtons(),
-      ],
-    );
-  }
-
-  Widget _buildSocialButtons() {
-    return Column(
-      children: [
-        SocialLoginButton(
-          provider: SocialProvider.google,
-          onPressed: _isLoading
-              ? null
-              : () {
-                  _showMessage('Google registration coming soon!');
-                },
-          isLoading: false,
-        ),
-        const SizedBox(height: 8),
-        SocialLoginButton(
-          provider: SocialProvider.apple,
-          onPressed: _isLoading
-              ? null
-              : () {
-                  _showMessage('Apple registration coming soon!');
-                },
-          isLoading: false,
-        ),
-      ],
-    );
-  }
-
   Widget _buildLoginSection(ThemeData theme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Already have an account? ', style: theme.textTheme.bodyMedium),
-        GestureDetector(
-          onTap: () => context.goToLogin(),
+        Text(
+          context.l10n.alreadyHaveAccount,
+          style: theme.textTheme.bodyMedium,
+        ),
+        TextButton(
+          onPressed: _isLoading ? null : context.goToLogin,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           child: Text(
-            'Sign In',
-            style: theme.textTheme.bodyMedium?.copyWith(
+            context.l10n.signIn,
+            style: TextStyle(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,
             ),
           ),
         ),
       ],
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(ThemeData theme) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
-      title: Text(
-        'Create Account',
-        style: theme.textTheme.titleMedium?.copyWith(
-          color: theme.colorScheme.onSurface,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
     );
   }
 }

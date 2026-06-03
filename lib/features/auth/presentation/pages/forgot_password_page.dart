@@ -5,22 +5,25 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
-import '../../../../core/utils/validators.dart';
-import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/l10n_helper.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/config/router.dart';
+import '../providers/auth_notifier.dart';
 import '../widgets/auth_form.dart';
 import '../widgets/auth_logo_section.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
+class ForgotPasswordPage extends ConsumerStatefulWidget {
   const ForgotPasswordPage({super.key});
 
   @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
+  ConsumerState<ForgotPasswordPage> createState() =>
+      _ForgotPasswordPageState();
 }
 
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
 
@@ -37,7 +40,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? AppColors.error : AppColors.success,
+        backgroundColor: isError ? Theme.of(context).colorScheme.error : AppColors.success,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -48,42 +51,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     setState(() => _isLoading = true);
 
-    try {
-      // Simulate password reset API call
-      await Future.delayed(const Duration(seconds: 2));
+    final result = await ref
+        .read(authProvider.notifier)
+        .forgotPassword(email: _emailController.text.trim());
 
-      if (mounted) {
-        setState(() {
-          _emailSent = true;
-          _isLoading = false;
-        });
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    result.fold(
+      (failure) => _showMessage(failure.userMessage, isError: true),
+      (_) {
+        setState(() => _emailSent = true);
         _showMessage(context.l10n.passwordResetEmailSent);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        _showMessage(context.l10n.passwordResetFailed, isError: true);
-      }
-    }
+      },
+    );
   }
 
   Future<void> _handleResendEmail() async {
     setState(() => _isLoading = true);
 
-    try {
-      // Simulate resend email API call
-      await Future.delayed(const Duration(seconds: 1));
+    final result = await ref
+        .read(authProvider.notifier)
+        .forgotPassword(email: _emailController.text.trim());
 
-      if (mounted) {
-        setState(() => _isLoading = false);
-        _showMessage(context.l10n.emailResent);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isLoading = false);
-        _showMessage(context.l10n.emailResendFailed, isError: true);
-      }
-    }
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    result.fold(
+      (failure) => _showMessage(failure.userMessage, isError: true),
+      (_) => _showMessage(context.l10n.emailResent),
+    );
   }
 
   @override

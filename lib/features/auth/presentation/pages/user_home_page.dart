@@ -1,20 +1,17 @@
-/// Home page for authenticated users
-///
-/// This page displays after successful authentication and provides
-/// the main navigation and user options for the marketplace.
 library;
 
 import 'package:flutter/material.dart';
-import '../providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/auth_notifier.dart';
 import '../../../../core/config/router.dart';
 
-class UserHomePage extends StatelessWidget {
+class UserHomePage extends ConsumerWidget {
   const UserHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final authProvider = AuthProvider.instance;
-    final user = authProvider.currentUser;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider).valueOrNull;
+    final user = authState is Authenticated ? authState.user : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +20,7 @@ class UserHomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
-            onPressed: () => _handleLogout(context),
+            onPressed: () => _handleLogout(context, ref),
           ),
         ],
       ),
@@ -33,7 +30,6 @@ class UserHomePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Welcome section
               const Icon(Icons.pets, size: 80, color: Colors.orange),
               const SizedBox(height: 24),
               Text(
@@ -44,13 +40,11 @@ class UserHomePage extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 user?.email ?? '',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: Colors.grey[600]),
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.grey[600],
+                    ),
               ),
               const SizedBox(height: 48),
-
-              // User info card
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -86,12 +80,10 @@ class UserHomePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-
-              // Action buttons
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () => _handleLogout(context),
+                  onPressed: () => _handleLogout(context, ref),
                   icon: const Icon(Icons.logout),
                   label: const Text('Sign Out'),
                   style: ElevatedButton.styleFrom(
@@ -108,22 +100,19 @@ class UserHomePage extends StatelessWidget {
     );
   }
 
-  void _handleLogout(BuildContext context) async {
-    final authProvider = AuthProvider.instance;
-
-    // Show confirmation dialog
+  void _handleLogout(BuildContext context, WidgetRef ref) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (ctx) => AlertDialog(
         title: const Text('Confirm Logout'),
         content: const Text('Are you sure you want to sign out?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () => Navigator.pop(ctx, false),
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Sign Out'),
           ),
         ],
@@ -131,11 +120,8 @@ class UserHomePage extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      await authProvider.signOut();
-
-      if (context.mounted) {
-        context.goToLogin();
-      }
+      await ref.read(authProvider.notifier).signOut();
+      if (context.mounted) context.goToLogin();
     }
   }
 }

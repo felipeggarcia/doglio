@@ -1,85 +1,69 @@
-/// Login page for Doglio Marketplace
-///
-/// This page handles authentication for both customers and admins.
-/// The system automatically determines user type based on role in database.
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
-import '../../../../core/utils/validators.dart';
-import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/l10n_helper.dart';
+import '../../../../core/utils/validators.dart';
 import '../../../../core/config/router.dart';
+import '../providers/auth_notifier.dart';
 import '../widgets/auth_form.dart';
 import '../widgets/auth_logo_section.dart';
-import '../controllers/auth_controller.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authController = AuthController();
   bool _obscurePassword = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _authController.addListener(_onAuthStateChanged);
-  }
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    _authController.removeListener(_onAuthStateChanged);
-    _authController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  void _onAuthStateChanged() {
-    if (_authController.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(_authController.error!),
-          backgroundColor: AppColors.error,
-        ),
-      );
-    }
-  }
-
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final success = await _authController.login(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
+    setState(() => _isLoading = true);
 
-    if (success && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
+    final result = await ref.read(authProvider.notifier).login(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+
+    if (!mounted) return;
+    setState(() => _isLoading = false);
+
+    result.fold(
+      (failure) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.l10n.loginSuccess),
-          backgroundColor: AppColors.success,
+          content: Text(failure.userMessage),
+          backgroundColor: Theme.of(context).colorScheme.error,
           behavior: SnackBarBehavior.floating,
         ),
-      );
-      context.goToStoreHome();
-    }
-  }
-
-  void _navigateToRegister() {
-    context.goToRegister();
-  }
-
-  void _handleForgotPassword() {
-    context.pushForgotPassword();
+      ),
+      (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.loginSuccess),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        context.goToStoreHome();
+      },
+    );
   }
 
   @override
@@ -105,32 +89,16 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Logo Section
                     const AuthLogoSection(size: 250, showAppName: true),
-
                     const SizedBox(height: 24),
-
-                    // Welcome Text
                     _buildWelcomeSection(theme),
-
                     const SizedBox(height: 32),
-
-                    // Login Form
                     _buildLoginForm(theme),
-
                     const SizedBox(height: 24),
-
-                    // Login Button
                     _buildLoginButton(),
-
                     const SizedBox(height: 16),
-
-                    // Forgot Password
                     _buildForgotPasswordButton(theme),
-
                     const SizedBox(height: 32),
-
-                    // Register Link
                     _buildRegisterSection(theme),
                   ],
                 ),
@@ -152,9 +120,7 @@ class _LoginPageState extends State<LoginPage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-
         const SizedBox(height: 8),
-
         Text(
           context.l10n.loginSubtitle,
           style: theme.textTheme.bodyMedium?.copyWith(
@@ -168,7 +134,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginForm(ThemeData theme) {
     return Column(
       children: [
-        // Email Field
         AuthFormField(
           controller: _emailController,
           label: context.l10n.email,
@@ -176,12 +141,9 @@ class _LoginPageState extends State<LoginPage> {
           keyboardType: TextInputType.emailAddress,
           prefixIcon: Icons.email_outlined,
           validator: (value) => Validators.email(value, context),
-          enabled: !_authController.isLoading,
+          enabled: !_isLoading,
         ),
-
         const SizedBox(height: 16),
-
-        // Password Field
         AuthFormField(
           controller: _passwordController,
           label: context.l10n.password,
@@ -194,12 +156,11 @@ class _LoginPageState extends State<LoginPage> {
                   ? Icons.visibility_outlined
                   : Icons.visibility_off_outlined,
             ),
-            onPressed: () {
-              setState(() => _obscurePassword = !_obscurePassword);
-            },
+            onPressed: () =>
+                setState(() => _obscurePassword = !_obscurePassword),
           ),
           validator: (value) => Validators.required(value, context),
-          enabled: !_authController.isLoading,
+          enabled: !_isLoading,
         ),
       ],
     );
@@ -207,20 +168,18 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _buildLoginButton() {
     return DoglioButton(
-      text: _authController.isLoading
-          ? context.l10n.signingIn
-          : context.l10n.signIn,
-      onPressed: _authController.isLoading ? null : _handleLogin,
+      text: _isLoading ? context.l10n.signingIn : context.l10n.signIn,
+      onPressed: _isLoading ? null : _handleLogin,
       type: DoglioButtonType.primary,
       size: DoglioButtonSize.large,
-      isLoading: _authController.isLoading,
+      isLoading: _isLoading,
       fullWidth: true,
     );
   }
 
   Widget _buildForgotPasswordButton(ThemeData theme) {
     return TextButton(
-      onPressed: _authController.isLoading ? null : _handleForgotPassword,
+      onPressed: _isLoading ? null : context.pushForgotPassword,
       child: Text(
         context.l10n.forgotPassword,
         style: TextStyle(
@@ -242,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         TextButton(
-          onPressed: _authController.isLoading ? null : _navigateToRegister,
+          onPressed: _isLoading ? null : context.goToRegister,
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             minimumSize: Size.zero,

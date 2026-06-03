@@ -1,28 +1,27 @@
-/// App navigation drawer shown when the user is authenticated
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
-import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../auth/presentation/providers/auth_notifier.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final auth = AuthProvider.instance;
-    final user = auth.currentUser;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider).valueOrNull;
+    final user = authState is Authenticated ? authState.user : null;
     final firstName =
         (user?.name.isNotEmpty == true) ? user!.name.split(' ').first : '';
 
     return Drawer(
       child: Column(
         children: [
-          // Header
           DrawerHeader(
-            decoration: const BoxDecoration(color: AppColors.primary),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Column(
@@ -52,7 +51,6 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
 
-          // Menu items
           ListTile(
             leading: const Icon(Icons.receipt_long_outlined),
             title: Text(context.l10n.myOrders),
@@ -88,7 +86,7 @@ class AppDrawer extends StatelessWidget {
             ),
             onTap: () async {
               Navigator.pop(context);
-              await auth.signOut();
+              await ref.read(authProvider.notifier).signOut();
             },
           ),
 
