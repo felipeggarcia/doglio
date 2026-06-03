@@ -1,11 +1,7 @@
 /// Custom button widget for Doglio Marketplace
-///
-/// This file provides a reusable button component that follows
-/// the design system and supports various button styles.
 library;
 
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
 import '../../theme/app_fonts.dart';
 
 enum DoglioButtonType { primary, secondary, outline, text }
@@ -36,8 +32,7 @@ class DoglioButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return SizedBox(
       width: fullWidth ? double.infinity : null,
@@ -46,45 +41,40 @@ class DoglioButton extends StatelessWidget {
   }
 
   Widget _buildButton(ColorScheme colorScheme) {
-    final buttonStyle = _getButtonStyle(colorScheme);
-    final child = _buildButtonChild();
-
-    switch (type) {
-      case DoglioButtonType.primary:
-        return ElevatedButton(
+    return switch (type) {
+      DoglioButtonType.primary => ElevatedButton(
           onPressed: _getOnPressed(),
-          style: buttonStyle,
-          child: child,
-        );
-      case DoglioButtonType.secondary:
-        return FilledButton(
+          style: _getButtonStyle(colorScheme),
+          child: _buildButtonChild(colorScheme),
+        ),
+      DoglioButtonType.secondary => FilledButton(
           onPressed: _getOnPressed(),
-          style: buttonStyle,
-          child: child,
-        );
-      case DoglioButtonType.outline:
-        return OutlinedButton(
+          style: _getButtonStyle(colorScheme),
+          child: _buildButtonChild(colorScheme),
+        ),
+      DoglioButtonType.outline => OutlinedButton(
           onPressed: _getOnPressed(),
-          style: buttonStyle,
-          child: child,
-        );
-      case DoglioButtonType.text:
-        return TextButton(
+          style: _getButtonStyle(colorScheme),
+          child: _buildButtonChild(colorScheme),
+        ),
+      DoglioButtonType.text => TextButton(
           onPressed: _getOnPressed(),
-          style: buttonStyle,
-          child: child,
-        );
-    }
+          style: _getButtonStyle(colorScheme),
+          child: _buildButtonChild(colorScheme),
+        ),
+    };
   }
 
-  Widget _buildButtonChild() {
+  Widget _buildButtonChild(ColorScheme colorScheme) {
     if (isLoading) {
       return SizedBox(
         height: _getIconSize(),
         width: _getIconSize(),
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(_getLoadingColor()),
+          valueColor: AlwaysStoppedAnimation<Color>(
+            _getLoadingColor(colorScheme),
+          ),
         ),
       );
     }
@@ -106,102 +96,71 @@ class DoglioButton extends StatelessWidget {
   ButtonStyle _getButtonStyle(ColorScheme colorScheme) {
     final padding = _getPadding();
     final textStyle = _getTextStyle();
+    // disabled states use Material's surface/outline tones
+    final disabledBg = colorScheme.onSurface.withValues(alpha: 0.12);
+    final disabledFg = colorScheme.onSurface.withValues(alpha: 0.38);
 
-    switch (type) {
-      case DoglioButtonType.primary:
-        return ElevatedButton.styleFrom(
-          backgroundColor: isDisabled ? AppColors.grey300 : AppColors.primary,
-          foregroundColor: isDisabled ? AppColors.grey600 : AppColors.onPrimary,
+    return switch (type) {
+      DoglioButtonType.primary => ElevatedButton.styleFrom(
+          backgroundColor: isDisabled ? disabledBg : colorScheme.primary,
+          foregroundColor: isDisabled ? disabledFg : colorScheme.onPrimary,
           padding: padding,
           textStyle: textStyle,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           elevation: isDisabled ? 0 : 2,
-        );
-      case DoglioButtonType.secondary:
-        return FilledButton.styleFrom(
-          backgroundColor: isDisabled ? AppColors.grey300 : AppColors.secondary,
-          foregroundColor: isDisabled
-              ? AppColors.grey600
-              : AppColors.onSecondary,
+        ),
+      DoglioButtonType.secondary => FilledButton.styleFrom(
+          backgroundColor: isDisabled ? disabledBg : colorScheme.secondary,
+          foregroundColor: isDisabled ? disabledFg : colorScheme.onSecondary,
           padding: padding,
           textStyle: textStyle,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        );
-      case DoglioButtonType.outline:
-        return OutlinedButton.styleFrom(
-          foregroundColor: isDisabled ? AppColors.grey600 : AppColors.primary,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      DoglioButtonType.outline => OutlinedButton.styleFrom(
+          foregroundColor: isDisabled ? disabledFg : colorScheme.primary,
           side: BorderSide(
-            color: isDisabled ? AppColors.grey300 : AppColors.primary,
+            color: isDisabled ? disabledBg : colorScheme.primary,
             width: 1,
           ),
           padding: padding,
           textStyle: textStyle,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        );
-      case DoglioButtonType.text:
-        return TextButton.styleFrom(
-          foregroundColor: isDisabled ? AppColors.grey600 : AppColors.primary,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      DoglioButtonType.text => TextButton.styleFrom(
+          foregroundColor: isDisabled ? disabledFg : colorScheme.primary,
           padding: padding,
           textStyle: textStyle,
-        );
-    }
+        ),
+    };
   }
 
-  EdgeInsets _getPadding() {
-    switch (size) {
-      case DoglioButtonSize.small:
-        return const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-      case DoglioButtonSize.medium:
-        return const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
-      case DoglioButtonSize.large:
-        return const EdgeInsets.symmetric(horizontal: 32, vertical: 16);
-    }
-  }
+  Color _getLoadingColor(ColorScheme colorScheme) => switch (type) {
+        DoglioButtonType.primary => colorScheme.onPrimary,
+        DoglioButtonType.secondary => colorScheme.onSecondary,
+        DoglioButtonType.outline || DoglioButtonType.text => colorScheme.primary,
+      };
 
-  TextStyle _getTextStyle() {
-    switch (size) {
-      case DoglioButtonSize.small:
-        return AppTextStyles.labelMedium;
-      case DoglioButtonSize.medium:
-        return AppTextStyles.labelLarge;
-      case DoglioButtonSize.large:
-        return AppTextStyles.titleSmall;
-    }
-  }
+  EdgeInsets _getPadding() => switch (size) {
+        DoglioButtonSize.small =>
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        DoglioButtonSize.medium =>
+          const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+        DoglioButtonSize.large =>
+          const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      };
 
-  double _getIconSize() {
-    switch (size) {
-      case DoglioButtonSize.small:
-        return 16;
-      case DoglioButtonSize.medium:
-        return 20;
-      case DoglioButtonSize.large:
-        return 24;
-    }
-  }
+  TextStyle _getTextStyle() => switch (size) {
+        DoglioButtonSize.small => AppTextStyles.labelMedium,
+        DoglioButtonSize.medium => AppTextStyles.labelLarge,
+        DoglioButtonSize.large => AppTextStyles.titleSmall,
+      };
 
-  Color _getLoadingColor() {
-    switch (type) {
-      case DoglioButtonType.primary:
-        return AppColors.onPrimary;
-      case DoglioButtonType.secondary:
-        return AppColors.onSecondary;
-      case DoglioButtonType.outline:
-      case DoglioButtonType.text:
-        return AppColors.primary;
-    }
-  }
+  double _getIconSize() => switch (size) {
+        DoglioButtonSize.small => 16,
+        DoglioButtonSize.medium => 20,
+        DoglioButtonSize.large => 24,
+      };
 
-  VoidCallback? _getOnPressed() {
-    if (isDisabled || isLoading) {
-      return null;
-    }
-    return onPressed;
-  }
+  VoidCallback? _getOnPressed() =>
+      (isDisabled || isLoading) ? null : onPressed;
 }

@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/config/router.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../domain/entities/product.dart';
 
@@ -50,7 +49,7 @@ class ProductCard extends StatelessWidget {
                               placeholder: (_, _) => Center(
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: AppColors.primary,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                               errorWidget: (_, _, _) => Center(
@@ -160,7 +159,7 @@ class ProductCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   if (product.averageRating != null) ...[

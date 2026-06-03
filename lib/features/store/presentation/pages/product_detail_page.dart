@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/config/api_config.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../../favorites/presentation/providers/favorites_provider.dart';
 import '../../domain/entities/product.dart';
@@ -53,7 +52,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           SliverAppBar(
             floating: true,
             snap: true,
-            backgroundColor: AppColors.primary,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             elevation: 0,
             iconTheme: const IconThemeData(color: Colors.white),
             leading: IconButton(
@@ -145,7 +144,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               placeholder: (_, _) => Container(
                 color: Colors.grey[200],
                 child: Center(
-                  child: CircularProgressIndicator(color: AppColors.primary),
+                  child: CircularProgressIndicator(color: Theme.of(context).colorScheme.primary),
                 ),
               ),
               errorWidget: (_, _, _) => Container(
@@ -184,7 +183,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: _currentImageIndex == index
-                          ? AppColors.primary
+                          ? Theme.of(context).colorScheme.primary
                           : Colors.grey[400],
                     ),
                   ),
@@ -296,7 +295,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   'R\$ ${widget.product.displayPrice}',
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               const Spacer(),
@@ -307,17 +306,17 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.star, size: 16, color: AppColors.primary),
+                      Icon(Icons.star, size: 16, color: Theme.of(context).colorScheme.primary),
                       const SizedBox(width: 4),
                       Text(
                         context.l10n.featured,
                         style: TextStyle(
-                          color: AppColors.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w600,
                           fontSize: 12,
                         ),
@@ -352,9 +351,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             children: widget.product.categories.map((category) {
               return Chip(
                 label: Text(category.name),
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                 labelStyle: TextStyle(
-                  color: AppColors.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.w500,
                 ),
                 side: BorderSide.none,
@@ -421,7 +420,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                 }
               : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary,
+            backgroundColor: Theme.of(context).colorScheme.primary,
             disabledBackgroundColor: Colors.grey[300],
             foregroundColor: Colors.white,
             disabledForegroundColor: Colors.grey[600],
