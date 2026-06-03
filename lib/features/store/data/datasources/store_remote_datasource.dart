@@ -54,26 +54,21 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         '${ApiConfig.baseUrl}/products',
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
-      print('[StoreRemoteDatasource] Fetching products from: $uri');
       final response = await _httpClient
           .get(uri, headers: _getHeaders())
           .timeout(const Duration(seconds: 10));
-      print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final products = (data['data'] as List)
+        return (data['data'] as List)
             .map((json) => ProductModel.fromJson(json))
             .toList();
-        print('[StoreRemoteDatasource] Products parsed: ${products.length}');
-        return products;
       } else {
         throw Exception(
           'Failed to load products: ${response.statusCode} - ${response.body}',
         );
       }
     } catch (e) {
-      print('[StoreRemoteDatasource] Error loading products: $e');
       throw Exception('Error loading products: $e');
     }
   }
@@ -94,28 +89,21 @@ class StoreRemoteDatasourceImpl implements StoreRemoteDatasource {
         '${ApiConfig.baseUrl}/categories',
       ).replace(queryParameters: queryParams.isEmpty ? null : queryParams);
 
-      print('[StoreRemoteDatasource] Fetching categories from: $uri');
       final response = await _httpClient
           .get(uri, headers: _getHeaders())
           .timeout(const Duration(seconds: 10));
-      print('[StoreRemoteDatasource] Response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final categories = (data['data'] as List)
+        return (data['data'] as List)
             .map((json) => CategoryModel.fromJson(json))
             .toList();
-        print(
-          '[StoreRemoteDatasource] Categories parsed: ${categories.length}',
-        );
-        return categories;
       } else {
         throw Exception(
           'Failed to load categories: ${response.statusCode} - ${response.body}',
         );
       }
     } catch (e) {
-      print('[StoreRemoteDatasource] Error loading categories: $e');
       throw Exception('Error loading categories: $e');
     }
   }
