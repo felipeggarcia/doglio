@@ -10,7 +10,7 @@ _FavoriteModel _$FavoriteModelFromJson(Map<String, dynamic> json) =>
     _FavoriteModel(
       id: json['id'] as String,
       product: ProductModel.fromJson(json['product'] as Map<String, dynamic>),
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: _dateTimeFromJson(json['created_at']),
       notifyOnRestock: json['notify_on_restock'] as bool? ?? false,
     );
 

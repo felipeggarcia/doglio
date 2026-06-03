@@ -7,6 +7,9 @@ import '../../../store/data/models/product_model.dart';
 part 'favorite_model.freezed.dart';
 part 'favorite_model.g.dart';
 
+DateTime _dateTimeFromJson(dynamic value) =>
+    value != null ? DateTime.parse(value.toString()) : DateTime(2000);
+
 @freezed
 abstract class FavoriteModel with _$FavoriteModel {
   const FavoriteModel._();
@@ -14,7 +17,7 @@ abstract class FavoriteModel with _$FavoriteModel {
   const factory FavoriteModel({
     required String id,
     required ProductModel product,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) required DateTime createdAt,
     @JsonKey(name: 'notify_on_restock', defaultValue: false)
     required bool notifyOnRestock,
   }) = _FavoriteModel;

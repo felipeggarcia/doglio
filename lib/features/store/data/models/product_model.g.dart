@@ -9,7 +9,7 @@ part of 'product_model.dart';
 _ProductImageModel _$ProductImageModelFromJson(Map<String, dynamic> json) =>
     _ProductImageModel(
       id: json['id'] as String,
-      imagePath: _imagePathFromJson(json['imagePath']),
+      imagePath: json['imagePath'] as String,
       order: (json['order'] as num?)?.toInt() ?? 0,
       isPrimary: json['is_primary'] as bool? ?? false,
     );
@@ -63,10 +63,10 @@ _ProductModel _$ProductModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      price: json['price'] as String,
-      originalPrice: json['original_price'] as String?,
-      effectivePrice: json['effective_price'] as String?,
-      discountAmount: json['discount_amount'] as String?,
+      price: _priceFromJson(json['price']),
+      originalPrice: _nullablePriceFromJson(json['original_price']),
+      effectivePrice: _nullablePriceFromJson(json['effective_price']),
+      discountAmount: _nullablePriceFromJson(json['discount_amount']),
       inStock: json['in_stock'] as bool? ?? false,
       isHighlighted: json['is_highlighted'] as bool? ?? false,
       isActive: json['is_active'] as bool? ?? true,
@@ -92,8 +92,8 @@ _ProductModel _$ProductModelFromJson(Map<String, dynamic> json) =>
           [],
       averageRating: (json['average_rating'] as num?)?.toDouble(),
       reviewsCount: (json['reviews_count'] as num?)?.toInt() ?? 0,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: _dateTimeFromJson(json['created_at']),
+      updatedAt: _dateTimeFromJson(json['updated_at']),
     );
 
 Map<String, dynamic> _$ProductModelToJson(_ProductModel instance) =>

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProductImageModel {
 
- String get id;@JsonKey(fromJson: _imagePathFromJson) String get imagePath;@JsonKey(defaultValue: 0) int get order;@JsonKey(name: 'is_primary', defaultValue: false) bool get isPrimary;
+ String get id; String get imagePath;@JsonKey(defaultValue: 0) int get order;@JsonKey(name: 'is_primary', defaultValue: false) bool get isPrimary;
 /// Create a copy of ProductImageModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ProductImageModelCopyWith<$Res>  {
   factory $ProductImageModelCopyWith(ProductImageModel value, $Res Function(ProductImageModel) _then) = _$ProductImageModelCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(fromJson: _imagePathFromJson) String imagePath,@JsonKey(defaultValue: 0) int order,@JsonKey(name: 'is_primary', defaultValue: false) bool isPrimary
+ String id, String imagePath,@JsonKey(defaultValue: 0) int order,@JsonKey(name: 'is_primary', defaultValue: false) bool isPrimary
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(fromJson: _imagePathFromJson)  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductImageModel() when $default != null:
 return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(fromJson: _imagePathFromJson)  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)  $default,) {final _that = this;
 switch (_that) {
 case _ProductImageModel():
 return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(fromJson: _imagePathFromJson)  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String imagePath, @JsonKey(defaultValue: 0)  int order, @JsonKey(name: 'is_primary', defaultValue: false)  bool isPrimary)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductImageModel() when $default != null:
 return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
@@ -212,11 +212,11 @@ return $default(_that.id,_that.imagePath,_that.order,_that.isPrimary);case _:
 @JsonSerializable()
 
 class _ProductImageModel extends ProductImageModel {
-  const _ProductImageModel({required this.id, @JsonKey(fromJson: _imagePathFromJson) required this.imagePath, @JsonKey(defaultValue: 0) required this.order, @JsonKey(name: 'is_primary', defaultValue: false) required this.isPrimary}): super._();
+  const _ProductImageModel({required this.id, required this.imagePath, @JsonKey(defaultValue: 0) required this.order, @JsonKey(name: 'is_primary', defaultValue: false) required this.isPrimary}): super._();
   factory _ProductImageModel.fromJson(Map<String, dynamic> json) => _$ProductImageModelFromJson(json);
 
 @override final  String id;
-@override@JsonKey(fromJson: _imagePathFromJson) final  String imagePath;
+@override final  String imagePath;
 @override@JsonKey(defaultValue: 0) final  int order;
 @override@JsonKey(name: 'is_primary', defaultValue: false) final  bool isPrimary;
 
@@ -253,7 +253,7 @@ abstract mixin class _$ProductImageModelCopyWith<$Res> implements $ProductImageM
   factory _$ProductImageModelCopyWith(_ProductImageModel value, $Res Function(_ProductImageModel) _then) = __$ProductImageModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(fromJson: _imagePathFromJson) String imagePath,@JsonKey(defaultValue: 0) int order,@JsonKey(name: 'is_primary', defaultValue: false) bool isPrimary
+ String id, String imagePath,@JsonKey(defaultValue: 0) int order,@JsonKey(name: 'is_primary', defaultValue: false) bool isPrimary
 });
 
 
@@ -837,7 +837,7 @@ as int?,
 /// @nodoc
 mixin _$ProductModel {
 
- String get id;@JsonKey(defaultValue: '') String get name;@JsonKey(defaultValue: '') String get description; String get price;@JsonKey(name: 'original_price') String? get originalPrice;@JsonKey(name: 'effective_price') String? get effectivePrice;@JsonKey(name: 'discount_amount') String? get discountAmount;@JsonKey(name: 'in_stock', defaultValue: false) bool get inStock;@JsonKey(name: 'is_highlighted', defaultValue: false) bool get isHighlighted;@JsonKey(name: 'is_active', defaultValue: true) bool get isActive; PromotionModel? get promotion;@JsonKey(name: 'primary_image') ProductImageModel? get primaryImage;@JsonKey(defaultValue: []) List<ProductImageModel> get images;@JsonKey(defaultValue: []) List<CategoryModel> get categories;@JsonKey(name: 'average_rating') double? get averageRating;@JsonKey(name: 'reviews_count', defaultValue: 0) int get reviewsCount;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id;@JsonKey(defaultValue: '') String get name;@JsonKey(defaultValue: '') String get description;@JsonKey(fromJson: _priceFromJson) String get price;@JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) String? get originalPrice;@JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) String? get effectivePrice;@JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) String? get discountAmount;@JsonKey(name: 'in_stock', defaultValue: false) bool get inStock;@JsonKey(name: 'is_highlighted', defaultValue: false) bool get isHighlighted;@JsonKey(name: 'is_active', defaultValue: true) bool get isActive; PromotionModel? get promotion;@JsonKey(name: 'primary_image') ProductImageModel? get primaryImage;@JsonKey(defaultValue: []) List<ProductImageModel> get images;@JsonKey(defaultValue: []) List<CategoryModel> get categories;@JsonKey(name: 'average_rating') double? get averageRating;@JsonKey(name: 'reviews_count', defaultValue: 0) int get reviewsCount;@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime get createdAt;@JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) DateTime get updatedAt;
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -870,7 +870,7 @@ abstract mixin class $ProductModelCopyWith<$Res>  {
   factory $ProductModelCopyWith(ProductModel value, $Res Function(ProductModel) _then) = _$ProductModelCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description, String price,@JsonKey(name: 'original_price') String? originalPrice,@JsonKey(name: 'effective_price') String? effectivePrice,@JsonKey(name: 'discount_amount') String? discountAmount,@JsonKey(name: 'in_stock', defaultValue: false) bool inStock,@JsonKey(name: 'is_highlighted', defaultValue: false) bool isHighlighted,@JsonKey(name: 'is_active', defaultValue: true) bool isActive, PromotionModel? promotion,@JsonKey(name: 'primary_image') ProductImageModel? primaryImage,@JsonKey(defaultValue: []) List<ProductImageModel> images,@JsonKey(defaultValue: []) List<CategoryModel> categories,@JsonKey(name: 'average_rating') double? averageRating,@JsonKey(name: 'reviews_count', defaultValue: 0) int reviewsCount,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description,@JsonKey(fromJson: _priceFromJson) String price,@JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) String? originalPrice,@JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) String? effectivePrice,@JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) String? discountAmount,@JsonKey(name: 'in_stock', defaultValue: false) bool inStock,@JsonKey(name: 'is_highlighted', defaultValue: false) bool isHighlighted,@JsonKey(name: 'is_active', defaultValue: true) bool isActive, PromotionModel? promotion,@JsonKey(name: 'primary_image') ProductImageModel? primaryImage,@JsonKey(defaultValue: []) List<ProductImageModel> images,@JsonKey(defaultValue: []) List<CategoryModel> categories,@JsonKey(name: 'average_rating') double? averageRating,@JsonKey(name: 'reviews_count', defaultValue: 0) int reviewsCount,@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime createdAt,@JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) DateTime updatedAt
 });
 
 
@@ -1016,7 +1016,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description,  String price, @JsonKey(name: 'original_price')  String? originalPrice, @JsonKey(name: 'effective_price')  String? effectivePrice, @JsonKey(name: 'discount_amount')  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(fromJson: _priceFromJson)  String price, @JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson)  String? originalPrice, @JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson)  String? effectivePrice, @JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson)  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson)  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
 return $default(_that.id,_that.name,_that.description,_that.price,_that.originalPrice,_that.effectivePrice,_that.discountAmount,_that.inStock,_that.isHighlighted,_that.isActive,_that.promotion,_that.primaryImage,_that.images,_that.categories,_that.averageRating,_that.reviewsCount,_that.createdAt,_that.updatedAt);case _:
@@ -1037,7 +1037,7 @@ return $default(_that.id,_that.name,_that.description,_that.price,_that.original
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description,  String price, @JsonKey(name: 'original_price')  String? originalPrice, @JsonKey(name: 'effective_price')  String? effectivePrice, @JsonKey(name: 'discount_amount')  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(fromJson: _priceFromJson)  String price, @JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson)  String? originalPrice, @JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson)  String? effectivePrice, @JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson)  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson)  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel():
 return $default(_that.id,_that.name,_that.description,_that.price,_that.originalPrice,_that.effectivePrice,_that.discountAmount,_that.inStock,_that.isHighlighted,_that.isActive,_that.promotion,_that.primaryImage,_that.images,_that.categories,_that.averageRating,_that.reviewsCount,_that.createdAt,_that.updatedAt);case _:
@@ -1057,7 +1057,7 @@ return $default(_that.id,_that.name,_that.description,_that.price,_that.original
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description,  String price, @JsonKey(name: 'original_price')  String? originalPrice, @JsonKey(name: 'effective_price')  String? effectivePrice, @JsonKey(name: 'discount_amount')  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(defaultValue: '')  String name, @JsonKey(defaultValue: '')  String description, @JsonKey(fromJson: _priceFromJson)  String price, @JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson)  String? originalPrice, @JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson)  String? effectivePrice, @JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson)  String? discountAmount, @JsonKey(name: 'in_stock', defaultValue: false)  bool inStock, @JsonKey(name: 'is_highlighted', defaultValue: false)  bool isHighlighted, @JsonKey(name: 'is_active', defaultValue: true)  bool isActive,  PromotionModel? promotion, @JsonKey(name: 'primary_image')  ProductImageModel? primaryImage, @JsonKey(defaultValue: [])  List<ProductImageModel> images, @JsonKey(defaultValue: [])  List<CategoryModel> categories, @JsonKey(name: 'average_rating')  double? averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0)  int reviewsCount, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson)  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ProductModel() when $default != null:
 return $default(_that.id,_that.name,_that.description,_that.price,_that.originalPrice,_that.effectivePrice,_that.discountAmount,_that.inStock,_that.isHighlighted,_that.isActive,_that.promotion,_that.primaryImage,_that.images,_that.categories,_that.averageRating,_that.reviewsCount,_that.createdAt,_that.updatedAt);case _:
@@ -1072,16 +1072,16 @@ return $default(_that.id,_that.name,_that.description,_that.price,_that.original
 @JsonSerializable()
 
 class _ProductModel extends ProductModel {
-  const _ProductModel({required this.id, @JsonKey(defaultValue: '') required this.name, @JsonKey(defaultValue: '') required this.description, required this.price, @JsonKey(name: 'original_price') this.originalPrice, @JsonKey(name: 'effective_price') this.effectivePrice, @JsonKey(name: 'discount_amount') this.discountAmount, @JsonKey(name: 'in_stock', defaultValue: false) required this.inStock, @JsonKey(name: 'is_highlighted', defaultValue: false) required this.isHighlighted, @JsonKey(name: 'is_active', defaultValue: true) required this.isActive, this.promotion, @JsonKey(name: 'primary_image') this.primaryImage, @JsonKey(defaultValue: []) required final  List<ProductImageModel> images, @JsonKey(defaultValue: []) required final  List<CategoryModel> categories, @JsonKey(name: 'average_rating') this.averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0) required this.reviewsCount, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _images = images,_categories = categories,super._();
+  const _ProductModel({required this.id, @JsonKey(defaultValue: '') required this.name, @JsonKey(defaultValue: '') required this.description, @JsonKey(fromJson: _priceFromJson) required this.price, @JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) this.originalPrice, @JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) this.effectivePrice, @JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) this.discountAmount, @JsonKey(name: 'in_stock', defaultValue: false) required this.inStock, @JsonKey(name: 'is_highlighted', defaultValue: false) required this.isHighlighted, @JsonKey(name: 'is_active', defaultValue: true) required this.isActive, this.promotion, @JsonKey(name: 'primary_image') this.primaryImage, @JsonKey(defaultValue: []) required final  List<ProductImageModel> images, @JsonKey(defaultValue: []) required final  List<CategoryModel> categories, @JsonKey(name: 'average_rating') this.averageRating, @JsonKey(name: 'reviews_count', defaultValue: 0) required this.reviewsCount, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) required this.createdAt, @JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) required this.updatedAt}): _images = images,_categories = categories,super._();
   factory _ProductModel.fromJson(Map<String, dynamic> json) => _$ProductModelFromJson(json);
 
 @override final  String id;
 @override@JsonKey(defaultValue: '') final  String name;
 @override@JsonKey(defaultValue: '') final  String description;
-@override final  String price;
-@override@JsonKey(name: 'original_price') final  String? originalPrice;
-@override@JsonKey(name: 'effective_price') final  String? effectivePrice;
-@override@JsonKey(name: 'discount_amount') final  String? discountAmount;
+@override@JsonKey(fromJson: _priceFromJson) final  String price;
+@override@JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) final  String? originalPrice;
+@override@JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) final  String? effectivePrice;
+@override@JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) final  String? discountAmount;
 @override@JsonKey(name: 'in_stock', defaultValue: false) final  bool inStock;
 @override@JsonKey(name: 'is_highlighted', defaultValue: false) final  bool isHighlighted;
 @override@JsonKey(name: 'is_active', defaultValue: true) final  bool isActive;
@@ -1103,8 +1103,8 @@ class _ProductModel extends ProductModel {
 
 @override@JsonKey(name: 'average_rating') final  double? averageRating;
 @override@JsonKey(name: 'reviews_count', defaultValue: 0) final  int reviewsCount;
-@override@JsonKey(name: 'created_at') final  DateTime createdAt;
-@override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
+@override@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) final  DateTime createdAt;
+@override@JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) final  DateTime updatedAt;
 
 /// Create a copy of ProductModel
 /// with the given fields replaced by the non-null parameter values.
@@ -1139,7 +1139,7 @@ abstract mixin class _$ProductModelCopyWith<$Res> implements $ProductModelCopyWi
   factory _$ProductModelCopyWith(_ProductModel value, $Res Function(_ProductModel) _then) = __$ProductModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description, String price,@JsonKey(name: 'original_price') String? originalPrice,@JsonKey(name: 'effective_price') String? effectivePrice,@JsonKey(name: 'discount_amount') String? discountAmount,@JsonKey(name: 'in_stock', defaultValue: false) bool inStock,@JsonKey(name: 'is_highlighted', defaultValue: false) bool isHighlighted,@JsonKey(name: 'is_active', defaultValue: true) bool isActive, PromotionModel? promotion,@JsonKey(name: 'primary_image') ProductImageModel? primaryImage,@JsonKey(defaultValue: []) List<ProductImageModel> images,@JsonKey(defaultValue: []) List<CategoryModel> categories,@JsonKey(name: 'average_rating') double? averageRating,@JsonKey(name: 'reviews_count', defaultValue: 0) int reviewsCount,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id,@JsonKey(defaultValue: '') String name,@JsonKey(defaultValue: '') String description,@JsonKey(fromJson: _priceFromJson) String price,@JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) String? originalPrice,@JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) String? effectivePrice,@JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) String? discountAmount,@JsonKey(name: 'in_stock', defaultValue: false) bool inStock,@JsonKey(name: 'is_highlighted', defaultValue: false) bool isHighlighted,@JsonKey(name: 'is_active', defaultValue: true) bool isActive, PromotionModel? promotion,@JsonKey(name: 'primary_image') ProductImageModel? primaryImage,@JsonKey(defaultValue: []) List<ProductImageModel> images,@JsonKey(defaultValue: []) List<CategoryModel> categories,@JsonKey(name: 'average_rating') double? averageRating,@JsonKey(name: 'reviews_count', defaultValue: 0) int reviewsCount,@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime createdAt,@JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) DateTime updatedAt
 });
 
 

@@ -12,13 +12,21 @@ abstract class ProductImageModel with _$ProductImageModel {
 
   const factory ProductImageModel({
     required String id,
-    @JsonKey(fromJson: _imagePathFromJson) required String imagePath,
+    required String imagePath,
     @JsonKey(defaultValue: 0) required int order,
     @JsonKey(name: 'is_primary', defaultValue: false) required bool isPrimary,
   }) = _ProductImageModel;
 
+  // Manual: API envia 'url' ou 'image_path', não 'imagePath'
   factory ProductImageModel.fromJson(Map<String, dynamic> json) =>
-      _$ProductImageModelFromJson(json);
+      _ProductImageModel(
+        id: json['id'] as String? ?? '',
+        imagePath: (json['url'] as String?) ??
+            (json['image_path'] as String?) ??
+            '',
+        order: (json['order'] as num?)?.toInt() ?? 0,
+        isPrimary: json['is_primary'] as bool? ?? false,
+      );
 
   ProductImage toEntity() => ProductImage(
         id: id,
@@ -28,8 +36,13 @@ abstract class ProductImageModel with _$ProductImageModel {
       );
 }
 
-String _imagePathFromJson(dynamic value) =>
-    (value is String) ? value : '';
+// A API pode retornar price como número ou string
+String _priceFromJson(dynamic value) => value?.toString() ?? '0.00';
+
+String? _nullablePriceFromJson(dynamic value) => value?.toString();
+
+DateTime _dateTimeFromJson(dynamic value) =>
+    value != null ? DateTime.parse(value.toString()) : DateTime(2000);
 
 @freezed
 abstract class PromotionModel with _$PromotionModel {
@@ -89,10 +102,10 @@ abstract class ProductModel with _$ProductModel {
     required String id,
     @JsonKey(defaultValue: '') required String name,
     @JsonKey(defaultValue: '') required String description,
-    required String price,
-    @JsonKey(name: 'original_price') String? originalPrice,
-    @JsonKey(name: 'effective_price') String? effectivePrice,
-    @JsonKey(name: 'discount_amount') String? discountAmount,
+    @JsonKey(fromJson: _priceFromJson) required String price,
+    @JsonKey(name: 'original_price', fromJson: _nullablePriceFromJson) String? originalPrice,
+    @JsonKey(name: 'effective_price', fromJson: _nullablePriceFromJson) String? effectivePrice,
+    @JsonKey(name: 'discount_amount', fromJson: _nullablePriceFromJson) String? discountAmount,
     @JsonKey(name: 'in_stock', defaultValue: false) required bool inStock,
     @JsonKey(name: 'is_highlighted', defaultValue: false)
     required bool isHighlighted,
@@ -103,8 +116,8 @@ abstract class ProductModel with _$ProductModel {
     @JsonKey(defaultValue: []) required List<CategoryModel> categories,
     @JsonKey(name: 'average_rating') double? averageRating,
     @JsonKey(name: 'reviews_count', defaultValue: 0) required int reviewsCount,
-    @JsonKey(name: 'created_at') required DateTime createdAt,
-    @JsonKey(name: 'updated_at') required DateTime updatedAt,
+    @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) required DateTime createdAt,
+    @JsonKey(name: 'updated_at', fromJson: _dateTimeFromJson) required DateTime updatedAt,
   }) = _ProductModel;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>

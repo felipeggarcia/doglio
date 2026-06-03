@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FavoriteModel {
 
- String get id; ProductModel get product;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'notify_on_restock', defaultValue: false) bool get notifyOnRestock;
+ String get id; ProductModel get product;@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime get createdAt;@JsonKey(name: 'notify_on_restock', defaultValue: false) bool get notifyOnRestock;
 /// Create a copy of FavoriteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $FavoriteModelCopyWith<$Res>  {
   factory $FavoriteModelCopyWith(FavoriteModel value, $Res Function(FavoriteModel) _then) = _$FavoriteModelCopyWithImpl;
 @useResult
 $Res call({
- String id, ProductModel product,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'notify_on_restock', defaultValue: false) bool notifyOnRestock
+ String id, ProductModel product,@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime createdAt,@JsonKey(name: 'notify_on_restock', defaultValue: false) bool notifyOnRestock
 });
 
 
@@ -165,7 +165,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  ProductModel product, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  ProductModel product, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FavoriteModel() when $default != null:
 return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);case _:
@@ -186,7 +186,7 @@ return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  ProductModel product, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  ProductModel product, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteModel():
 return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);case _:
@@ -206,7 +206,7 @@ return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);ca
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  ProductModel product, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  ProductModel product, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson)  DateTime createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false)  bool notifyOnRestock)?  $default,) {final _that = this;
 switch (_that) {
 case _FavoriteModel() when $default != null:
 return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);case _:
@@ -221,12 +221,12 @@ return $default(_that.id,_that.product,_that.createdAt,_that.notifyOnRestock);ca
 @JsonSerializable()
 
 class _FavoriteModel extends FavoriteModel {
-  const _FavoriteModel({required this.id, required this.product, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false) required this.notifyOnRestock}): super._();
+  const _FavoriteModel({required this.id, required this.product, @JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) required this.createdAt, @JsonKey(name: 'notify_on_restock', defaultValue: false) required this.notifyOnRestock}): super._();
   factory _FavoriteModel.fromJson(Map<String, dynamic> json) => _$FavoriteModelFromJson(json);
 
 @override final  String id;
 @override final  ProductModel product;
-@override@JsonKey(name: 'created_at') final  DateTime createdAt;
+@override@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) final  DateTime createdAt;
 @override@JsonKey(name: 'notify_on_restock', defaultValue: false) final  bool notifyOnRestock;
 
 /// Create a copy of FavoriteModel
@@ -262,7 +262,7 @@ abstract mixin class _$FavoriteModelCopyWith<$Res> implements $FavoriteModelCopy
   factory _$FavoriteModelCopyWith(_FavoriteModel value, $Res Function(_FavoriteModel) _then) = __$FavoriteModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, ProductModel product,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'notify_on_restock', defaultValue: false) bool notifyOnRestock
+ String id, ProductModel product,@JsonKey(name: 'created_at', fromJson: _dateTimeFromJson) DateTime createdAt,@JsonKey(name: 'notify_on_restock', defaultValue: false) bool notifyOnRestock
 });
 
 
