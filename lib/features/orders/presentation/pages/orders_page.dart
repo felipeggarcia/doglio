@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order.dart';
 import '../providers/orders_provider.dart';
 import '../../../../core/config/router.dart';
+import '../../../../core/utils/l10n_helper.dart';
 
 class OrdersPage extends ConsumerWidget {
   const OrdersPage({super.key});
@@ -16,7 +17,7 @@ class OrdersPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meus Pedidos'),
+        title: Text(context.l10n.myOrders),
       ),
       body: ordersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -30,22 +31,22 @@ class OrdersPage extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.read(ordersProvider.notifier).reload(),
-                child: const Text('Tentar novamente'),
+                child: Text(context.l10n.tryAgain),
               ),
             ],
           ),
         ),
         data: (orders) {
           if (orders.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  const Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
                   Text(
-                    'Nenhum pedido ainda',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    context.l10n.noOrders,
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -57,7 +58,7 @@ class OrdersPage extends ConsumerWidget {
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: orders.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final order = orders[index];
                 return _OrderCard(order: order);
@@ -86,9 +87,9 @@ class _OrderCard extends StatelessWidget {
             color: _statusColor(order.status),
           ),
         ),
-        title: Text('Pedido #${order.id}'),
+        title: Text(context.l10n.orderNumber(order.id)),
         subtitle: Text(
-          _statusLabel(order.status),
+          _statusLabel(order.status, context),
           style: TextStyle(color: _statusColor(order.status)),
         ),
         trailing: Column(
@@ -128,11 +129,11 @@ class _OrderCard extends StatelessWidget {
         OrderStatus.cancelled => Icons.cancel_outlined,
       };
 
-  String _statusLabel(OrderStatus status) => switch (status) {
-        OrderStatus.pending => 'Pendente',
-        OrderStatus.processing => 'Em processamento',
-        OrderStatus.shipped => 'Enviado',
-        OrderStatus.delivered => 'Entregue',
-        OrderStatus.cancelled => 'Cancelado',
+  String _statusLabel(OrderStatus status, BuildContext context) => switch (status) {
+        OrderStatus.pending => context.l10n.orderStatusPending,
+        OrderStatus.processing => context.l10n.orderStatusProcessing,
+        OrderStatus.shipped => context.l10n.orderStatusShipped,
+        OrderStatus.delivered => context.l10n.orderStatusDelivered,
+        OrderStatus.cancelled => context.l10n.orderStatusCancelled,
       };
 }

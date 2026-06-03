@@ -134,7 +134,7 @@ class UserHomePage extends StatelessWidget {
       await authProvider.signOut();
 
       if (context.mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.login);
+        context.goToLogin();
       }
     }
   }

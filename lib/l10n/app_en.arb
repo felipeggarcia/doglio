@@ -239,12 +239,38 @@
   "primaryAddress": "Primary",
   "setPrimaryAddress": "Set as primary",
   "addressLabel": "Label (e.g., Home, Work)",
-  "addressStreet": "Street",
+  "addressStreet": "Street / Avenue",
   "addressNumber": "Number",
   "addressComplement": "Complement (optional)",
   "addressCity": "City",
   "addressState": "State",
   "addressZip": "ZIP code",
   "addressSaved": "Address saved successfully",
-  "addressDeleted": "Address deleted"
+  "addressDeleted": "Address deleted",
+  "addressDistrict": "District",
+  "newAddressTitle": "New Address",
+  "editAddressTitle": "Edit Address",
+  "confirmDeleteAddressMessage": "Are you sure you want to delete this address?",
+  "zipCodeLabel": "ZIP: {zip}",
+  "@zipCodeLabel": {
+    "placeholders": {
+      "zip": { "type": "String" }
+    }
+  },
+  "requiredField": "Required",
+  "shippingAddress": "Shipping address",
+  "orderStatusTitle": "Status",
+  "trackingCodeLabel": "Tracking code: {code}",
+  "@trackingCodeLabel": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "orderNumber": "Order #{id}",
+  "@orderNumber": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "favoriteUpdateError": "Failed to update favorites. Please try again."
 }

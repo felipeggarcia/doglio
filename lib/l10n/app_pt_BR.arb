@@ -196,12 +196,38 @@
   "primaryAddress": "Principal",
   "setPrimaryAddress": "Definir como principal",
   "addressLabel": "Identificação (ex: Casa, Trabalho)",
-  "addressStreet": "Rua",
+  "addressStreet": "Rua / Avenida",
   "addressNumber": "Número",
   "addressComplement": "Complemento (opcional)",
   "addressCity": "Cidade",
   "addressState": "Estado",
   "addressZip": "CEP",
   "addressSaved": "Endereço salvo com sucesso",
-  "addressDeleted": "Endereço excluído"
+  "addressDeleted": "Endereço excluído",
+  "addressDistrict": "Bairro",
+  "newAddressTitle": "Novo Endereço",
+  "editAddressTitle": "Editar Endereço",
+  "confirmDeleteAddressMessage": "Tem certeza que deseja excluir este endereço?",
+  "zipCodeLabel": "CEP: {zip}",
+  "@zipCodeLabel": {
+    "placeholders": {
+      "zip": { "type": "String" }
+    }
+  },
+  "requiredField": "Obrigatório",
+  "shippingAddress": "Endereço de entrega",
+  "orderStatusTitle": "Status",
+  "trackingCodeLabel": "Código de rastreio: {code}",
+  "@trackingCodeLabel": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "orderNumber": "Pedido #{id}",
+  "@orderNumber": {
+    "placeholders": {
+      "id": { "type": "String" }
+    }
+  },
+  "favoriteUpdateError": "Erro ao atualizar favoritos. Tente novamente."
 }

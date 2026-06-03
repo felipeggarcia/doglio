@@ -1236,7 +1236,7 @@ abstract class AppLocalizations {
   /// No description provided for @addressStreet.
   ///
   /// In en, this message translates to:
-  /// **'Street'**
+  /// **'Street / Avenue'**
   String get addressStreet;
 
   /// No description provided for @addressNumber.
@@ -1280,6 +1280,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Address deleted'**
   String get addressDeleted;
+
+  /// No description provided for @addressDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get addressDistrict;
+
+  /// No description provided for @newAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New Address'**
+  String get newAddressTitle;
+
+  /// No description provided for @editAddressTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Address'**
+  String get editAddressTitle;
+
+  /// No description provided for @confirmDeleteAddressMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this address?'**
+  String get confirmDeleteAddressMessage;
+
+  /// No description provided for @zipCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP: {zip}'**
+  String zipCodeLabel(String zip);
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required'**
+  String get requiredField;
+
+  /// No description provided for @shippingAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping address'**
+  String get shippingAddress;
+
+  /// No description provided for @orderStatusTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get orderStatusTitle;
+
+  /// No description provided for @trackingCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Tracking code: {code}'**
+  String trackingCodeLabel(String code);
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id}'**
+  String orderNumber(String id);
+
+  /// No description provided for @favoriteUpdateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update favorites. Please try again.'**
+  String get favoriteUpdateError;
 }
 
 class _AppLocalizationsDelegate

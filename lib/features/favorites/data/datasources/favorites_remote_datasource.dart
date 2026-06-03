@@ -61,7 +61,7 @@ class FavoritesRemoteDatasource {
         )
         .timeout(ApiConfig.timeout);
 
-    if (response.statusCode != 201) {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Failed to add favorite: ${response.statusCode}');
     }
     final body = jsonDecode(response.body) as Map<String, dynamic>;
@@ -76,7 +76,7 @@ class FavoritesRemoteDatasource {
         )
         .timeout(ApiConfig.timeout);
 
-    if (response.statusCode != 204) {
+    if (response.statusCode < 200 || response.statusCode >= 300) {
       throw Exception('Failed to remove favorite: ${response.statusCode}');
     }
   }

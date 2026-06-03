@@ -1,11 +1,36 @@
 /// Favorites page
 library;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/favorites_provider.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/config/router.dart';
+import '../../../../core/utils/l10n_helper.dart';
+
+Widget _buildProductImage(String? imagePath) {
+  if (imagePath == null || imagePath.isEmpty) {
+    return const Icon(Icons.pets, size: 56, color: Colors.grey);
+  }
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(8),
+    child: CachedNetworkImage(
+      imageUrl: ApiConfig.normalizeImageUrl(imagePath),
+      width: 56,
+      height: 56,
+      fit: BoxFit.cover,
+      httpHeaders: const {'Host': ApiConfig.virtualHost},
+      placeholder: (_, _) => const SizedBox(
+        width: 56,
+        height: 56,
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      ),
+      errorWidget: (_, _, _) =>
+          const Icon(Icons.pets, size: 56, color: Colors.grey),
+    ),
+  );
+}
 
 class FavoritesPage extends ConsumerWidget {
   const FavoritesPage({super.key});
@@ -16,7 +41,7 @@ class FavoritesPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meus Favoritos'),
+        title: Text(context.l10n.myFavorites),
       ),
       body: favoritesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -30,22 +55,22 @@ class FavoritesPage extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.read(favoritesProvider.notifier).reload(),
-                child: const Text('Tentar novamente'),
+                child: Text(context.l10n.tryAgain),
               ),
             ],
           ),
         ),
         data: (favorites) {
           if (favorites.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.favorite_border, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  const Icon(Icons.favorite_border, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
                   Text(
-                    'Nenhum favorito ainda',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    context.l10n.noFavorites,
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -57,7 +82,7 @@ class FavoritesPage extends ConsumerWidget {
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: favorites.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final favorite = favorites[index];
                 final product = favorite.product;
@@ -78,19 +103,7 @@ class FavoritesPage extends ConsumerWidget {
                   },
                   child: Card(
                     child: ListTile(
-                      leading: product.primaryImage != null
-                          ? ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                ApiConfig.normalizeImageUrl(product.primaryImage!.imagePath),
-                                width: 56,
-                                height: 56,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) =>
-                                    const Icon(Icons.image_not_supported),
-                              ),
-                            )
-                          : const Icon(Icons.inventory_2_outlined, size: 56),
+                      leading: _buildProductImage(product.bestImagePath),
                       title: Text(
                         product.name,
                         maxLines: 2,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/order.dart';
 import '../providers/orders_provider.dart';
+import '../../../../core/utils/l10n_helper.dart';
 
 class OrderDetailPage extends ConsumerWidget {
   const OrderDetailPage({super.key, required this.orderId});
@@ -16,7 +17,7 @@ class OrderDetailPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pedido #$orderId'),
+        title: Text(context.l10n.orderNumber(orderId)),
       ),
       body: orderAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -53,7 +54,7 @@ class _OrderDetailBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Status', style: theme.textTheme.titleMedium),
+                Text(context.l10n.orderStatusTitle, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -63,7 +64,7 @@ class _OrderDetailBody extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      _statusLabel(order.status),
+                      _statusLabel(order.status, context),
                       style: TextStyle(
                         color: _statusColor(order.status),
                         fontWeight: FontWeight.bold,
@@ -75,7 +76,7 @@ class _OrderDetailBody extends StatelessWidget {
                 if (order.trackingCode != null) ...[
                   const SizedBox(height: 8),
                   Text(
-                    'Código de rastreio: ${order.trackingCode}',
+                    context.l10n.trackingCodeLabel(order.trackingCode!),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -91,7 +92,7 @@ class _OrderDetailBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Itens', style: theme.textTheme.titleMedium),
+                Text(context.l10n.orderItems, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 ...order.items.map(
                   (item) => Padding(
@@ -120,9 +121,9 @@ class _OrderDetailBody extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Total',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(
+                      context.l10n.total,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'R\$ ${double.tryParse(order.total)?.toStringAsFixed(2) ?? order.total}',
@@ -142,7 +143,7 @@ class _OrderDetailBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Endereço de entrega',
+                  Text(context.l10n.shippingAddress,
                       style: theme.textTheme.titleMedium),
                   const SizedBox(height: 8),
                   Text(order.shippingAddress!),
@@ -171,11 +172,11 @@ class _OrderDetailBody extends StatelessWidget {
         OrderStatus.cancelled => Icons.cancel_outlined,
       };
 
-  String _statusLabel(OrderStatus status) => switch (status) {
-        OrderStatus.pending => 'Pendente',
-        OrderStatus.processing => 'Em processamento',
-        OrderStatus.shipped => 'Enviado',
-        OrderStatus.delivered => 'Entregue',
-        OrderStatus.cancelled => 'Cancelado',
+  String _statusLabel(OrderStatus status, BuildContext context) => switch (status) {
+        OrderStatus.pending => context.l10n.orderStatusPending,
+        OrderStatus.processing => context.l10n.orderStatusProcessing,
+        OrderStatus.shipped => context.l10n.orderStatusShipped,
+        OrderStatus.delivered => context.l10n.orderStatusDelivered,
+        OrderStatus.cancelled => context.l10n.orderStatusCancelled,
       };
 }

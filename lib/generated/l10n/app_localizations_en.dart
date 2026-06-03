@@ -598,7 +598,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addressLabel => 'Label (e.g., Home, Work)';
 
   @override
-  String get addressStreet => 'Street';
+  String get addressStreet => 'Street / Avenue';
 
   @override
   String get addressNumber => 'Number';
@@ -620,4 +620,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addressDeleted => 'Address deleted';
+
+  @override
+  String get addressDistrict => 'District';
+
+  @override
+  String get newAddressTitle => 'New Address';
+
+  @override
+  String get editAddressTitle => 'Edit Address';
+
+  @override
+  String get confirmDeleteAddressMessage =>
+      'Are you sure you want to delete this address?';
+
+  @override
+  String zipCodeLabel(String zip) {
+    return 'ZIP: $zip';
+  }
+
+  @override
+  String get requiredField => 'Required';
+
+  @override
+  String get shippingAddress => 'Shipping address';
+
+  @override
+  String get orderStatusTitle => 'Status';
+
+  @override
+  String trackingCodeLabel(String code) {
+    return 'Tracking code: $code';
+  }
+
+  @override
+  String orderNumber(String id) {
+    return 'Order #$id';
+  }
+
+  @override
+  String get favoriteUpdateError =>
+      'Failed to update favorites. Please try again.';
 }

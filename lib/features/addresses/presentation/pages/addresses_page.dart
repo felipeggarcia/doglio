@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/address.dart';
 import '../providers/addresses_provider.dart';
+import '../../../../core/utils/l10n_helper.dart';
 
 class AddressesPage extends ConsumerWidget {
   const AddressesPage({super.key});
@@ -15,7 +16,7 @@ class AddressesPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Meus Endereços'),
+        title: Text(context.l10n.myAddresses),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddressForm(context, ref, null),
@@ -33,23 +34,23 @@ class AddressesPage extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () => ref.read(addressesProvider.notifier).reload(),
-                child: const Text('Tentar novamente'),
+                child: Text(context.l10n.tryAgain),
               ),
             ],
           ),
         ),
         data: (addresses) {
           if (addresses.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.location_off_outlined,
+                  const Icon(Icons.location_off_outlined,
                       size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
-                    'Nenhum endereço cadastrado',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                    context.l10n.noAddresses,
+                    style: const TextStyle(fontSize: 18, color: Colors.grey),
                   ),
                 ],
               ),
@@ -61,7 +62,7 @@ class AddressesPage extends ConsumerWidget {
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
               itemCount: addresses.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final address = addresses[index];
                 return _AddressCard(
@@ -83,16 +84,17 @@ class AddressesPage extends ConsumerWidget {
     showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Excluir endereço'),
-        content: const Text('Tem certeza que deseja excluir este endereço?'),
+        title: Text(ctx.l10n.deleteAddress),
+        content: Text(ctx.l10n.confirmDeleteAddressMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancelar'),
+            child: Text(ctx.l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Excluir', style: TextStyle(color: Colors.red)),
+            child: Text(ctx.l10n.delete,
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -145,9 +147,9 @@ class _AddressCard extends StatelessWidget {
                 if (address.isPrimary) ...[
                   const Icon(Icons.star, color: Colors.amber, size: 18),
                   const SizedBox(width: 4),
-                  const Text(
-                    'Principal',
-                    style: TextStyle(
+                  Text(
+                    context.l10n.primaryAddress,
+                    style: const TextStyle(
                         color: Colors.amber, fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
@@ -156,13 +158,13 @@ class _AddressCard extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, size: 20),
                   onPressed: onEdit,
-                  tooltip: 'Editar',
+                  tooltip: context.l10n.edit,
                 ),
                 IconButton(
-                  icon: const Icon(Icons.delete_outline, size: 20,
-                      color: Colors.red),
+                  icon: const Icon(Icons.delete_outline,
+                      size: 20, color: Colors.red),
                   onPressed: onDelete,
-                  tooltip: 'Excluir',
+                  tooltip: context.l10n.delete,
                 ),
               ],
             ),
@@ -171,16 +173,14 @@ class _AddressCard extends StatelessWidget {
               '${address.complement != null ? ', ${address.complement}' : ''}',
               style: const TextStyle(fontWeight: FontWeight.w500),
             ),
-            Text(
-              '${address.district} — ${address.city}/${address.state}',
-            ),
-            Text('CEP: ${address.zipCode}'),
+            Text('${address.district} — ${address.city}/${address.state}'),
+            Text(context.l10n.zipCodeLabel(address.zipCode)),
             if (!address.isPrimary) ...[
               const SizedBox(height: 8),
               TextButton.icon(
                 onPressed: onSetPrimary,
                 icon: const Icon(Icons.star_border, size: 16),
-                label: const Text('Definir como principal'),
+                label: Text(context.l10n.setPrimaryAddress),
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -257,6 +257,7 @@ class _AddressFormState extends State<_AddressForm> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -271,15 +272,17 @@ class _AddressFormState extends State<_AddressForm> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              widget.address == null ? 'Novo Endereço' : 'Editar Endereço',
+              widget.address == null
+                  ? l10n.newAddressTitle
+                  : l10n.editAddressTitle,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _street,
-              decoration: const InputDecoration(labelText: 'Rua / Avenida'),
+              decoration: InputDecoration(labelText: l10n.addressStreet),
               validator: (v) =>
-                  v == null || v.isEmpty ? 'Obrigatório' : null,
+                  v == null || v.isEmpty ? l10n.requiredField : null,
             ),
             const SizedBox(height: 8),
             Row(
@@ -288,9 +291,9 @@ class _AddressFormState extends State<_AddressForm> {
                   flex: 2,
                   child: TextFormField(
                     controller: _number,
-                    decoration: const InputDecoration(labelText: 'Número'),
+                    decoration: InputDecoration(labelText: l10n.addressNumber),
                     validator: (v) =>
-                        v == null || v.isEmpty ? 'Obrigatório' : null,
+                        v == null || v.isEmpty ? l10n.requiredField : null,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -299,7 +302,7 @@ class _AddressFormState extends State<_AddressForm> {
                   child: TextFormField(
                     controller: _complement,
                     decoration:
-                        const InputDecoration(labelText: 'Complemento'),
+                        InputDecoration(labelText: l10n.addressComplement),
                   ),
                 ),
               ],
@@ -307,9 +310,9 @@ class _AddressFormState extends State<_AddressForm> {
             const SizedBox(height: 8),
             TextFormField(
               controller: _district,
-              decoration: const InputDecoration(labelText: 'Bairro'),
+              decoration: InputDecoration(labelText: l10n.addressDistrict),
               validator: (v) =>
-                  v == null || v.isEmpty ? 'Obrigatório' : null,
+                  v == null || v.isEmpty ? l10n.requiredField : null,
             ),
             const SizedBox(height: 8),
             Row(
@@ -318,9 +321,9 @@ class _AddressFormState extends State<_AddressForm> {
                   flex: 3,
                   child: TextFormField(
                     controller: _city,
-                    decoration: const InputDecoration(labelText: 'Cidade'),
+                    decoration: InputDecoration(labelText: l10n.addressCity),
                     validator: (v) =>
-                        v == null || v.isEmpty ? 'Obrigatório' : null,
+                        v == null || v.isEmpty ? l10n.requiredField : null,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -328,10 +331,10 @@ class _AddressFormState extends State<_AddressForm> {
                   flex: 1,
                   child: TextFormField(
                     controller: _state,
-                    decoration: const InputDecoration(labelText: 'UF'),
+                    decoration: InputDecoration(labelText: l10n.addressState),
                     maxLength: 2,
                     validator: (v) =>
-                        v == null || v.isEmpty ? 'Obrigatório' : null,
+                        v == null || v.isEmpty ? l10n.requiredField : null,
                   ),
                 ),
               ],
@@ -339,15 +342,15 @@ class _AddressFormState extends State<_AddressForm> {
             const SizedBox(height: 8),
             TextFormField(
               controller: _zipCode,
-              decoration: const InputDecoration(labelText: 'CEP'),
+              decoration: InputDecoration(labelText: l10n.addressZip),
               keyboardType: TextInputType.number,
               validator: (v) =>
-                  v == null || v.isEmpty ? 'Obrigatório' : null,
+                  v == null || v.isEmpty ? l10n.requiredField : null,
             ),
             const SizedBox(height: 24),
             FilledButton(
               onPressed: _submit,
-              child: const Text('Salvar'),
+              child: Text(l10n.save),
             ),
           ],
         ),

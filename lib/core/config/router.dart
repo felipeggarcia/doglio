@@ -114,6 +114,10 @@ extension AppNavigationContext on BuildContext {
   void goToOrders() => go(AppRoutes.orders);
   void goToAddresses() => go(AppRoutes.addresses);
 
+  void pushFavorites() => push(AppRoutes.favorites);
+  void pushOrders() => push(AppRoutes.orders);
+  void pushAddresses() => push(AppRoutes.addresses);
+
   void pushOrderDetail(Order order) =>
       push('/orders/${order.id}', extra: order);
 }

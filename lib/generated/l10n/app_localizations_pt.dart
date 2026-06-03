@@ -600,7 +600,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addressLabel => 'Identificação (ex: Casa, Trabalho)';
 
   @override
-  String get addressStreet => 'Rua';
+  String get addressStreet => 'Rua / Avenida';
 
   @override
   String get addressNumber => 'Número';
@@ -622,6 +622,47 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get addressDeleted => 'Endereço excluído';
+
+  @override
+  String get addressDistrict => 'Bairro';
+
+  @override
+  String get newAddressTitle => 'Novo Endereço';
+
+  @override
+  String get editAddressTitle => 'Editar Endereço';
+
+  @override
+  String get confirmDeleteAddressMessage =>
+      'Tem certeza que deseja excluir este endereço?';
+
+  @override
+  String zipCodeLabel(String zip) {
+    return 'CEP: $zip';
+  }
+
+  @override
+  String get requiredField => 'Obrigatório';
+
+  @override
+  String get shippingAddress => 'Endereço de entrega';
+
+  @override
+  String get orderStatusTitle => 'Status';
+
+  @override
+  String trackingCodeLabel(String code) {
+    return 'Código de rastreio: $code';
+  }
+
+  @override
+  String orderNumber(String id) {
+    return 'Pedido #$id';
+  }
+
+  @override
+  String get favoriteUpdateError =>
+      'Erro ao atualizar favoritos. Tente novamente.';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -1220,7 +1261,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get addressLabel => 'Identificação (ex: Casa, Trabalho)';
 
   @override
-  String get addressStreet => 'Rua';
+  String get addressStreet => 'Rua / Avenida';
 
   @override
   String get addressNumber => 'Número';
@@ -1242,4 +1283,45 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get addressDeleted => 'Endereço excluído';
+
+  @override
+  String get addressDistrict => 'Bairro';
+
+  @override
+  String get newAddressTitle => 'Novo Endereço';
+
+  @override
+  String get editAddressTitle => 'Editar Endereço';
+
+  @override
+  String get confirmDeleteAddressMessage =>
+      'Tem certeza que deseja excluir este endereço?';
+
+  @override
+  String zipCodeLabel(String zip) {
+    return 'CEP: $zip';
+  }
+
+  @override
+  String get requiredField => 'Obrigatório';
+
+  @override
+  String get shippingAddress => 'Endereço de entrega';
+
+  @override
+  String get orderStatusTitle => 'Status';
+
+  @override
+  String trackingCodeLabel(String code) {
+    return 'Código de rastreio: $code';
+  }
+
+  @override
+  String orderNumber(String id) {
+    return 'Pedido #$id';
+  }
+
+  @override
+  String get favoriteUpdateError =>
+      'Erro ao atualizar favoritos. Tente novamente.';
 }
