@@ -15,7 +15,7 @@ class OrdersRepositoryImpl implements OrdersRepository {
   Future<Either<Failure, List<Order>>> getOrders() async {
     try {
       final result = await _datasource.getOrders();
-      return Right(result);
+      return Right(result.map((m) => m.toEntity()).toList());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -25,7 +25,7 @@ class OrdersRepositoryImpl implements OrdersRepository {
   Future<Either<Failure, Order>> getOrderDetail(String orderId) async {
     try {
       final result = await _datasource.getOrderDetail(orderId);
-      return Right(result);
+      return Right(result.toEntity());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }

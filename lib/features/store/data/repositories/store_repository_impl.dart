@@ -22,13 +22,13 @@ class StoreRepositoryImpl implements StoreRepository {
     int? perPage,
   }) async {
     try {
-      final products = await remoteDatasource.getProducts(
+      final models = await remoteDatasource.getProducts(
         categoryId: categoryId,
         isHighlighted: isHighlighted,
         search: search,
         perPage: perPage,
       );
-      return right(products);
+      return right(models.map((m) => m.toEntity()).toList());
     } on TimeoutException {
       return left(const TimeoutFailure());
     } on SocketException catch (e) {
@@ -44,11 +44,11 @@ class StoreRepositoryImpl implements StoreRepository {
     bool withCount = false,
   }) async {
     try {
-      final categories = await remoteDatasource.getCategories(
+      final models = await remoteDatasource.getCategories(
         isHighlighted: isHighlighted,
         withCount: withCount,
       );
-      return right(categories);
+      return right(models.map((m) => m.toEntity()).toList());
     } on TimeoutException {
       return left(const TimeoutFailure());
     } on SocketException catch (e) {

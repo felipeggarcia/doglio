@@ -1,81 +1,44 @@
-/// User model for Doglio Marketplace
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/user.dart';
 
-class UserModel extends User {
-  const UserModel({
-    required super.id,
-    required super.email,
-    required super.name,
-    required super.role,
-    super.city,
-    super.state,
-    super.cpfCnpj,
-    super.birthDate,
-  });
+part 'user_model.freezed.dart';
+part 'user_model.g.dart';
 
-  factory UserModel.fromJson(Map<String, dynamic> json) {
-    return UserModel(
-      id: json['id'] as String,
-      email: json['email'] as String,
-      name: json['name'] as String,
-      role: _parseUserRole(json['role'] as String? ?? 'customer'),
-      city: json['city'] as String?,
-      state: json['state'] as String?,
-      cpfCnpj: json['cpf_cnpj'] as String?,
-      birthDate: json['birth_date'] as String?,
-    );
-  }
+UserRole _userRoleFromJson(String role) =>
+    role == 'admin' ? UserRole.admin : UserRole.user;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'email': email,
-      'name': name,
-      'role': _userRoleToString(role),
-      'city': city,
-      'state': state,
-      'cpf_cnpj': cpfCnpj,
-      'birth_date': birthDate,
-    };
-  }
+String _userRoleToJson(UserRole role) =>
+    role == UserRole.admin ? 'admin' : 'customer';
 
-  static UserRole _parseUserRole(String roleString) {
-    return switch (roleString.toLowerCase()) {
-      'admin' => UserRole.admin,
-      _ => UserRole.user,
-    };
-  }
+@freezed
+abstract class UserModel with _$UserModel {
+  const UserModel._();
 
-  static String _userRoleToString(UserRole role) {
-    return switch (role) {
-      UserRole.admin => 'admin',
-      UserRole.user => 'customer',
-    };
-  }
-
-  @override
-  UserModel copyWith({
-    String? id,
-    String? email,
-    String? name,
-    UserRole? role,
+  const factory UserModel({
+    required String id,
+    required String email,
+    required String name,
+    @JsonKey(fromJson: _userRoleFromJson, toJson: _userRoleToJson)
+    required UserRole role,
     String? city,
     String? state,
-    String? cpfCnpj,
-    String? birthDate,
-  }) {
-    return UserModel(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      name: name ?? this.name,
-      role: role ?? this.role,
-      city: city ?? this.city,
-      state: state ?? this.state,
-      cpfCnpj: cpfCnpj ?? this.cpfCnpj,
-      birthDate: birthDate ?? this.birthDate,
-    );
-  }
-}
+    @JsonKey(name: 'cpf_cnpj') String? cpfCnpj,
+    @JsonKey(name: 'birth_date') String? birthDate,
+  }) = _UserModel;
 
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
+
+  User toEntity() => User(
+        id: id,
+        email: email,
+        name: name,
+        role: role,
+        city: city,
+        state: state,
+        cpfCnpj: cpfCnpj,
+        birthDate: birthDate,
+      );
+}

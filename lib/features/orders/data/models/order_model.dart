@@ -1,69 +1,82 @@
-/// Order data model
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/order.dart';
 
-class OrderItemModel extends OrderItem {
-  const OrderItemModel({
-    required super.id,
-    required super.productId,
-    required super.productName,
-    required super.price,
-    required super.quantity,
-    super.productImage,
-  });
+part 'order_model.freezed.dart';
+part 'order_model.g.dart';
 
-  factory OrderItemModel.fromJson(Map<String, dynamic> json) {
-    return OrderItemModel(
-      id: json['id'] as String,
-      productId: json['product_id'] as String,
-      productName: json['product_name'] as String,
-      price: json['price'] as String,
-      quantity: json['quantity'] as int,
-      productImage: json['product_image'] as String?,
-    );
-  }
+OrderStatus _orderStatusFromJson(String value) =>
+    switch (value.toLowerCase()) {
+      'processing' => OrderStatus.processing,
+      'shipped' => OrderStatus.shipped,
+      'delivered' => OrderStatus.delivered,
+      'cancelled' => OrderStatus.cancelled,
+      _ => OrderStatus.pending,
+    };
+
+String _orderStatusToJson(OrderStatus status) =>
+    switch (status) {
+      OrderStatus.pending => 'pending',
+      OrderStatus.processing => 'processing',
+      OrderStatus.shipped => 'shipped',
+      OrderStatus.delivered => 'delivered',
+      OrderStatus.cancelled => 'cancelled',
+    };
+
+@freezed
+abstract class OrderItemModel with _$OrderItemModel {
+  const OrderItemModel._();
+
+  const factory OrderItemModel({
+    required String id,
+    @JsonKey(name: 'product_id') required String productId,
+    @JsonKey(name: 'product_name') required String productName,
+    required String price,
+    required int quantity,
+    @JsonKey(name: 'product_image') String? productImage,
+  }) = _OrderItemModel;
+
+  factory OrderItemModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderItemModelFromJson(json);
+
+  OrderItem toEntity() => OrderItem(
+        id: id,
+        productId: productId,
+        productName: productName,
+        price: price,
+        quantity: quantity,
+        productImage: productImage,
+      );
 }
 
-class OrderModel extends Order {
-  const OrderModel({
-    required super.id,
-    required super.status,
-    required super.items,
-    required super.total,
-    required super.createdAt,
-    super.updatedAt,
-    super.shippingAddress,
-    super.trackingCode,
-  });
+@freezed
+abstract class OrderModel with _$OrderModel {
+  const OrderModel._();
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) {
-    final itemsList = (json['items'] as List<dynamic>?)
-            ?.cast<Map<String, dynamic>>()
-            .map(OrderItemModel.fromJson)
-            .toList() ??
-        [];
+  const factory OrderModel({
+    required String id,
+    @JsonKey(fromJson: _orderStatusFromJson, toJson: _orderStatusToJson)
+    required OrderStatus status,
+    @JsonKey(defaultValue: []) required List<OrderItemModel> items,
+    required String total,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'updated_at') DateTime? updatedAt,
+    @JsonKey(name: 'shipping_address') String? shippingAddress,
+    @JsonKey(name: 'tracking_code') String? trackingCode,
+  }) = _OrderModel;
 
-    return OrderModel(
-      id: json['id'] as String,
-      status: _parseStatus(json['status'] as String? ?? 'pending'),
-      items: itemsList,
-      total: json['total'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'] as String)
-          : null,
-      shippingAddress: json['shipping_address'] as String?,
-      trackingCode: json['tracking_code'] as String?,
-    );
-  }
+  factory OrderModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderModelFromJson(json);
 
-  static OrderStatus _parseStatus(String value) =>
-      switch (value.toLowerCase()) {
-        'processing' => OrderStatus.processing,
-        'shipped' => OrderStatus.shipped,
-        'delivered' => OrderStatus.delivered,
-        'cancelled' => OrderStatus.cancelled,
-        _ => OrderStatus.pending,
-      };
+  Order toEntity() => Order(
+        id: id,
+        status: status,
+        items: items.map((i) => i.toEntity()).toList(),
+        total: total,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        shippingAddress: shippingAddress,
+        trackingCode: trackingCode,
+      );
 }

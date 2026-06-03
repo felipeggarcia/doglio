@@ -15,7 +15,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
   Future<Either<Failure, List<Favorite>>> getFavorites() async {
     try {
       final result = await _datasource.getFavorites();
-      return Right(result);
+      return Right(result.map((m) => m.toEntity()).toList());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -31,7 +31,7 @@ class FavoritesRepositoryImpl implements FavoritesRepository {
         productId: productId,
         notifyOnRestock: notifyOnRestock,
       );
-      return Right(result);
+      return Right(result.toEntity());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }

@@ -16,7 +16,7 @@ class AddressesRepositoryImpl implements AddressesRepository {
   Future<Either<Failure, List<Address>>> getAddresses() async {
     try {
       final result = await _datasource.getAddresses();
-      return Right(result);
+      return Right(result.map((m) => m.toEntity()).toList());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -27,7 +27,7 @@ class AddressesRepositoryImpl implements AddressesRepository {
     try {
       final model = _toModel(address);
       final result = await _datasource.createAddress(model);
-      return Right(result);
+      return Right(result.toEntity());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }
@@ -38,7 +38,7 @@ class AddressesRepositoryImpl implements AddressesRepository {
     try {
       final model = _toModel(address);
       final result = await _datasource.updateAddress(model);
-      return Right(result);
+      return Right(result.toEntity());
     } catch (e) {
       return Left(UnknownFailure(e.toString()));
     }

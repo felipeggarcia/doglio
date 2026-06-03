@@ -1,25 +1,31 @@
-/// Favorite data model (API ↔ Domain)
 library;
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/favorite.dart';
 import '../../../store/data/models/product_model.dart';
 
-class FavoriteModel extends Favorite {
-  const FavoriteModel({
-    required super.id,
-    required super.product,
-    required super.createdAt,
-    super.notifyOnRestock,
-  });
+part 'favorite_model.freezed.dart';
+part 'favorite_model.g.dart';
 
-  factory FavoriteModel.fromJson(Map<String, dynamic> json) {
-    return FavoriteModel(
-      id: json['id'] as String,
-      product: ProductModel.fromJson(
-        json['product'] as Map<String, dynamic>,
-      ),
-      createdAt: DateTime.parse(json['created_at'] as String),
-      notifyOnRestock: json['notify_on_restock'] as bool? ?? false,
-    );
-  }
+@freezed
+abstract class FavoriteModel with _$FavoriteModel {
+  const FavoriteModel._();
+
+  const factory FavoriteModel({
+    required String id,
+    required ProductModel product,
+    @JsonKey(name: 'created_at') required DateTime createdAt,
+    @JsonKey(name: 'notify_on_restock', defaultValue: false)
+    required bool notifyOnRestock,
+  }) = _FavoriteModel;
+
+  factory FavoriteModel.fromJson(Map<String, dynamic> json) =>
+      _$FavoriteModelFromJson(json);
+
+  Favorite toEntity() => Favorite(
+        id: id,
+        product: product.toEntity(),
+        createdAt: createdAt,
+        notifyOnRestock: notifyOnRestock,
+      );
 }
