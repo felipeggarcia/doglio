@@ -25,3 +25,4 @@ void main() async {
   await DoglioAppInitializer.initialize();
   runApp(const ProviderScope(child: DoglioApp()));
 }
+

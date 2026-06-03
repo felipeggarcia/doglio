@@ -50,6 +50,18 @@ class Product {
 
   bool get hasPromotion => promotion != null && effectivePrice != null;
 
+  /// Melhor caminho de imagem disponível: primaryImage → isPrimary em images → primeira imagem
+  String? get bestImagePath {
+    if (primaryImage != null && primaryImage!.imagePath.isNotEmpty) {
+      return primaryImage!.imagePath;
+    }
+    return images
+            .where((i) => i.isPrimary && i.imagePath.isNotEmpty)
+            .firstOrNull
+            ?.imagePath ??
+        images.where((i) => i.imagePath.isNotEmpty).firstOrNull?.imagePath;
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

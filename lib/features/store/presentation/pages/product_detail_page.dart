@@ -1,11 +1,9 @@
-/// Product detail page - Display product information
-///
-/// This page shows detailed information about a product including
-/// images, description, price, and stock status.
 library;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
@@ -33,24 +31,13 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
   List<String> get _allImages {
     final images = <String>[];
-
-    // Add all product images
     for (var image in widget.product.images) {
-      if (image.imagePath.isNotEmpty) {
-        images.add(image.imagePath);
-      }
+      if (image.imagePath.isNotEmpty) images.add(image.imagePath);
     }
-
-    // If no images, add primary image or placeholder
     if (images.isEmpty && widget.product.primaryImage != null) {
       images.add(widget.product.primaryImage!.imagePath);
     }
-
     return images;
-  }
-
-  String _getFullImageUrl(String imagePath) {
-    return ApiConfig.normalizeImageUrl(imagePath);
   }
 
   @override
@@ -62,45 +49,69 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
-          // App Bar with back button
+          // AppBar verde — oculta ao rolar, volta ao rolar para cima
           SliverAppBar(
-            expandedHeight: 400,
-            pinned: true,
+            floating: true,
+            snap: true,
             backgroundColor: AppColors.primary,
+            elevation: 0,
             iconTheme: const IconThemeData(color: Colors.white),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => context.pop(),
+            ),
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/images/logo/logo.png',
+                  height: 28,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+                const SizedBox(width: 8),
+                const Text(
+                  'Doglio',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+              ],
+            ),
             actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: Colors.white,
+                ),
+                onPressed: () {},
+              ),
               _FavoriteButton(product: widget.product),
             ],
-            flexibleSpace: FlexibleSpaceBar(
-              background: _buildImageGallery(images),
-            ),
           ),
 
-          // Product details
+          // Espaçamento entre AppBar e galeria
+          const SliverToBoxAdapter(child: SizedBox(height: 32)),
+
+          // Galeria de imagens
+          SliverToBoxAdapter(
+            child: SizedBox(height: 320, child: _buildImageGallery(images)),
+          ),
+
+          // Conteúdo do produto
           SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Product name and price
                 _buildHeaderSection(theme),
-
                 const Divider(height: 1),
-
-                // Stock status
-                _buildStockSection(theme),
-
-                const Divider(height: 1),
-
-                // Categories
-                if (widget.product.categories.isNotEmpty)
-                  _buildCategoriesSection(theme),
-
-                const Divider(height: 1),
-
-                // Description
                 _buildDescriptionSection(theme),
-
-                const SizedBox(height: 100), // Space for bottom button
+                const Divider(height: 1),
+                if (widget.product.categories.isNotEmpty) ...[
+                  _buildCategoriesSection(theme),
+                ],
+                const SizedBox(height: 100),
               ],
             ),
           ),
@@ -122,72 +133,35 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
     return Stack(
       children: [
-        // Image carousel
         PageView.builder(
           controller: _pageController,
-          onPageChanged: (index) {
-            setState(() {
-              _currentImageIndex = index;
-            });
-          },
+          onPageChanged: (index) => setState(() => _currentImageIndex = index),
           itemCount: images.length,
           itemBuilder: (context, index) {
-            return GestureDetector(
-              onHorizontalDragEnd: (details) {
-                // Allow swipe gesture
-                if (details.primaryVelocity! > 0 && _currentImageIndex > 0) {
-                  _pageController.previousPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                } else if (details.primaryVelocity! < 0 &&
-                    _currentImageIndex < images.length - 1) {
-                  _pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                }
-              },
-              child: Image.network(
-                _getFullImageUrl(images[index]),
-                fit: BoxFit.cover,
-                headers: const {'Host': ApiConfig.virtualHost},
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[200],
-                    child: Center(
-                      child: Icon(
-                        Icons.pets,
-                        size: 120,
-                        color: Colors.grey[400],
-                      ),
-                    ),
-                  );
-                },
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    color: Colors.grey[200],
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                            : null,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  );
-                },
+            return CachedNetworkImage(
+              imageUrl: ApiConfig.normalizeImageUrl(images[index]),
+              fit: BoxFit.cover,
+              httpHeaders: const {'Host': ApiConfig.virtualHost},
+              placeholder: (_, _) => Container(
+                color: Colors.grey[200],
+                child: Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                ),
+              ),
+              errorWidget: (_, _, _) => Container(
+                color: Colors.grey[200],
+                child: Center(
+                  child: Icon(Icons.pets, size: 120, color: Colors.grey[400]),
+                ),
               ),
             );
           },
         ),
 
-        // Clickable image indicators
+        // Indicadores de página
         if (images.length > 1)
           Positioned(
-            bottom: 20,
+            bottom: 16,
             left: 0,
             right: 0,
             child: Row(
@@ -201,9 +175,6 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                       duration: const Duration(milliseconds: 300),
                       curve: Curves.easeInOut,
                     );
-                    setState(() {
-                      _currentImageIndex = index;
-                    });
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
@@ -213,15 +184,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
                       color: _currentImageIndex == index
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.3),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                          ? AppColors.primary
+                          : Colors.grey[400],
                     ),
                   ),
                 ),
@@ -229,70 +193,62 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             ),
           ),
 
-        // Navigation arrows for desktop/web (optional)
+        // Setas de navegação
         if (images.length > 1) ...[
-          // Previous button
-          Positioned(
-            left: 16,
-            top: 0,
-            bottom: 0,
-            child: Center(
-              child: _currentImageIndex > 0
-                  ? Material(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(20),
-                      child: InkWell(
-                        onTap: () {
-                          _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          child: const Icon(
-                            Icons.chevron_left,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
+          if (_currentImageIndex > 0)
+            Positioned(
+              left: 16,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: Material(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  child: InkWell(
+                    onTap: () => _pageController.previousPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(
+                        Icons.chevron_left,
+                        color: Colors.white,
+                        size: 28,
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-          // Next button
-          Positioned(
-            right: 16,
-            top: 0,
-            bottom: 0,
-            child: Center(
-              child: _currentImageIndex < images.length - 1
-                  ? Material(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(20),
-                      child: InkWell(
-                        onTap: () {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          child: const Icon(
-                            Icons.chevron_right,
-                            color: Colors.white,
-                            size: 28,
-                          ),
-                        ),
+          if (_currentImageIndex < images.length - 1)
+            Positioned(
+              right: 16,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: Material(
+                  color: Colors.black.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(20),
+                  child: InkWell(
+                    onTap: () => _pageController.nextPage(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Icon(
+                        Icons.chevron_right,
+                        color: Colors.white,
+                        size: 28,
                       ),
-                    )
-                  : const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
         ],
       ],
     );
@@ -304,7 +260,6 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Product name
           Text(
             widget.product.name,
             style: theme.textTheme.headlineSmall?.copyWith(
@@ -312,19 +267,38 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               color: Colors.black87,
             ),
           ),
-
           const SizedBox(height: 12),
-
-          // Price
           Row(
             children: [
-              Text(
-                'R\$ ${widget.product.price}',
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
+              if (widget.product.hasPromotion) ...[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'R\$ ${widget.product.price}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: Colors.grey[500],
+                        decoration: TextDecoration.lineThrough,
+                        decorationColor: Colors.grey[500],
+                      ),
+                    ),
+                    Text(
+                      'R\$ ${widget.product.displayPrice}',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              ] else
+                Text(
+                  'R\$ ${widget.product.displayPrice}',
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
+                ),
               const Spacer(),
               if (widget.product.isHighlighted)
                 Container(
@@ -352,31 +326,6 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
                   ),
                 ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStockSection(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          Icon(
-            widget.product.inStock ? Icons.check_circle : Icons.cancel,
-            color: widget.product.inStock ? Colors.green : Colors.red,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            widget.product.inStock
-                ? context.l10n.inStock
-                : context.l10n.outOfStock,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: widget.product.inStock ? Colors.green : Colors.red,
-              fontWeight: FontWeight.w600,
-            ),
           ),
         ],
       ),
@@ -459,50 +408,44 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         ],
       ),
       child: SafeArea(
-        child: Row(
-          children: [
-            // Add to cart button (TODO: implement cart functionality)
-            Expanded(
-              child: ElevatedButton(
-                onPressed: widget.product.inStock
-                    ? () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(context.l10n.addToCart),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  disabledBackgroundColor: Colors.grey[300],
-                  foregroundColor: Colors.white,
-                  disabledForegroundColor: Colors.grey[600],
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.shopping_cart_outlined, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      widget.product.inStock
-                          ? context.l10n.addToCart
-                          : context.l10n.unavailable,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+        child: ElevatedButton(
+          onPressed: widget.product.inStock
+              ? () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(context.l10n.addToCart),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
                     ),
-                  ],
+                  );
+                }
+              : null,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            disabledBackgroundColor: Colors.grey[300],
+            foregroundColor: Colors.white,
+            disabledForegroundColor: Colors.grey[600],
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.shopping_cart_outlined, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                widget.product.inStock
+                    ? context.l10n.addToCart
+                    : context.l10n.unavailable,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -517,8 +460,8 @@ class _FavoriteButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isFav = ref.watch(
       favoritesProvider.select(
-        (state) => state.valueOrNull?.any((f) => f.product.id == product.id) ??
-            false,
+        (state) =>
+            state.valueOrNull?.any((f) => f.product.id == product.id) ?? false,
       ),
     );
 
@@ -528,15 +471,28 @@ class _FavoriteButton extends ConsumerWidget {
         color: Colors.white,
       ),
       onPressed: () async {
-        final notifier = ref.read(favoritesProvider.notifier);
-        await notifier.toggle(product.id);
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(isFav ? 'Removido dos favoritos' : 'Adicionado aos favoritos'),
-              duration: const Duration(seconds: 2),
-            ),
-          );
+        try {
+          await ref.read(favoritesProvider.notifier).toggle(product.id);
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  isFav ? context.l10n.favoriteRemoved : context.l10n.favoriteAdded,
+                ),
+                behavior: SnackBarBehavior.floating,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        } catch (_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.favoriteUpdateError),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         }
       },
     );

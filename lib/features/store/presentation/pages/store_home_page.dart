@@ -7,12 +7,11 @@ library;
 import 'package:flutter/material.dart';
 import '../../../../core/config/router.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/config/api_config.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../../../features/auth/presentation/providers/auth_provider.dart';
-import '../../domain/entities/product.dart';
 import '../providers/store_provider.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/product_card.dart';
 
 class StoreHomePage extends StatefulWidget {
   const StoreHomePage({super.key});
@@ -269,7 +268,7 @@ class _StoreHomePageState extends State<StoreHomePage> {
                               index,
                             ) {
                               final product = _storeProvider.products[index];
-                              return _buildProductCard(product);
+                              return ProductCard(product: product);
                             }, childCount: _storeProvider.products.length),
                           ),
                         ),
@@ -314,212 +313,4 @@ class _StoreHomePageState extends State<StoreHomePage> {
     );
   }
 
-  Widget _buildProductCard(Product product) {
-    final imageUrl = product.primaryImage?.imagePath;
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: () {
-          context.pushProductDetail(product);
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Imagem com badges
-            Expanded(
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(12),
-                      ),
-                    ),
-                    child: imageUrl != null && imageUrl.isNotEmpty
-                        ? ClipRRect(
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(12),
-                            ),
-                            child: Builder(
-                              builder: (context) {
-                                final fullUrl = ApiConfig.normalizeImageUrl(
-                                  imageUrl,
-                                );
-                                return Image.network(
-                                  fullUrl,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  headers: const {
-                                    'Host': ApiConfig.virtualHost,
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Center(
-                                      child: Icon(
-                                        Icons.pets,
-                                        size: 48,
-                                        color: Colors.grey[400],
-                                      ),
-                                    );
-                                  },
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
-                                          return child;
-                                        return Center(
-                                          child: CircularProgressIndicator(
-                                            value:
-                                                loadingProgress
-                                                        .expectedTotalBytes !=
-                                                    null
-                                                ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                : null,
-                                          ),
-                                        );
-                                      },
-                                );
-                              },
-                            ),
-                          )
-                        : Center(
-                            child: Icon(
-                              Icons.pets,
-                              size: 48,
-                              color: Colors.grey[400],
-                            ),
-                          ),
-                  ),
-                  // Badge: Fora de estoque
-                  if (!product.inStock)
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          context.l10n.outOfStock,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  // Badge: Promoção
-                  if (product.hasPromotion)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 3,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          '-${product.promotion!.discountValue.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-            // Info do produto
-            Padding(
-              padding: const EdgeInsets.all(6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 2),
-                  // Preço com promoção
-                  if (product.hasPromotion) ...[
-                    Text(
-                      'R\$ ${product.price}',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: Colors.grey[500],
-                        decoration: TextDecoration.lineThrough,
-                      ),
-                    ),
-                    Text(
-                      'R\$ ${product.displayPrice}',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange,
-                      ),
-                    ),
-                  ] else
-                    Text(
-                      'R\$ ${product.displayPrice}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  // Rating
-                  if (product.averageRating != null) ...[
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber, size: 11),
-                        const SizedBox(width: 2),
-                        Text(
-                          product.averageRating!.toStringAsFixed(1),
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          ' (${product.reviewsCount})',
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

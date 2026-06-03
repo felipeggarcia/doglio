@@ -58,7 +58,7 @@ class AppDrawer extends StatelessWidget {
             title: Text(context.l10n.myOrders),
             onTap: () {
               Navigator.pop(context);
-              context.goToOrders();
+              context.pushOrders();
             },
           ),
           ListTile(
@@ -66,7 +66,7 @@ class AppDrawer extends StatelessWidget {
             title: Text(context.l10n.myFavorites),
             onTap: () {
               Navigator.pop(context);
-              context.goToFavorites();
+              context.pushFavorites();
             },
           ),
           ListTile(
@@ -74,7 +74,7 @@ class AppDrawer extends StatelessWidget {
             title: Text(context.l10n.myAddresses),
             onTap: () {
               Navigator.pop(context);
-              context.goToAddresses();
+              context.pushAddresses();
             },
           ),
 

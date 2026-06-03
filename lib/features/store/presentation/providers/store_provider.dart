@@ -66,14 +66,10 @@ class StoreProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        print(
-          '[StoreProvider] Error loading categories: ${failure.userMessage}',
-        );
         _error = failure.userMessage;
         _categories = [];
       },
       (categories) {
-        print('[StoreProvider] Categories loaded: ${categories.length}');
         _categories = categories;
         _error = null;
       },
@@ -101,12 +97,10 @@ class StoreProvider extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        print('[StoreProvider] Error loading products: ${failure.userMessage}');
         _error = failure.userMessage;
         _products = [];
       },
       (products) {
-        print('[StoreProvider] Products loaded: ${products.length}');
         _products = products;
         _error = null;
       },
