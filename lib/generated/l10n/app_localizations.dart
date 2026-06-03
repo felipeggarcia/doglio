@@ -1346,6 +1346,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to update favorites. Please try again.'**
   String get favoriteUpdateError;
+
+  /// No description provided for @cartEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get cartEmpty;
+
+  /// No description provided for @cartEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add products to start shopping'**
+  String get cartEmptySubtitle;
+
+  /// No description provided for @clearCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear cart'**
+  String get clearCart;
+
+  /// No description provided for @clearCartConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove all items from your cart?'**
+  String get clearCartConfirm;
+
+  /// No description provided for @cartCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart cleared'**
+  String get cartCleared;
+
+  /// No description provided for @cartItemAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Product added to cart'**
+  String get cartItemAdded;
+
+  /// No description provided for @continueShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue shopping'**
+  String get continueShopping;
+
+  /// No description provided for @stockWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Some items have stock issues'**
+  String get stockWarning;
+
+  /// No description provided for @priceChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Some item prices have changed'**
+  String get priceChanged;
 }
 
 class _AppLocalizationsDelegate

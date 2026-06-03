@@ -661,4 +661,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get favoriteUpdateError =>
       'Failed to update favorites. Please try again.';
+
+  @override
+  String get cartEmpty => 'Your cart is empty';
+
+  @override
+  String get cartEmptySubtitle => 'Add products to start shopping';
+
+  @override
+  String get clearCart => 'Clear cart';
+
+  @override
+  String get clearCartConfirm => 'Remove all items from your cart?';
+
+  @override
+  String get cartCleared => 'Cart cleared';
+
+  @override
+  String get cartItemAdded => 'Product added to cart';
+
+  @override
+  String get continueShopping => 'Continue shopping';
+
+  @override
+  String get stockWarning => 'Some items have stock issues';
+
+  @override
+  String get priceChanged => 'Some item prices have changed';
 }

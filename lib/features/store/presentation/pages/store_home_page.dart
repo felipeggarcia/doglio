@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/config/router.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../../auth/presentation/providers/auth_notifier.dart';
+import '../../../cart/presentation/providers/cart_provider.dart';
 import '../providers/store_notifier.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/product_card.dart';
@@ -57,10 +58,7 @@ class _StoreHomePageState extends ConsumerState<StoreHomePage> {
           ],
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
-            onPressed: () {},
-          ),
+          _CartIconButton(),
           Builder(
             builder: (innerContext) => IconButton(
               icon: const Icon(Icons.person_outline, color: Colors.white),
@@ -269,6 +267,23 @@ class _StoreHomePageState extends ConsumerState<StoreHomePage> {
             color: isSelected ? Colors.white : Colors.black87,
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ─── Ícone do carrinho com badge ──────────────────────────────────────────────
+
+class _CartIconButton extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(cartProvider.select((s) => s.totalItems));
+    return Badge(
+      isLabelVisible: count > 0,
+      label: Text('$count', style: const TextStyle(fontSize: 10)),
+      child: IconButton(
+        icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        onPressed: () => context.pushCart(),
       ),
     );
   }

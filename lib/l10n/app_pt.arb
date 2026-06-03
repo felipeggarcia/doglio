@@ -229,5 +229,15 @@
       "id": { "type": "String" }
     }
   },
-  "favoriteUpdateError": "Erro ao atualizar favoritos. Tente novamente."
+  "favoriteUpdateError": "Erro ao atualizar favoritos. Tente novamente.",
+
+  "cartEmpty": "Seu carrinho está vazio",
+  "cartEmptySubtitle": "Adicione produtos para continuar comprando",
+  "clearCart": "Limpar carrinho",
+  "clearCartConfirm": "Deseja remover todos os itens do carrinho?",
+  "cartCleared": "Carrinho limpo",
+  "cartItemAdded": "Adicionado ao carrinho",
+  "continueShopping": "Continuar comprando",
+  "stockWarning": "Alguns itens têm problemas de estoque",
+  "priceChanged": "Preços de alguns itens foram alterados"
 }

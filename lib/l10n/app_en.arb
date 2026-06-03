@@ -272,5 +272,15 @@
       "id": { "type": "String" }
     }
   },
-  "favoriteUpdateError": "Failed to update favorites. Please try again."
+  "favoriteUpdateError": "Failed to update favorites. Please try again.",
+
+  "cartEmpty": "Your cart is empty",
+  "cartEmptySubtitle": "Add products to start shopping",
+  "clearCart": "Clear cart",
+  "clearCartConfirm": "Remove all items from your cart?",
+  "cartCleared": "Cart cleared",
+  "cartItemAdded": "Product added to cart",
+  "continueShopping": "Continue shopping",
+  "stockWarning": "Some items have stock issues",
+  "priceChanged": "Some item prices have changed"
 }

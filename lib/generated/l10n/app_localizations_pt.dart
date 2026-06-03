@@ -663,6 +663,33 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get favoriteUpdateError =>
       'Erro ao atualizar favoritos. Tente novamente.';
+
+  @override
+  String get cartEmpty => 'Seu carrinho está vazio';
+
+  @override
+  String get cartEmptySubtitle => 'Adicione produtos para continuar comprando';
+
+  @override
+  String get clearCart => 'Limpar carrinho';
+
+  @override
+  String get clearCartConfirm => 'Deseja remover todos os itens do carrinho?';
+
+  @override
+  String get cartCleared => 'Carrinho limpo';
+
+  @override
+  String get cartItemAdded => 'Adicionado ao carrinho';
+
+  @override
+  String get continueShopping => 'Continuar comprando';
+
+  @override
+  String get stockWarning => 'Alguns itens têm problemas de estoque';
+
+  @override
+  String get priceChanged => 'Preços de alguns itens foram alterados';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -1324,4 +1351,31 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   @override
   String get favoriteUpdateError =>
       'Erro ao atualizar favoritos. Tente novamente.';
+
+  @override
+  String get cartEmpty => 'Seu carrinho está vazio';
+
+  @override
+  String get cartEmptySubtitle => 'Adicione produtos para continuar comprando';
+
+  @override
+  String get clearCart => 'Limpar carrinho';
+
+  @override
+  String get clearCartConfirm => 'Deseja remover todos os itens do carrinho?';
+
+  @override
+  String get cartCleared => 'Carrinho limpo';
+
+  @override
+  String get cartItemAdded => 'Adicionado ao carrinho';
+
+  @override
+  String get continueShopping => 'Continuar comprando';
+
+  @override
+  String get stockWarning => 'Alguns itens têm problemas de estoque';
+
+  @override
+  String get priceChanged => 'Preços de alguns itens foram alterados';
 }

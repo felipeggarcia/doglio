@@ -17,6 +17,7 @@ import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/orders/presentation/pages/order_detail_page.dart';
 import '../../features/orders/domain/entities/order.dart';
 import '../../features/addresses/presentation/pages/addresses_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 
 /// Route paths constants
 abstract class AppRoutes {
@@ -30,6 +31,7 @@ abstract class AppRoutes {
   static const String orders = '/orders';
   static const String orderDetail = '/orders/:id';
   static const String addresses = '/addresses';
+  static const String cart = '/cart';
 }
 
 /// Application GoRouter instance
@@ -93,6 +95,11 @@ final appRouter = GoRouter(
       name: 'addresses',
       builder: (context, state) => const AddressesPage(),
     ),
+    GoRoute(
+      path: AppRoutes.cart,
+      name: 'cart',
+      builder: (context, state) => const CartPage(),
+    ),
   ],
 );
 
@@ -120,4 +127,6 @@ extension AppNavigationContext on BuildContext {
 
   void pushOrderDetail(Order order) =>
       push('/orders/${order.id}', extra: order);
+
+  void pushCart() => push(AppRoutes.cart);
 }

@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/config/api_config.dart';
+import '../../../../core/config/router.dart';
 import '../../../../core/utils/l10n_helper.dart';
+import '../../../../core/widgets/cart_bubble.dart' show CartBubble, FavoriteBubble;
+import '../../../cart/presentation/providers/cart_provider.dart';
 import '../../../favorites/presentation/providers/favorites_provider.dart';
 import '../../domain/entities/product.dart';
 
@@ -21,6 +24,8 @@ class ProductDetailPage extends ConsumerStatefulWidget {
 class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   int _currentImageIndex = 0;
   final PageController _pageController = PageController();
+  bool _appBarVisible = true;
+  final GlobalKey _cartIconKey = GlobalKey();
 
   @override
   void dispose() {
@@ -46,7 +51,17 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: CustomScrollView(
+      body: NotificationListener<ScrollUpdateNotification>(
+        onNotification: (n) {
+          final down = (n.scrollDelta ?? 0) > 0;
+          if (down && _appBarVisible) setState(() => _appBarVisible = false);
+          if (!down && !_appBarVisible) setState(() => _appBarVisible = true);
+          // Qualquer scroll descarta o balão com animação rápida
+          CartBubble.dismiss();
+          FavoriteBubble.dismiss();
+          return false;
+        },
+        child: CustomScrollView(
         slivers: [
           // AppBar verde — oculta ao rolar, volta ao rolar para cima
           SliverAppBar(
@@ -79,14 +94,8 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
               ],
             ),
             actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.white,
-                ),
-                onPressed: () {},
-              ),
-              _FavoriteButton(product: widget.product),
+              _CartBadgeButton(key: _cartIconKey),
+              _FavoriteButton(product: widget.product, appBarVisible: _appBarVisible),
             ],
           ),
 
@@ -115,8 +124,9 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             ),
           ),
         ],
+        ),
       ),
-      bottomNavigationBar: _buildBottomBar(theme),
+      bottomNavigationBar: _buildBottomBar(theme, ref),
     );
   }
 
@@ -393,7 +403,12 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
     );
   }
 
-  Widget _buildBottomBar(ThemeData theme) {
+  Widget _buildBottomBar(ThemeData theme, WidgetRef ref) {
+    final inCart = ref.watch(
+      cartProvider.select(
+        (s) => s.items.any((i) => i.productId == widget.product.id),
+      ),
+    );
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -410,17 +425,17 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         child: ElevatedButton(
           onPressed: widget.product.inStock
               ? () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(context.l10n.addToCart),
-                      behavior: SnackBarBehavior.floating,
-                      duration: const Duration(seconds: 2),
-                    ),
+                  ref.read(cartProvider.notifier).addItem(widget.product);
+                  CartBubble.show(
+                    _cartIconKey.currentContext ?? context,
+                    appBarVisible: _appBarVisible,
                   );
                 }
               : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: inCart
+                ? theme.colorScheme.primary.withValues(alpha: 0.85)
+                : theme.colorScheme.primary,
             disabledBackgroundColor: Colors.grey[300],
             foregroundColor: Colors.white,
             disabledForegroundColor: Colors.grey[600],
@@ -432,11 +447,16 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.shopping_cart_outlined, size: 20),
+              Icon(
+                inCart ? Icons.shopping_cart : Icons.shopping_cart_outlined,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 widget.product.inStock
-                    ? context.l10n.addToCart
+                    ? (inCart
+                        ? context.l10n.addToCart
+                        : context.l10n.addToCart)
                     : context.l10n.unavailable,
                 style: const TextStyle(
                   fontSize: 16,
@@ -451,9 +471,27 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
   }
 }
 
+class _CartBadgeButton extends ConsumerWidget {
+  const _CartBadgeButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final count = ref.watch(cartProvider.select((s) => s.totalItems));
+    return Badge(
+      isLabelVisible: count > 0,
+      label: Text('$count', style: const TextStyle(fontSize: 10)),
+      child: IconButton(
+        icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white),
+        onPressed: () => context.pushCart(),
+      ),
+    );
+  }
+}
+
 class _FavoriteButton extends ConsumerWidget {
-  const _FavoriteButton({required this.product});
+  const _FavoriteButton({required this.product, required this.appBarVisible});
   final Product product;
+  final bool appBarVisible;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -473,15 +511,7 @@ class _FavoriteButton extends ConsumerWidget {
         try {
           await ref.read(favoritesProvider.notifier).toggle(product.id);
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  isFav ? context.l10n.favoriteRemoved : context.l10n.favoriteAdded,
-                ),
-                behavior: SnackBarBehavior.floating,
-                duration: const Duration(seconds: 2),
-              ),
-            );
+            FavoriteBubble.show(context, added: !isFav, appBarVisible: appBarVisible);
           }
         } catch (_) {
           if (context.mounted) {
