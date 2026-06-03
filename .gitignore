@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 CONTEXT.md
 devtools_options.yaml
+CONTRIBUTING.md
