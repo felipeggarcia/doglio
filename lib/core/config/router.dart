@@ -18,6 +18,9 @@ import '../../features/orders/presentation/pages/order_detail_page.dart';
 import '../../features/orders/domain/entities/order.dart';
 import '../../features/addresses/presentation/pages/addresses_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/checkout/presentation/pages/checkout_page.dart';
+import '../../features/checkout/presentation/pages/pix_page.dart';
+import '../../features/checkout/domain/entities/checkout_result.dart';
 
 /// Route paths constants
 abstract class AppRoutes {
@@ -32,6 +35,8 @@ abstract class AppRoutes {
   static const String orderDetail = '/orders/:id';
   static const String addresses = '/addresses';
   static const String cart = '/cart';
+  static const String checkout = '/checkout';
+  static const String pix = '/pix';
 }
 
 /// Application GoRouter instance
@@ -68,8 +73,11 @@ final appRouter = GoRouter(
       path: AppRoutes.productDetail,
       name: 'product-detail',
       builder: (context, state) {
-        final product = state.extra as Product;
-        return ProductDetailPage(product: product);
+        final product = state.extra as Product?;
+        if (product != null) return ProductDetailPage(product: product);
+        return ProductDetailPageLoader(
+          productId: state.pathParameters['id']!,
+        );
       },
     ),
     GoRoute(
@@ -100,6 +108,19 @@ final appRouter = GoRouter(
       name: 'cart',
       builder: (context, state) => const CartPage(),
     ),
+    GoRoute(
+      path: AppRoutes.checkout,
+      name: 'checkout',
+      builder: (context, state) => const CheckoutPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.pix,
+      name: 'pix',
+      builder: (context, state) {
+        final result = state.extra as CheckoutResult;
+        return PixPage(result: result);
+      },
+    ),
   ],
 );
 
@@ -129,4 +150,7 @@ extension AppNavigationContext on BuildContext {
       push('/orders/${order.id}', extra: order);
 
   void pushCart() => push(AppRoutes.cart);
+  void pushCheckout() => push(AppRoutes.checkout);
+  void pushPix(CheckoutResult result) =>
+      push(AppRoutes.pix, extra: result);
 }

@@ -571,7 +571,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deliveryPickup => 'Store pickup';
 
   @override
-  String get deliveryHome => 'Home delivery';
+  String get deliveryHome => 'Receive at home';
 
   @override
   String get addresses => 'Addresses';
@@ -688,4 +688,115 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get priceChanged => 'Some item prices have changed';
+
+  @override
+  String get checkoutTitle => 'Order Summary';
+
+  @override
+  String get checkoutDeliverySection => 'How to receive?';
+
+  @override
+  String get checkoutSelectAddress => 'Delivery address';
+
+  @override
+  String get checkoutAddNewAddress => 'Add new address';
+
+  @override
+  String get checkoutPayWithPix => 'Pay with PIX';
+
+  @override
+  String checkoutPayWithMethod(String name) {
+    return 'Pay with $name';
+  }
+
+  @override
+  String get checkoutPaymentMethod => 'Payment method';
+
+  @override
+  String get checkoutSelectPaymentMethod => 'Select how to pay';
+
+  @override
+  String get checkoutNoPaymentMethods => 'No payment methods available';
+
+  @override
+  String get checkoutShippingFee => 'Shipping';
+
+  @override
+  String get checkoutFreeShipping => 'Free pickup';
+
+  @override
+  String get checkoutCepLabel => 'Delivery ZIP code';
+
+  @override
+  String get checkoutCepFound => 'Address found!';
+
+  @override
+  String get checkoutCepNotFound => 'ZIP not in your saved addresses';
+
+  @override
+  String get checkoutSaveAddress => 'Save address?';
+
+  @override
+  String get checkoutSaveAddressMessage =>
+      'Save this address to your account and set as favorite?';
+
+  @override
+  String get checkoutUpdateAddress => 'Update saved address?';
+
+  @override
+  String get checkoutUpdateAddressMessage =>
+      'Details changed. Update the saved address?';
+
+  @override
+  String get checkoutPlacing => 'Placing order...';
+
+  @override
+  String get checkoutValidating => 'Validating cart...';
+
+  @override
+  String get checkoutError => 'Error placing order';
+
+  @override
+  String get checkoutCartChanged =>
+      'Cart updated — please review before continuing';
+
+  @override
+  String get pixTitle => 'PIX Payment';
+
+  @override
+  String get pixCopyCode => 'Copy code';
+
+  @override
+  String get pixCopied => 'Code copied!';
+
+  @override
+  String get pixExpiresIn => 'Expires in 30 minutes';
+
+  @override
+  String get pixSuccessTitle => 'Order placed!';
+
+  @override
+  String get pixSuccessSubtitle => 'Complete PIX payment to confirm your order';
+
+  @override
+  String get pixInstructions =>
+      'Open your bank app, go to Pix and paste the code below';
+
+  @override
+  String get pixCodeLabel => 'PIX Code';
+
+  @override
+  String get orderSeeDetails => 'See full details';
+
+  @override
+  String get orderStatusHistory => 'Status history';
+
+  @override
+  String get checkoutSavedAddresses => 'Saved addresses';
+
+  @override
+  String get checkoutUseNewAddress => 'Use a different address';
+
+  @override
+  String get checkoutDeliveryToSelected => 'Delivery to this address';
 }

@@ -573,7 +573,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get deliveryPickup => 'Retirada na loja';
 
   @override
-  String get deliveryHome => 'Entrega em domicílio';
+  String get deliveryHome => 'Receber em casa';
 
   @override
   String get addresses => 'Endereços';
@@ -690,6 +690,118 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get priceChanged => 'Preços de alguns itens foram alterados';
+
+  @override
+  String get checkoutTitle => 'Resumo do Pedido';
+
+  @override
+  String get checkoutDeliverySection => 'Como receber?';
+
+  @override
+  String get checkoutSelectAddress => 'Endereço de entrega';
+
+  @override
+  String get checkoutAddNewAddress => 'Cadastrar novo endereço';
+
+  @override
+  String get checkoutPayWithPix => 'Pagar com PIX';
+
+  @override
+  String checkoutPayWithMethod(String name) {
+    return 'Pagar com $name';
+  }
+
+  @override
+  String get checkoutPaymentMethod => 'Forma de pagamento';
+
+  @override
+  String get checkoutSelectPaymentMethod => 'Selecione como quer pagar';
+
+  @override
+  String get checkoutNoPaymentMethods => 'Nenhum método disponível';
+
+  @override
+  String get checkoutShippingFee => 'Frete';
+
+  @override
+  String get checkoutFreeShipping => 'Retirada gratuita';
+
+  @override
+  String get checkoutCepLabel => 'CEP de entrega';
+
+  @override
+  String get checkoutCepFound => 'Endereço encontrado!';
+
+  @override
+  String get checkoutCepNotFound => 'CEP não encontrado nos seus endereços';
+
+  @override
+  String get checkoutSaveAddress => 'Salvar endereço?';
+
+  @override
+  String get checkoutSaveAddressMessage =>
+      'Deseja salvar este endereço na sua conta e torná-lo favorito?';
+
+  @override
+  String get checkoutUpdateAddress => 'Atualizar endereço salvo?';
+
+  @override
+  String get checkoutUpdateAddressMessage =>
+      'Os dados foram alterados. Deseja atualizar o endereço salvo?';
+
+  @override
+  String get checkoutPlacing => 'Finalizando pedido...';
+
+  @override
+  String get checkoutValidating => 'Validando carrinho...';
+
+  @override
+  String get checkoutError => 'Erro ao finalizar pedido';
+
+  @override
+  String get checkoutCartChanged =>
+      'Carrinho atualizado — revise os itens antes de continuar';
+
+  @override
+  String get pixTitle => 'Pagamento PIX';
+
+  @override
+  String get pixCopyCode => 'Copiar código';
+
+  @override
+  String get pixCopied => 'Código copiado!';
+
+  @override
+  String get pixExpiresIn => 'Expira em 30 minutos';
+
+  @override
+  String get pixSuccessTitle => 'Pedido criado!';
+
+  @override
+  String get pixSuccessSubtitle =>
+      'Efetue o pagamento PIX para confirmar seu pedido';
+
+  @override
+  String get pixInstructions =>
+      'Abra o app do seu banco, entre em Pix e cole o código abaixo';
+
+  @override
+  String get pixCodeLabel => 'Código PIX';
+
+  @override
+  String get orderSeeDetails => 'Ver detalhes completos';
+
+  @override
+  String get orderStatusHistory => 'Histórico de status';
+
+  @override
+  String get checkoutSavedAddresses => 'Endereços salvos';
+
+  @override
+  String get checkoutUseNewAddress => 'Usar outro endereço';
+
+  @override
+  String get checkoutDeliveryToSelected => 'Entrega para este endereço';
 }
 
 /// The translations for Portuguese, as used in Brazil (`pt_BR`).
@@ -1261,7 +1373,7 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get deliveryPickup => 'Retirada na loja';
 
   @override
-  String get deliveryHome => 'Entrega em domicílio';
+  String get deliveryHome => 'Receber em casa';
 
   @override
   String get addresses => 'Endereços';
@@ -1378,4 +1490,116 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get priceChanged => 'Preços de alguns itens foram alterados';
+
+  @override
+  String get checkoutTitle => 'Resumo do Pedido';
+
+  @override
+  String get checkoutDeliverySection => 'Como receber?';
+
+  @override
+  String get checkoutSelectAddress => 'Endereço de entrega';
+
+  @override
+  String get checkoutAddNewAddress => 'Cadastrar novo endereço';
+
+  @override
+  String get checkoutPayWithPix => 'Pagar com PIX';
+
+  @override
+  String checkoutPayWithMethod(String name) {
+    return 'Pagar com $name';
+  }
+
+  @override
+  String get checkoutPaymentMethod => 'Forma de pagamento';
+
+  @override
+  String get checkoutSelectPaymentMethod => 'Selecione como quer pagar';
+
+  @override
+  String get checkoutNoPaymentMethods => 'Nenhum método disponível';
+
+  @override
+  String get checkoutShippingFee => 'Frete';
+
+  @override
+  String get checkoutFreeShipping => 'Retirada gratuita';
+
+  @override
+  String get checkoutCepLabel => 'CEP de entrega';
+
+  @override
+  String get checkoutCepFound => 'Endereço encontrado!';
+
+  @override
+  String get checkoutCepNotFound => 'CEP não encontrado nos seus endereços';
+
+  @override
+  String get checkoutSaveAddress => 'Salvar endereço?';
+
+  @override
+  String get checkoutSaveAddressMessage =>
+      'Deseja salvar este endereço na sua conta e torná-lo favorito?';
+
+  @override
+  String get checkoutUpdateAddress => 'Atualizar endereço salvo?';
+
+  @override
+  String get checkoutUpdateAddressMessage =>
+      'Os dados foram alterados. Deseja atualizar o endereço salvo?';
+
+  @override
+  String get checkoutPlacing => 'Finalizando pedido...';
+
+  @override
+  String get checkoutValidating => 'Validando carrinho...';
+
+  @override
+  String get checkoutError => 'Erro ao finalizar pedido';
+
+  @override
+  String get checkoutCartChanged =>
+      'Carrinho atualizado — revise os itens antes de continuar';
+
+  @override
+  String get pixTitle => 'Pagamento PIX';
+
+  @override
+  String get pixCopyCode => 'Copiar código';
+
+  @override
+  String get pixCopied => 'Código copiado!';
+
+  @override
+  String get pixExpiresIn => 'Expira em 30 minutos';
+
+  @override
+  String get pixSuccessTitle => 'Pedido criado!';
+
+  @override
+  String get pixSuccessSubtitle =>
+      'Efetue o pagamento PIX para confirmar seu pedido';
+
+  @override
+  String get pixInstructions =>
+      'Abra o app do seu banco, entre em Pix e cole o código abaixo';
+
+  @override
+  String get pixCodeLabel => 'Código PIX';
+
+  @override
+  String get orderSeeDetails => 'Ver detalhes completos';
+
+  @override
+  String get orderStatusHistory => 'Histórico de status';
+
+  @override
+  String get checkoutSavedAddresses => 'Endereços salvos';
+
+  @override
+  String get checkoutUseNewAddress => 'Usar outro endereço';
+
+  @override
+  String get checkoutDeliveryToSelected => 'Entrega para este endereço';
 }

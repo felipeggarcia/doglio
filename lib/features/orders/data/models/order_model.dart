@@ -69,8 +69,9 @@ abstract class OrderModel with _$OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);
 
-  Order toEntity() => Order(
+  Order toEntity({String? orderNumber, OrderPayment? payment}) => Order(
         id: id,
+        orderNumber: orderNumber,
         status: status,
         items: items.map((i) => i.toEntity()).toList(),
         total: total,
@@ -78,5 +79,6 @@ abstract class OrderModel with _$OrderModel {
         updatedAt: updatedAt,
         shippingAddress: shippingAddress,
         trackingCode: trackingCode,
+        payment: payment,
       );
 }

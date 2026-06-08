@@ -1,8 +1,49 @@
 /// Text and number formatters for Doglio Marketplace
-///
-/// This file provides utility functions for formatting various types of data
-/// displayed throughout the application.
 library;
+
+import 'package:flutter/services.dart';
+
+/// Máscara de CEP: formata dígitos como 00000-000.
+/// Aceita somente números; insere hífen automaticamente após o 5º dígito.
+class CepInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final digits = newValue.text
+        .replaceAll(RegExp(r'[^\d]'), '')
+        .substring(
+          0,
+          newValue.text
+              .replaceAll(RegExp(r'[^\d]'), '')
+              .length
+              .clamp(0, 8),
+        );
+
+    if (digits.length <= 5) {
+      return newValue.copyWith(
+        text: digits,
+        selection: TextSelection.collapsed(offset: digits.length),
+      );
+    }
+    final formatted = '${digits.substring(0, 5)}-${digits.substring(5)}';
+    return newValue.copyWith(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+/// Converte automaticamente para maiúsculas (usado no campo UF).
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) =>
+      newValue.copyWith(text: newValue.text.toUpperCase());
+}
 
 class AppFormatters {
   /// Format currency based on locale

@@ -3,6 +3,7 @@ library;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/store_notifier.dart' show productByIdProvider;
 import 'package:go_router/go_router.dart';
 import '../../../../core/config/api_config.dart';
 import '../../../../core/config/router.dart';
@@ -523,6 +524,34 @@ class _FavoriteButton extends ConsumerWidget {
             );
           }
         }
+      },
+    );
+  }
+}
+
+class ProductDetailPageLoader extends ConsumerWidget {
+  const ProductDetailPageLoader({super.key, required this.productId});
+  final String productId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final async = ref.watch(productByIdProvider(productId));
+    return async.when(
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, _) => Scaffold(
+        appBar: AppBar(),
+        body: const Center(child: Text('Produto não encontrado')),
+      ),
+      data: (product) {
+        if (product == null) {
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: Text('Produto não encontrado')),
+          );
+        }
+        return ProductDetailPage(product: product);
       },
     );
   }

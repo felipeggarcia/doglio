@@ -1182,7 +1182,7 @@ abstract class AppLocalizations {
   /// No description provided for @deliveryHome.
   ///
   /// In en, this message translates to:
-  /// **'Home delivery'**
+  /// **'Receive at home'**
   String get deliveryHome;
 
   /// No description provided for @addresses.
@@ -1400,6 +1400,216 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Some item prices have changed'**
   String get priceChanged;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Summary'**
+  String get checkoutTitle;
+
+  /// No description provided for @checkoutDeliverySection.
+  ///
+  /// In en, this message translates to:
+  /// **'How to receive?'**
+  String get checkoutDeliverySection;
+
+  /// No description provided for @checkoutSelectAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery address'**
+  String get checkoutSelectAddress;
+
+  /// No description provided for @checkoutAddNewAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Add new address'**
+  String get checkoutAddNewAddress;
+
+  /// No description provided for @checkoutPayWithPix.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay with PIX'**
+  String get checkoutPayWithPix;
+
+  /// No description provided for @checkoutPayWithMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay with {name}'**
+  String checkoutPayWithMethod(String name);
+
+  /// No description provided for @checkoutPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get checkoutPaymentMethod;
+
+  /// No description provided for @checkoutSelectPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Select how to pay'**
+  String get checkoutSelectPaymentMethod;
+
+  /// No description provided for @checkoutNoPaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'No payment methods available'**
+  String get checkoutNoPaymentMethods;
+
+  /// No description provided for @checkoutShippingFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get checkoutShippingFee;
+
+  /// No description provided for @checkoutFreeShipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Free pickup'**
+  String get checkoutFreeShipping;
+
+  /// No description provided for @checkoutCepLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery ZIP code'**
+  String get checkoutCepLabel;
+
+  /// No description provided for @checkoutCepFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Address found!'**
+  String get checkoutCepFound;
+
+  /// No description provided for @checkoutCepNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'ZIP not in your saved addresses'**
+  String get checkoutCepNotFound;
+
+  /// No description provided for @checkoutSaveAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Save address?'**
+  String get checkoutSaveAddress;
+
+  /// No description provided for @checkoutSaveAddressMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Save this address to your account and set as favorite?'**
+  String get checkoutSaveAddressMessage;
+
+  /// No description provided for @checkoutUpdateAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Update saved address?'**
+  String get checkoutUpdateAddress;
+
+  /// No description provided for @checkoutUpdateAddressMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Details changed. Update the saved address?'**
+  String get checkoutUpdateAddressMessage;
+
+  /// No description provided for @checkoutPlacing.
+  ///
+  /// In en, this message translates to:
+  /// **'Placing order...'**
+  String get checkoutPlacing;
+
+  /// No description provided for @checkoutValidating.
+  ///
+  /// In en, this message translates to:
+  /// **'Validating cart...'**
+  String get checkoutValidating;
+
+  /// No description provided for @checkoutError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error placing order'**
+  String get checkoutError;
+
+  /// No description provided for @checkoutCartChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart updated — please review before continuing'**
+  String get checkoutCartChanged;
+
+  /// No description provided for @pixTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'PIX Payment'**
+  String get pixTitle;
+
+  /// No description provided for @pixCopyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get pixCopyCode;
+
+  /// No description provided for @pixCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code copied!'**
+  String get pixCopied;
+
+  /// No description provided for @pixExpiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires in 30 minutes'**
+  String get pixExpiresIn;
+
+  /// No description provided for @pixSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order placed!'**
+  String get pixSuccessTitle;
+
+  /// No description provided for @pixSuccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete PIX payment to confirm your order'**
+  String get pixSuccessSubtitle;
+
+  /// No description provided for @pixInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Open your bank app, go to Pix and paste the code below'**
+  String get pixInstructions;
+
+  /// No description provided for @pixCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'PIX Code'**
+  String get pixCodeLabel;
+
+  /// No description provided for @orderSeeDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'See full details'**
+  String get orderSeeDetails;
+
+  /// No description provided for @orderStatusHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Status history'**
+  String get orderStatusHistory;
+
+  /// No description provided for @checkoutSavedAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved addresses'**
+  String get checkoutSavedAddresses;
+
+  /// No description provided for @checkoutUseNewAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Use a different address'**
+  String get checkoutUseNewAddress;
+
+  /// No description provided for @checkoutDeliveryToSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery to this address'**
+  String get checkoutDeliveryToSelected;
 }
 
 class _AppLocalizationsDelegate

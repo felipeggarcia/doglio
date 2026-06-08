@@ -5,6 +5,7 @@ import '../../data/datasources/store_remote_datasource.dart';
 import '../../data/repositories/store_repository_impl.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/usecases/get_categories_usecase.dart';
+import '../../domain/usecases/get_product_details_usecase.dart';
 import '../../domain/usecases/get_products_usecase.dart';
 
 // ─── Estado ────────────────────────────────────────────────────────────────────
@@ -136,3 +137,12 @@ class StoreNotifier extends Notifier<StoreState> {
 final storeProvider = NotifierProvider<StoreNotifier, StoreState>(
   StoreNotifier.new,
 );
+
+final productByIdProvider =
+    FutureProvider.autoDispose.family<Product?, String>((ref, productId) async {
+  final useCase = GetProductDetailsUseCase(
+    StoreRepositoryImpl(remoteDatasource: StoreRemoteDatasourceImpl()),
+  );
+  final result = await useCase(productId);
+  return result.fold((_) => null, (p) => p);
+});

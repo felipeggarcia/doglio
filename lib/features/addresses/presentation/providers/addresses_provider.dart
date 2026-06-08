@@ -49,7 +49,10 @@ class AddressesNotifier extends AsyncNotifier<List<Address>> {
   Future<void> save(Address address) async {
     final result = await _saveAddress(address);
     result.fold(
-      (failure) => throw Exception(failure.userMessage),
+      (failure) => state = AsyncError(
+        Exception(failure.userMessage),
+        StackTrace.current,
+      ),
       (_) => reload(),
     );
   }
@@ -57,7 +60,10 @@ class AddressesNotifier extends AsyncNotifier<List<Address>> {
   Future<void> delete(String addressId) async {
     final result = await _deleteAddress(addressId);
     result.fold(
-      (failure) => throw Exception(failure.userMessage),
+      (failure) => state = AsyncError(
+        Exception(failure.userMessage),
+        StackTrace.current,
+      ),
       (_) {
         final current = state.valueOrNull ?? [];
         state = AsyncData(
@@ -70,7 +76,10 @@ class AddressesNotifier extends AsyncNotifier<List<Address>> {
   Future<void> setPrimary(String addressId) async {
     final result = await _setPrimary(addressId);
     result.fold(
-      (failure) => throw Exception(failure.userMessage),
+      (failure) => state = AsyncError(
+        Exception(failure.userMessage),
+        StackTrace.current,
+      ),
       (_) {
         final current = state.valueOrNull ?? [];
         state = AsyncData(

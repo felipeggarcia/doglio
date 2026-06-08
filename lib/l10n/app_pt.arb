@@ -186,7 +186,7 @@
   "paymentInfo": "Pagamento",
   "deliveryInfo": "Entrega",
   "deliveryPickup": "Retirada na loja",
-  "deliveryHome": "Entrega em domicílio",
+  "deliveryHome": "Receber em casa",
 
   "addresses": "Endereços",
   "noAddresses": "Nenhum endereço cadastrado",
@@ -239,5 +239,46 @@
   "cartItemAdded": "Adicionado ao carrinho",
   "continueShopping": "Continuar comprando",
   "stockWarning": "Alguns itens têm problemas de estoque",
-  "priceChanged": "Preços de alguns itens foram alterados"
+  "priceChanged": "Preços de alguns itens foram alterados",
+
+  "checkoutTitle": "Resumo do Pedido",
+  "checkoutDeliverySection": "Como receber?",
+  "checkoutSelectAddress": "Endereço de entrega",
+  "checkoutAddNewAddress": "Cadastrar novo endereço",
+  "checkoutPayWithPix": "Pagar com PIX",
+  "checkoutPayWithMethod": "Pagar com {name}",
+  "@checkoutPayWithMethod": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "checkoutPaymentMethod": "Forma de pagamento",
+  "checkoutSelectPaymentMethod": "Selecione como quer pagar",
+  "checkoutNoPaymentMethods": "Nenhum método disponível",
+  "checkoutShippingFee": "Frete",
+  "checkoutFreeShipping": "Retirada gratuita",
+  "checkoutCepLabel": "CEP de entrega",
+  "checkoutCepFound": "Endereço encontrado!",
+  "checkoutCepNotFound": "CEP não encontrado nos seus endereços",
+  "checkoutSaveAddress": "Salvar endereço?",
+  "checkoutSaveAddressMessage": "Deseja salvar este endereço na sua conta e torná-lo favorito?",
+  "checkoutUpdateAddress": "Atualizar endereço salvo?",
+  "checkoutUpdateAddressMessage": "Os dados foram alterados. Deseja atualizar o endereço salvo?",
+  "checkoutPlacing": "Finalizando pedido...",
+  "checkoutValidating": "Validando carrinho...",
+  "checkoutError": "Erro ao finalizar pedido",
+  "checkoutCartChanged": "Carrinho atualizado — revise os itens antes de continuar",
+  "pixTitle": "Pagamento PIX",
+  "pixCopyCode": "Copiar código",
+  "pixCopied": "Código copiado!",
+  "pixExpiresIn": "Expira em 30 minutos",
+  "pixSuccessTitle": "Pedido criado!",
+  "pixSuccessSubtitle": "Efetue o pagamento PIX para confirmar seu pedido",
+  "pixInstructions": "Abra o app do seu banco, entre em Pix e cole o código abaixo",
+  "pixCodeLabel": "Código PIX",
+  "orderSeeDetails": "Ver detalhes completos",
+  "orderStatusHistory": "Histórico de status",
+  "checkoutSavedAddresses": "Endereços salvos",
+  "checkoutUseNewAddress": "Usar outro endereço",
+  "checkoutDeliveryToSelected": "Entrega para este endereço"
 }

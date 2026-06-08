@@ -479,9 +479,7 @@ class _CheckoutBar extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO: navegar para checkout
-                },
+                onPressed: () => context.push('/checkout'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: theme.colorScheme.primary,
                   foregroundColor: Colors.white,

@@ -229,7 +229,7 @@
   "paymentInfo": "Payment",
   "deliveryInfo": "Delivery",
   "deliveryPickup": "Store pickup",
-  "deliveryHome": "Home delivery",
+  "deliveryHome": "Receive at home",
 
   "addresses": "Addresses",
   "noAddresses": "No addresses saved yet",
@@ -282,5 +282,46 @@
   "cartItemAdded": "Product added to cart",
   "continueShopping": "Continue shopping",
   "stockWarning": "Some items have stock issues",
-  "priceChanged": "Some item prices have changed"
+  "priceChanged": "Some item prices have changed",
+
+  "checkoutTitle": "Order Summary",
+  "checkoutDeliverySection": "How to receive?",
+  "checkoutSelectAddress": "Delivery address",
+  "checkoutAddNewAddress": "Add new address",
+  "checkoutPayWithPix": "Pay with PIX",
+  "checkoutPayWithMethod": "Pay with {name}",
+  "@checkoutPayWithMethod": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "checkoutPaymentMethod": "Payment method",
+  "checkoutSelectPaymentMethod": "Select how to pay",
+  "checkoutNoPaymentMethods": "No payment methods available",
+  "checkoutShippingFee": "Shipping",
+  "checkoutFreeShipping": "Free pickup",
+  "checkoutCepLabel": "Delivery ZIP code",
+  "checkoutCepFound": "Address found!",
+  "checkoutCepNotFound": "ZIP not in your saved addresses",
+  "checkoutSaveAddress": "Save address?",
+  "checkoutSaveAddressMessage": "Save this address to your account and set as favorite?",
+  "checkoutUpdateAddress": "Update saved address?",
+  "checkoutUpdateAddressMessage": "Details changed. Update the saved address?",
+  "checkoutPlacing": "Placing order...",
+  "checkoutValidating": "Validating cart...",
+  "checkoutError": "Error placing order",
+  "checkoutCartChanged": "Cart updated — please review before continuing",
+  "pixTitle": "PIX Payment",
+  "pixCopyCode": "Copy code",
+  "pixCopied": "Code copied!",
+  "pixExpiresIn": "Expires in 30 minutes",
+  "pixSuccessTitle": "Order placed!",
+  "pixSuccessSubtitle": "Complete PIX payment to confirm your order",
+  "pixInstructions": "Open your bank app, go to Pix and paste the code below",
+  "pixCodeLabel": "PIX Code",
+  "orderSeeDetails": "See full details",
+  "orderStatusHistory": "Status history",
+  "checkoutSavedAddresses": "Saved addresses",
+  "checkoutUseNewAddress": "Use a different address",
+  "checkoutDeliveryToSelected": "Delivery to this address"
 }

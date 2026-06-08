@@ -42,7 +42,7 @@ class AddressesRemoteDatasource {
     final data = body['data'] as List<dynamic>;
     return data
         .cast<Map<String, dynamic>>()
-        .map(AddressModel.fromJson)
+        .map((json) => AddressModel.fromJson(_normalizeJson(json)))
         .toList();
   }
 
@@ -55,11 +55,13 @@ class AddressesRemoteDatasource {
         )
         .timeout(ApiConfig.timeout);
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 201 && response.statusCode != 200) {
       throw Exception('Failed to create address: ${response.statusCode}');
     }
     final body = jsonDecode(response.body) as Map<String, dynamic>;
-    return AddressModel.fromJson(body['data'] as Map<String, dynamic>);
+    return AddressModel.fromJson(
+      _normalizeJson(body['data'] as Map<String, dynamic>),
+    );
   }
 
   Future<AddressModel> updateAddress(AddressModel address) async {
@@ -75,7 +77,9 @@ class AddressesRemoteDatasource {
       throw Exception('Failed to update address: ${response.statusCode}');
     }
     final body = jsonDecode(response.body) as Map<String, dynamic>;
-    return AddressModel.fromJson(body['data'] as Map<String, dynamic>);
+    return AddressModel.fromJson(
+      _normalizeJson(body['data'] as Map<String, dynamic>),
+    );
   }
 
   Future<void> deleteAddress(String addressId) async {
@@ -86,10 +90,21 @@ class AddressesRemoteDatasource {
         )
         .timeout(ApiConfig.timeout);
 
-    if (response.statusCode != 204) {
+    if (response.statusCode != 204 && response.statusCode != 200) {
       throw Exception('Failed to delete address: ${response.statusCode}');
     }
   }
+
+  /// Normaliza campos do JSON de endereço para cobrir variações de campo
+  /// que o backend pode retornar (ex: 'zip' vs 'zip_code', 'neighborhood' vs 'district').
+  Map<String, dynamic> _normalizeJson(Map<String, dynamic> json) => {
+        ...json,
+        'zip_code': json['zip_code'] ?? json['zip'] ?? json['cep'] ?? '',
+        'district': json['district'] ??
+            json['neighborhood'] ??
+            json['bairro'] ??
+            '',
+      };
 
   Future<void> setPrimaryAddress(String addressId) async {
     final response = await _httpClient
