@@ -6,16 +6,17 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme/app_theme.dart';
 import 'core/config/router.dart';
 import 'generated/l10n/app_localizations.dart';
 
 /// The root widget for the Doglio Marketplace application
-class DoglioApp extends StatelessWidget {
+class DoglioApp extends ConsumerWidget {
   const DoglioApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       // App configuration
       title: 'Doglio - Pet Products Marketplace',
@@ -27,7 +28,7 @@ class DoglioApp extends StatelessWidget {
       themeMode: ThemeMode.system,
 
       // Navigation configuration (go_router)
-      routerConfig: appRouter,
+      routerConfig: ref.watch(routerProvider),
 
       // Localization configuration
       locale: const Locale('pt', 'BR'),

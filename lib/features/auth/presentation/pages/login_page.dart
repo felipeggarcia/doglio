@@ -3,7 +3,6 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/shared/widgets/doglio_button.dart';
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/config/router.dart';
@@ -53,15 +52,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           behavior: SnackBarBehavior.floating,
         ),
       ),
-      (_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.loginSuccess),
-            backgroundColor: AppColors.success,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        context.goToStoreHome();
+      (user) {
+        if (user.isAdmin) {
+          context.goToAdminDashboard();
+        } else {
+          context.goToStoreHome();
+        }
       },
     );
   }

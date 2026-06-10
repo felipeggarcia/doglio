@@ -4,7 +4,17 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/providers/auth_notifier.dart';
+import '../../features/admin/domain/entities/admin_user.dart';
+import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
+import '../../features/admin/presentation/pages/admin_users_page.dart';
+import '../../features/admin/presentation/pages/admin_user_form_page.dart';
+import '../../features/admin/presentation/pages/admin_products_page.dart';
+import '../../features/admin/presentation/pages/admin_orders_page.dart';
+import '../../features/admin/presentation/pages/admin_categories_page.dart';
+import '../../features/admin/presentation/pages/admin_promotions_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -37,13 +47,48 @@ abstract class AppRoutes {
   static const String cart = '/cart';
   static const String checkout = '/checkout';
   static const String pix = '/pix';
+
+  // Área administrativa (exige role admin)
+  static const String adminDashboard = '/admin';
+  static const String adminUsers = '/admin/users';
+  static const String adminUserCreate = '/admin/users/new';
+  static const String adminUserEdit = '/admin/users/:id/edit';
+  static const String adminProducts = '/admin/products';
+  static const String adminOrders = '/admin/orders';
+  static const String adminCategories = '/admin/categories';
+  static const String adminPromotions = '/admin/promotions';
 }
 
-/// Application GoRouter instance
-final appRouter = GoRouter(
-  debugLogDiagnostics: false,
-  initialLocation: AppRoutes.storeHome,
-  routes: [
+/// Application GoRouter provider.
+///
+/// O router observa [authProvider] e aplica um guard de role: rotas sob
+/// `/admin` só são acessíveis por usuários autenticados com `role: admin`.
+/// Qualquer outro acesso é redirecionado para a home da loja.
+final routerProvider = Provider<GoRouter>((ref) {
+  // Bridge entre o estado de auth (Riverpod) e o refreshListenable do go_router.
+  final authRefresh = ValueNotifier<int>(0);
+  ref.listen(authProvider, (_, _) => authRefresh.value++);
+  ref.onDispose(authRefresh.dispose);
+
+  return GoRouter(
+    debugLogDiagnostics: false,
+    initialLocation: AppRoutes.storeHome,
+    refreshListenable: authRefresh,
+    redirect: (context, state) {
+      final auth = ref.read(authProvider).valueOrNull;
+      final isAdmin = auth is Authenticated && auth.user.isAdmin;
+      final goingToAdmin =
+          state.matchedLocation.startsWith(AppRoutes.adminDashboard);
+
+      // Admin sempre vai para a área admin (inclusive após hot restart)
+      if (isAdmin && !goingToAdmin) return AppRoutes.adminDashboard;
+
+      // Não-admin tentando acessar área admin → home da loja
+      if (goingToAdmin && !isAdmin) return AppRoutes.storeHome;
+
+      return null;
+    },
+    routes: [
     GoRoute(
       path: AppRoutes.storeHome,
       name: 'home',
@@ -121,8 +166,51 @@ final appRouter = GoRouter(
         return PixPage(result: result);
       },
     ),
-  ],
-);
+    // ─── Área administrativa (guard de role aplicado no redirect) ───
+    GoRoute(
+      path: AppRoutes.adminDashboard,
+      name: 'admin-dashboard',
+      builder: (context, state) => const AdminDashboardPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminUsers,
+      name: 'admin-users',
+      builder: (context, state) => const AdminUsersPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminUserCreate,
+      name: 'admin-user-create',
+      builder: (context, state) => const AdminUserFormPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminUserEdit,
+      name: 'admin-user-edit',
+      builder: (context, state) =>
+          AdminUserFormPage(user: state.extra as AdminUser?),
+    ),
+    GoRoute(
+      path: AppRoutes.adminProducts,
+      name: 'admin-products',
+      builder: (context, state) => const AdminProductsPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminOrders,
+      name: 'admin-orders',
+      builder: (context, state) => const AdminOrdersPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminCategories,
+      name: 'admin-categories',
+      builder: (context, state) => const AdminCategoriesPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminPromotions,
+      name: 'admin-promotions',
+      builder: (context, state) => const AdminPromotionsPage(),
+    ),
+    ],
+  );
+});
 
 /// Navigation extensions para manter compatibilidade com código existente
 extension AppNavigationContext on BuildContext {
@@ -130,6 +218,7 @@ extension AppNavigationContext on BuildContext {
   void goToLogin() => go(AppRoutes.login);
   void goToRegister() => go(AppRoutes.register);
   void goToUserHome() => go(AppRoutes.userHome);
+  void goToAdminDashboard() => go(AppRoutes.adminDashboard);
 
   void pushLogin() => push(AppRoutes.login);
   void pushRegister() => push(AppRoutes.register);

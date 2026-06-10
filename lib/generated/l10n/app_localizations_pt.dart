@@ -12,6 +12,111 @@ class AppLocalizationsPt extends AppLocalizations {
   String get appName => 'Doglio';
 
   @override
+  String get adminPanel => 'Painel Administrativo';
+
+  @override
+  String get adminPanelSubtitle => 'Ferramenta de gestão';
+
+  @override
+  String adminGreeting(String name) {
+    return 'Olá, $name';
+  }
+
+  @override
+  String get adminUsers => 'Usuários';
+
+  @override
+  String get adminProducts => 'Produtos';
+
+  @override
+  String get adminOrders => 'Pedidos';
+
+  @override
+  String get adminCategories => 'Categorias';
+
+  @override
+  String get adminPromotions => 'Promoções';
+
+  @override
+  String get adminUnderConstruction => 'Em construção';
+
+  @override
+  String get adminUnderConstructionDesc =>
+      'Esta seção estará disponível em breve.';
+
+  @override
+  String get logoutConfirmation => 'Tem certeza que deseja sair?';
+
+  @override
+  String get adminUsersSearchHint => 'Buscar por nome ou email';
+
+  @override
+  String get adminFilterRole => 'Função';
+
+  @override
+  String get adminFilterStatus => 'Status';
+
+  @override
+  String get adminFilterAll => 'Todos';
+
+  @override
+  String get adminRoleAdmin => 'Admin';
+
+  @override
+  String get adminRoleCustomer => 'Cliente';
+
+  @override
+  String get adminStatusActive => 'Ativo';
+
+  @override
+  String get adminStatusInactive => 'Inativo';
+
+  @override
+  String get adminUsersEmpty => 'Nenhum usuário encontrado';
+
+  @override
+  String get adminLoadMore => 'Carregar mais';
+
+  @override
+  String get adminUserNew => 'Novo usuário';
+
+  @override
+  String get adminUserCreateTitle => 'Novo usuário';
+
+  @override
+  String get adminUserEditTitle => 'Editar usuário';
+
+  @override
+  String get adminFieldRole => 'Função';
+
+  @override
+  String get adminFieldActive => 'Ativo';
+
+  @override
+  String get adminFieldCity => 'Cidade';
+
+  @override
+  String get adminFieldState => 'Estado';
+
+  @override
+  String get adminFieldCpfCnpj => 'CPF/CNPJ';
+
+  @override
+  String get adminFieldBirthDate => 'Nascimento';
+
+  @override
+  String get adminUserCreated => 'Usuário criado.';
+
+  @override
+  String get adminUserSaved => 'Usuário atualizado.';
+
+  @override
+  String get adminUserDeleted => 'Usuário removido.';
+
+  @override
+  String get adminUserDeleteConfirm => 'Remover este usuário?';
+
+  @override
   String get cancel => 'Cancelar';
 
   @override
@@ -810,6 +915,111 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get appName => 'Doglio';
+
+  @override
+  String get adminPanel => 'Painel Administrativo';
+
+  @override
+  String get adminPanelSubtitle => 'Ferramenta de gestão';
+
+  @override
+  String adminGreeting(String name) {
+    return 'Olá, $name';
+  }
+
+  @override
+  String get adminUsers => 'Usuários';
+
+  @override
+  String get adminProducts => 'Produtos';
+
+  @override
+  String get adminOrders => 'Pedidos';
+
+  @override
+  String get adminCategories => 'Categorias';
+
+  @override
+  String get adminPromotions => 'Promoções';
+
+  @override
+  String get adminUnderConstruction => 'Em construção';
+
+  @override
+  String get adminUnderConstructionDesc =>
+      'Esta seção estará disponível em breve.';
+
+  @override
+  String get logoutConfirmation => 'Tem certeza que deseja sair?';
+
+  @override
+  String get adminUsersSearchHint => 'Buscar por nome ou email';
+
+  @override
+  String get adminFilterRole => 'Função';
+
+  @override
+  String get adminFilterStatus => 'Status';
+
+  @override
+  String get adminFilterAll => 'Todos';
+
+  @override
+  String get adminRoleAdmin => 'Admin';
+
+  @override
+  String get adminRoleCustomer => 'Cliente';
+
+  @override
+  String get adminStatusActive => 'Ativo';
+
+  @override
+  String get adminStatusInactive => 'Inativo';
+
+  @override
+  String get adminUsersEmpty => 'Nenhum usuário encontrado';
+
+  @override
+  String get adminLoadMore => 'Carregar mais';
+
+  @override
+  String get adminUserNew => 'Novo usuário';
+
+  @override
+  String get adminUserCreateTitle => 'Novo usuário';
+
+  @override
+  String get adminUserEditTitle => 'Editar usuário';
+
+  @override
+  String get adminFieldRole => 'Função';
+
+  @override
+  String get adminFieldActive => 'Ativo';
+
+  @override
+  String get adminFieldCity => 'Cidade';
+
+  @override
+  String get adminFieldState => 'Estado';
+
+  @override
+  String get adminFieldCpfCnpj => 'CPF/CNPJ';
+
+  @override
+  String get adminFieldBirthDate => 'Nascimento';
+
+  @override
+  String get adminUserCreated => 'Usuário criado.';
+
+  @override
+  String get adminUserSaved => 'Usuário atualizado.';
+
+  @override
+  String get adminUserDeleted => 'Usuário removido.';
+
+  @override
+  String get adminUserDeleteConfirm => 'Remover este usuário?';
 
   @override
   String get cancel => 'Cancelar';

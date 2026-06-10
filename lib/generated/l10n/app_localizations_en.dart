@@ -12,6 +12,111 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appName => 'Doglio';
 
   @override
+  String get adminPanel => 'Admin Panel';
+
+  @override
+  String get adminPanelSubtitle => 'Management tools';
+
+  @override
+  String adminGreeting(String name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String get adminUsers => 'Users';
+
+  @override
+  String get adminProducts => 'Products';
+
+  @override
+  String get adminOrders => 'Orders';
+
+  @override
+  String get adminCategories => 'Categories';
+
+  @override
+  String get adminPromotions => 'Promotions';
+
+  @override
+  String get adminUnderConstruction => 'Under construction';
+
+  @override
+  String get adminUnderConstructionDesc =>
+      'This section will be available soon.';
+
+  @override
+  String get logoutConfirmation => 'Are you sure you want to sign out?';
+
+  @override
+  String get adminUsersSearchHint => 'Search by name or email';
+
+  @override
+  String get adminFilterRole => 'Role';
+
+  @override
+  String get adminFilterStatus => 'Status';
+
+  @override
+  String get adminFilterAll => 'All';
+
+  @override
+  String get adminRoleAdmin => 'Admin';
+
+  @override
+  String get adminRoleCustomer => 'Customer';
+
+  @override
+  String get adminStatusActive => 'Active';
+
+  @override
+  String get adminStatusInactive => 'Inactive';
+
+  @override
+  String get adminUsersEmpty => 'No users found';
+
+  @override
+  String get adminLoadMore => 'Load more';
+
+  @override
+  String get adminUserNew => 'New user';
+
+  @override
+  String get adminUserCreateTitle => 'New user';
+
+  @override
+  String get adminUserEditTitle => 'Edit user';
+
+  @override
+  String get adminFieldRole => 'Role';
+
+  @override
+  String get adminFieldActive => 'Active';
+
+  @override
+  String get adminFieldCity => 'City';
+
+  @override
+  String get adminFieldState => 'State';
+
+  @override
+  String get adminFieldCpfCnpj => 'Tax ID (CPF/CNPJ)';
+
+  @override
+  String get adminFieldBirthDate => 'Birth date';
+
+  @override
+  String get adminUserCreated => 'User created.';
+
+  @override
+  String get adminUserSaved => 'User updated.';
+
+  @override
+  String get adminUserDeleted => 'User removed.';
+
+  @override
+  String get adminUserDeleteConfirm => 'Remove this user?';
+
+  @override
   String get cancel => 'Cancel';
 
   @override

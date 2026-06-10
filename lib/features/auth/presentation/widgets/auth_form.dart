@@ -5,6 +5,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show TextInputFormatter;
 
 /// Custom text field widget for authentication forms
 class AuthFormField extends StatelessWidget {
@@ -20,6 +21,9 @@ class AuthFormField extends StatelessWidget {
     this.validator,
     this.enabled = true,
     this.maxLines = 1,
+    this.readOnly = false,
+    this.onTap,
+    this.inputFormatters,
   });
 
   final TextEditingController controller;
@@ -32,6 +36,15 @@ class AuthFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool enabled;
   final int maxLines;
+
+  /// Campo somente-leitura (ex: data preenchida por um seletor).
+  final bool readOnly;
+
+  /// Callback ao tocar no campo (ex: abrir um calendário).
+  final VoidCallback? onTap;
+
+  /// Formatadores de entrada (ex: máscara de CPF/CNPJ).
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +72,9 @@ class AuthFormField extends StatelessWidget {
           validator: validator,
           enabled: enabled,
           maxLines: maxLines,
+          readOnly: readOnly,
+          onTap: onTap,
+          inputFormatters: inputFormatters,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: enabled
                 ? theme.colorScheme.onSurface

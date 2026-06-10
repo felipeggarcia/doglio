@@ -105,6 +105,210 @@ abstract class AppLocalizations {
   /// **'Doglio'**
   String get appName;
 
+  /// No description provided for @adminPanel.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// No description provided for @adminPanelSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Management tools'**
+  String get adminPanelSubtitle;
+
+  /// Admin dashboard greeting
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String adminGreeting(String name);
+
+  /// No description provided for @adminUsers.
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get adminUsers;
+
+  /// No description provided for @adminProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Products'**
+  String get adminProducts;
+
+  /// No description provided for @adminOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get adminOrders;
+
+  /// No description provided for @adminCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get adminCategories;
+
+  /// No description provided for @adminPromotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotions'**
+  String get adminPromotions;
+
+  /// No description provided for @adminUnderConstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Under construction'**
+  String get adminUnderConstruction;
+
+  /// No description provided for @adminUnderConstructionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'This section will be available soon.'**
+  String get adminUnderConstructionDesc;
+
+  /// No description provided for @logoutConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get logoutConfirmation;
+
+  /// No description provided for @adminUsersSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name or email'**
+  String get adminUsersSearchHint;
+
+  /// No description provided for @adminFilterRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get adminFilterRole;
+
+  /// No description provided for @adminFilterStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get adminFilterStatus;
+
+  /// No description provided for @adminFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get adminFilterAll;
+
+  /// No description provided for @adminRoleAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin'**
+  String get adminRoleAdmin;
+
+  /// No description provided for @adminRoleCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get adminRoleCustomer;
+
+  /// No description provided for @adminStatusActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get adminStatusActive;
+
+  /// No description provided for @adminStatusInactive.
+  ///
+  /// In en, this message translates to:
+  /// **'Inactive'**
+  String get adminStatusInactive;
+
+  /// No description provided for @adminUsersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No users found'**
+  String get adminUsersEmpty;
+
+  /// No description provided for @adminLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get adminLoadMore;
+
+  /// No description provided for @adminUserNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New user'**
+  String get adminUserNew;
+
+  /// No description provided for @adminUserCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New user'**
+  String get adminUserCreateTitle;
+
+  /// No description provided for @adminUserEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit user'**
+  String get adminUserEditTitle;
+
+  /// No description provided for @adminFieldRole.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get adminFieldRole;
+
+  /// No description provided for @adminFieldActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get adminFieldActive;
+
+  /// No description provided for @adminFieldCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get adminFieldCity;
+
+  /// No description provided for @adminFieldState.
+  ///
+  /// In en, this message translates to:
+  /// **'State'**
+  String get adminFieldState;
+
+  /// No description provided for @adminFieldCpfCnpj.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax ID (CPF/CNPJ)'**
+  String get adminFieldCpfCnpj;
+
+  /// No description provided for @adminFieldBirthDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Birth date'**
+  String get adminFieldBirthDate;
+
+  /// No description provided for @adminUserCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'User created.'**
+  String get adminUserCreated;
+
+  /// No description provided for @adminUserSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'User updated.'**
+  String get adminUserSaved;
+
+  /// No description provided for @adminUserDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'User removed.'**
+  String get adminUserDeleted;
+
+  /// No description provided for @adminUserDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this user?'**
+  String get adminUserDeleteConfirm;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
