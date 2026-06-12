@@ -61,6 +61,7 @@ dependencies:
   shared_preferences: ^2.5.5      # Local storage (atualizado)
   flutter_secure_storage: ^9.2.2  # Secure storage for tokens
   http: ^1.6.0
+  image_picker: ^1.1.2            # Seleção de imagens (upload de produtos admin)
 
 dev_dependencies:
   flutter_test:
