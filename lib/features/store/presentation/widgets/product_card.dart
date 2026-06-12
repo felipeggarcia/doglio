@@ -14,7 +14,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final imageUrl = product.primaryImage?.imagePath;
+    final imageUrl = product.bestImagePath;
 
     return Card(
       elevation: 2,

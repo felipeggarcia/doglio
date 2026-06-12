@@ -40,7 +40,10 @@ class AuthException extends DoglioException {
 
 /// Validation-related exceptions
 class ValidationException extends DoglioException {
-  const ValidationException(super.message);
+  const ValidationException(super.message, {this.errors = const {}});
+
+  /// Erros estruturados do backend (422): `{campo: [mensagens]}`.
+  final Map<String, List<String>> errors;
 
   @override
   String toString() => 'ValidationException: $message';

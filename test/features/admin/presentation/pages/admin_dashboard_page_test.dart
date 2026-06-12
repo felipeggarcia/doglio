@@ -9,6 +9,7 @@ import 'package:doglio/features/admin/presentation/pages/admin_orders_page.dart'
 import 'package:doglio/features/admin/presentation/pages/admin_products_page.dart';
 import 'package:doglio/features/admin/presentation/pages/admin_promotions_page.dart';
 import 'package:doglio/features/admin/presentation/pages/admin_users_page.dart';
+import 'package:doglio/features/admin/presentation/providers/admin_products_provider.dart';
 import 'package:doglio/features/auth/domain/entities/user.dart';
 import 'package:doglio/features/auth/presentation/providers/auth_notifier.dart';
 import 'package:doglio/generated/l10n/app_localizations.dart';
@@ -22,6 +23,12 @@ class _FakeAuthNotifier extends AuthNotifier {
 
   @override
   Future<void> signOut() async => state = const AsyncData(Unauthenticated());
+}
+
+/// Evita que a AdminProductsPage real dispare HTTP ao navegar até ela.
+class _FakeProductsNotifier extends AdminProductsNotifier {
+  @override
+  AdminProductsState build() => const AdminProductsState();
 }
 
 class _LoginStub extends StatelessWidget {
@@ -76,6 +83,7 @@ Widget _app(AuthState auth) {
   return ProviderScope(
     overrides: [
       authProvider.overrideWith(() => _FakeAuthNotifier(auth)),
+      adminProductsProvider.overrideWith(_FakeProductsNotifier.new),
     ],
     child: MaterialApp.router(
       routerConfig: router,

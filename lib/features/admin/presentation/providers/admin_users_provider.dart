@@ -70,7 +70,7 @@ class AdminUsersState {
   static const _sentinel = Object();
 }
 
-class AdminUsersNotifier extends Notifier<AdminUsersState> {
+class AdminUsersNotifier extends AutoDisposeNotifier<AdminUsersState> {
   late final GetAdminUsersUseCase _getUsers;
   late final CreateAdminUserUseCase _createUser;
   late final UpdateAdminUserUseCase _updateUser;
@@ -190,6 +190,6 @@ class AdminUsersNotifier extends Notifier<AdminUsersState> {
 }
 
 final adminUsersProvider =
-    NotifierProvider<AdminUsersNotifier, AdminUsersState>(
+    AutoDisposeNotifierProvider<AdminUsersNotifier, AdminUsersState>(
   AdminUsersNotifier.new,
 );
