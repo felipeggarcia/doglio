@@ -11,9 +11,16 @@ import '../../features/admin/domain/entities/admin_user.dart';
 import '../../features/admin/presentation/pages/admin_dashboard_page.dart';
 import '../../features/admin/presentation/pages/admin_users_page.dart';
 import '../../features/admin/presentation/pages/admin_user_form_page.dart';
+import '../../features/admin/domain/entities/admin_product.dart';
 import '../../features/admin/presentation/pages/admin_products_page.dart';
+import '../../features/admin/presentation/pages/admin_product_form_page.dart';
+import '../../features/admin/presentation/pages/admin_product_stock_page.dart';
 import '../../features/admin/presentation/pages/admin_orders_page.dart';
+import '../../features/admin/domain/entities/admin_order.dart';
+import '../../features/admin/presentation/pages/admin_order_detail_page.dart';
+import '../../features/admin/domain/entities/admin_category.dart';
 import '../../features/admin/presentation/pages/admin_categories_page.dart';
+import '../../features/admin/presentation/pages/admin_category_form_page.dart';
 import '../../features/admin/presentation/pages/admin_promotions_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
@@ -54,8 +61,14 @@ abstract class AppRoutes {
   static const String adminUserCreate = '/admin/users/new';
   static const String adminUserEdit = '/admin/users/:id/edit';
   static const String adminProducts = '/admin/products';
+  static const String adminProductCreate = '/admin/products/new';
+  static const String adminProductEdit = '/admin/products/:id/edit';
+  static const String adminProductStock = '/admin/products/:id/stock';
   static const String adminOrders = '/admin/orders';
+  static const String adminOrderDetail = '/admin/orders/:id';
   static const String adminCategories = '/admin/categories';
+  static const String adminCategoryCreate = '/admin/categories/new';
+  static const String adminCategoryEdit = '/admin/categories/:id/edit';
   static const String adminPromotions = '/admin/promotions';
 }
 
@@ -193,15 +206,54 @@ final routerProvider = Provider<GoRouter>((ref) {
       name: 'admin-products',
       builder: (context, state) => const AdminProductsPage(),
     ),
+    // `/new` antes de `/:id/...` para o path literal ter precedência.
+    GoRoute(
+      path: AppRoutes.adminProductCreate,
+      name: 'admin-product-create',
+      builder: (context, state) => const AdminProductFormPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminProductEdit,
+      name: 'admin-product-edit',
+      builder: (context, state) =>
+          AdminProductFormPage(product: state.extra as AdminProduct?),
+    ),
+    GoRoute(
+      path: AppRoutes.adminProductStock,
+      name: 'admin-product-stock',
+      builder: (context, state) => AdminProductStockPage(
+        productId: state.pathParameters['id']!,
+        product: state.extra as AdminProduct?,
+      ),
+    ),
     GoRoute(
       path: AppRoutes.adminOrders,
       name: 'admin-orders',
       builder: (context, state) => const AdminOrdersPage(),
     ),
     GoRoute(
+      path: AppRoutes.adminOrderDetail,
+      name: 'admin-order-detail',
+      builder: (context, state) => AdminOrderDetailPage(
+        orderId: state.pathParameters['id']!,
+        order: state.extra as AdminOrder?,
+      ),
+    ),
+    GoRoute(
       path: AppRoutes.adminCategories,
       name: 'admin-categories',
       builder: (context, state) => const AdminCategoriesPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminCategoryCreate,
+      name: 'admin-category-create',
+      builder: (context, state) => const AdminCategoryFormPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.adminCategoryEdit,
+      name: 'admin-category-edit',
+      builder: (context, state) =>
+          AdminCategoryFormPage(category: state.extra as AdminCategory?),
     ),
     GoRoute(
       path: AppRoutes.adminPromotions,

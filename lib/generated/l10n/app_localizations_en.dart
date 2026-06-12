@@ -117,6 +117,364 @@ class AppLocalizationsEn extends AppLocalizations {
   String get adminUserDeleteConfirm => 'Remove this user?';
 
   @override
+  String get adminCategoryNew => 'New category';
+
+  @override
+  String get adminCategoryCreateTitle => 'New category';
+
+  @override
+  String get adminCategoryEditTitle => 'Edit category';
+
+  @override
+  String get adminCategoriesSearchHint => 'Search by name';
+
+  @override
+  String get adminCategoriesEmpty => 'No categories found';
+
+  @override
+  String get adminCategoryNoneSelected => 'None selected';
+
+  @override
+  String get adminCategoryCreated => 'Category created.';
+
+  @override
+  String get adminCategorySaved => 'Category updated.';
+
+  @override
+  String get adminCategoryDeleted => 'Category removed.';
+
+  @override
+  String get adminCategoryDeleteConfirm => 'Remove this category?';
+
+  @override
+  String get adminFieldName => 'Name';
+
+  @override
+  String get adminFieldHighlighted => 'Highlighted';
+
+  @override
+  String adminCategoryProductsCount(int count) {
+    return '$count products';
+  }
+
+  @override
+  String get adminProductNew => 'New product';
+
+  @override
+  String get adminProductCreateTitle => 'New product';
+
+  @override
+  String get adminProductEditTitle => 'Edit product';
+
+  @override
+  String get adminProductsSearchHint => 'Search by name';
+
+  @override
+  String get adminProductsEmpty => 'No products found';
+
+  @override
+  String adminProductStockCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count in stock',
+      one: '1 in stock',
+      zero: 'Out of stock',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminProductFilterHighlighted => 'Highlighted';
+
+  @override
+  String get adminProductFilterOutOfStock => 'Out of stock';
+
+  @override
+  String get adminProductFiltersButton => 'Filters';
+
+  @override
+  String get adminProductFiltersTitle => 'Filters';
+
+  @override
+  String get adminProductFilterCategories => 'Categories';
+
+  @override
+  String get adminProductFilterPriceMin => 'Min price';
+
+  @override
+  String get adminProductFilterPriceMax => 'Max price';
+
+  @override
+  String get adminProductFilterDateFrom => 'From date';
+
+  @override
+  String get adminProductFilterDateTo => 'To date';
+
+  @override
+  String get adminProductSortBy => 'Sort by';
+
+  @override
+  String get adminProductSortName => 'Name';
+
+  @override
+  String get adminProductSortPrice => 'Price';
+
+  @override
+  String get adminProductSortStock => 'Stock';
+
+  @override
+  String get adminProductSortCreated => 'Created at';
+
+  @override
+  String get adminProductSortUpdated => 'Updated at';
+
+  @override
+  String get adminProductSortAsc => 'Ascending';
+
+  @override
+  String get adminProductSortDesc => 'Descending';
+
+  @override
+  String get adminProductFiltersApply => 'Apply';
+
+  @override
+  String get adminProductFiltersClear => 'Clear';
+
+  @override
+  String get adminFieldDescription => 'Description';
+
+  @override
+  String get adminFieldPrice => 'Price';
+
+  @override
+  String get adminFieldCategories => 'Categories';
+
+  @override
+  String get adminProductImages => 'Images';
+
+  @override
+  String get adminProductAddImages => 'Add';
+
+  @override
+  String adminProductImageLimit(int max) {
+    return 'Maximum of $max images per product.';
+  }
+
+  @override
+  String get adminProductCreated => 'Product created.';
+
+  @override
+  String get adminProductSaved => 'Product updated.';
+
+  @override
+  String get adminProductDeleted => 'Product removed.';
+
+  @override
+  String get adminProductDeleteConfirm => 'Remove this product?';
+
+  @override
+  String get adminProductStockSection => 'Stock';
+
+  @override
+  String get adminProductStockManage => 'Manage stock';
+
+  @override
+  String get adminProductStockHistory => 'Stock history';
+
+  @override
+  String get adminProductStockCurrent => 'Current stock';
+
+  @override
+  String get adminProductStockEmpty => 'No stock movements';
+
+  @override
+  String get adminProductStockMove => 'Adjust stock';
+
+  @override
+  String get adminProductStockModeDelta => 'In/Out';
+
+  @override
+  String get adminProductStockModeAbsolute => 'Set total';
+
+  @override
+  String get adminProductStockTypeIn => 'In';
+
+  @override
+  String get adminProductStockTypeOut => 'Out';
+
+  @override
+  String get adminProductStockQuantityField => 'Quantity';
+
+  @override
+  String get adminProductStockQuantityInvalid => 'Enter a valid quantity';
+
+  @override
+  String get adminProductStockReason => 'Reason';
+
+  @override
+  String get adminProductReasonPurchase => 'Purchase';
+
+  @override
+  String get adminProductReasonReturn => 'Return';
+
+  @override
+  String get adminProductReasonManual => 'Manual adjustment';
+
+  @override
+  String get adminProductReasonLoss => 'Loss';
+
+  @override
+  String get adminProductStockNotes => 'Notes';
+
+  @override
+  String adminProductStockBeforeAfter(int before, int after) {
+    return '$before → $after';
+  }
+
+  @override
+  String get adminProductStockSaved => 'Stock updated.';
+
+  @override
+  String get adminOrdersTitle => 'Orders';
+
+  @override
+  String get adminOrdersEmpty => 'No orders found';
+
+  @override
+  String get adminOrdersFilterAll => 'All';
+
+  @override
+  String get adminOrdersFilterDelivery => 'Delivery';
+
+  @override
+  String get adminOrdersFilterPickup => 'Pickup';
+
+  @override
+  String get adminOrdersFilterPeriod => 'Period';
+
+  @override
+  String get adminOrderStatusPending => 'Pending';
+
+  @override
+  String get adminOrderStatusConfirmed => 'Confirmed';
+
+  @override
+  String get adminOrderStatusPreparing => 'Preparing';
+
+  @override
+  String get adminOrderStatusOutForDelivery => 'Out for delivery';
+
+  @override
+  String get adminOrderStatusDelivered => 'Delivered';
+
+  @override
+  String get adminOrderStatusCancelled => 'Cancelled';
+
+  @override
+  String adminOrderDetailTitle(String number) {
+    return 'Order #$number';
+  }
+
+  @override
+  String get adminOrderCustomerSection => 'Customer';
+
+  @override
+  String get adminOrderItemsSection => 'Order items';
+
+  @override
+  String get adminOrderPaymentSection => 'Payment';
+
+  @override
+  String get adminOrderHistorySection => 'Status history';
+
+  @override
+  String get adminOrderDeliverySection => 'Delivery';
+
+  @override
+  String get adminOrderSubtotal => 'Subtotal';
+
+  @override
+  String get adminOrderDiscount => 'Discount';
+
+  @override
+  String get adminOrderTotal => 'Total';
+
+  @override
+  String get adminOrderPickupLabel => 'In-store pickup';
+
+  @override
+  String get adminOrderDeliveryLabel => 'Delivery';
+
+  @override
+  String get adminOrderPaymentPending => 'Pending';
+
+  @override
+  String get adminOrderPaymentPaid => 'Paid';
+
+  @override
+  String get adminOrderPaymentApproved => 'Approved';
+
+  @override
+  String get adminOrderPixCode => 'PIX Code';
+
+  @override
+  String adminOrderPixExpires(String date) {
+    return 'Expires $date';
+  }
+
+  @override
+  String get adminOrderUpdateStatus => 'Update status';
+
+  @override
+  String get adminOrderStatusNotes => 'Notes (optional)';
+
+  @override
+  String get adminOrderStatusUpdated => 'Status updated.';
+
+  @override
+  String get adminOrderStatusUpdateError => 'Error updating status.';
+
+  @override
+  String get adminOrderConfirm => 'Confirm order';
+
+  @override
+  String get adminOrderStartPreparing => 'Start preparing';
+
+  @override
+  String get adminOrderSendOut => 'Send out for delivery';
+
+  @override
+  String get adminOrderMarkDelivered => 'Mark as delivered';
+
+  @override
+  String get adminOrderCancel => 'Cancel order';
+
+  @override
+  String get adminOrderAddItem => 'Add product';
+
+  @override
+  String get adminOrderEditItem => 'Edit item';
+
+  @override
+  String get adminOrderRemoveItem => 'Remove item';
+
+  @override
+  String get adminOrderRemoveItemConfirm => 'Remove this item from the order?';
+
+  @override
+  String get adminOrderItemSaved => 'Item updated.';
+
+  @override
+  String get adminOrderItemAdded => 'Product added.';
+
+  @override
+  String get adminOrderItemRemoved => 'Item removed.';
+
+  @override
+  String get adminOrderSearchProduct => 'Search product...';
+
+  @override
   String get cancel => 'Cancel';
 
   @override
@@ -154,6 +512,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get retry => 'Retry';
+
+  @override
+  String get loadMore => 'Load more';
 
   @override
   String get search => 'Search';

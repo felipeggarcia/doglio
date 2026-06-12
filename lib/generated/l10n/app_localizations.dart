@@ -309,6 +309,684 @@ abstract class AppLocalizations {
   /// **'Remove this user?'**
   String get adminUserDeleteConfirm;
 
+  /// No description provided for @adminCategoryNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get adminCategoryNew;
+
+  /// No description provided for @adminCategoryCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New category'**
+  String get adminCategoryCreateTitle;
+
+  /// No description provided for @adminCategoryEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit category'**
+  String get adminCategoryEditTitle;
+
+  /// No description provided for @adminCategoriesSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get adminCategoriesSearchHint;
+
+  /// No description provided for @adminCategoriesEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get adminCategoriesEmpty;
+
+  /// No description provided for @adminCategoryNoneSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'None selected'**
+  String get adminCategoryNoneSelected;
+
+  /// No description provided for @adminCategoryCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Category created.'**
+  String get adminCategoryCreated;
+
+  /// No description provided for @adminCategorySaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated.'**
+  String get adminCategorySaved;
+
+  /// No description provided for @adminCategoryDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Category removed.'**
+  String get adminCategoryDeleted;
+
+  /// No description provided for @adminCategoryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this category?'**
+  String get adminCategoryDeleteConfirm;
+
+  /// No description provided for @adminFieldName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get adminFieldName;
+
+  /// No description provided for @adminFieldHighlighted.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlighted'**
+  String get adminFieldHighlighted;
+
+  /// No description provided for @adminCategoryProductsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} products'**
+  String adminCategoryProductsCount(int count);
+
+  /// No description provided for @adminProductNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New product'**
+  String get adminProductNew;
+
+  /// No description provided for @adminProductCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New product'**
+  String get adminProductCreateTitle;
+
+  /// No description provided for @adminProductEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit product'**
+  String get adminProductEditTitle;
+
+  /// No description provided for @adminProductsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by name'**
+  String get adminProductsSearchHint;
+
+  /// No description provided for @adminProductsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No products found'**
+  String get adminProductsEmpty;
+
+  /// No description provided for @adminProductStockCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{Out of stock} =1{1 in stock} other{{count} in stock}}'**
+  String adminProductStockCount(int count);
+
+  /// No description provided for @adminProductFilterHighlighted.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlighted'**
+  String get adminProductFilterHighlighted;
+
+  /// No description provided for @adminProductFilterOutOfStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Out of stock'**
+  String get adminProductFilterOutOfStock;
+
+  /// No description provided for @adminProductFiltersButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get adminProductFiltersButton;
+
+  /// No description provided for @adminProductFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get adminProductFiltersTitle;
+
+  /// No description provided for @adminProductFilterCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get adminProductFilterCategories;
+
+  /// No description provided for @adminProductFilterPriceMin.
+  ///
+  /// In en, this message translates to:
+  /// **'Min price'**
+  String get adminProductFilterPriceMin;
+
+  /// No description provided for @adminProductFilterPriceMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Max price'**
+  String get adminProductFilterPriceMax;
+
+  /// No description provided for @adminProductFilterDateFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From date'**
+  String get adminProductFilterDateFrom;
+
+  /// No description provided for @adminProductFilterDateTo.
+  ///
+  /// In en, this message translates to:
+  /// **'To date'**
+  String get adminProductFilterDateTo;
+
+  /// No description provided for @adminProductSortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get adminProductSortBy;
+
+  /// No description provided for @adminProductSortName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get adminProductSortName;
+
+  /// No description provided for @adminProductSortPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get adminProductSortPrice;
+
+  /// No description provided for @adminProductSortStock.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get adminProductSortStock;
+
+  /// No description provided for @adminProductSortCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created at'**
+  String get adminProductSortCreated;
+
+  /// No description provided for @adminProductSortUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated at'**
+  String get adminProductSortUpdated;
+
+  /// No description provided for @adminProductSortAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get adminProductSortAsc;
+
+  /// No description provided for @adminProductSortDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get adminProductSortDesc;
+
+  /// No description provided for @adminProductFiltersApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get adminProductFiltersApply;
+
+  /// No description provided for @adminProductFiltersClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get adminProductFiltersClear;
+
+  /// No description provided for @adminFieldDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get adminFieldDescription;
+
+  /// No description provided for @adminFieldPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get adminFieldPrice;
+
+  /// No description provided for @adminFieldCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories'**
+  String get adminFieldCategories;
+
+  /// No description provided for @adminProductImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Images'**
+  String get adminProductImages;
+
+  /// No description provided for @adminProductAddImages.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get adminProductAddImages;
+
+  /// No description provided for @adminProductImageLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum of {max} images per product.'**
+  String adminProductImageLimit(int max);
+
+  /// No description provided for @adminProductCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Product created.'**
+  String get adminProductCreated;
+
+  /// No description provided for @adminProductSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Product updated.'**
+  String get adminProductSaved;
+
+  /// No description provided for @adminProductDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Product removed.'**
+  String get adminProductDeleted;
+
+  /// No description provided for @adminProductDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this product?'**
+  String get adminProductDeleteConfirm;
+
+  /// No description provided for @adminProductStockSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock'**
+  String get adminProductStockSection;
+
+  /// No description provided for @adminProductStockManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage stock'**
+  String get adminProductStockManage;
+
+  /// No description provided for @adminProductStockHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock history'**
+  String get adminProductStockHistory;
+
+  /// No description provided for @adminProductStockCurrent.
+  ///
+  /// In en, this message translates to:
+  /// **'Current stock'**
+  String get adminProductStockCurrent;
+
+  /// No description provided for @adminProductStockEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No stock movements'**
+  String get adminProductStockEmpty;
+
+  /// No description provided for @adminProductStockMove.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust stock'**
+  String get adminProductStockMove;
+
+  /// No description provided for @adminProductStockModeDelta.
+  ///
+  /// In en, this message translates to:
+  /// **'In/Out'**
+  String get adminProductStockModeDelta;
+
+  /// No description provided for @adminProductStockModeAbsolute.
+  ///
+  /// In en, this message translates to:
+  /// **'Set total'**
+  String get adminProductStockModeAbsolute;
+
+  /// No description provided for @adminProductStockTypeIn.
+  ///
+  /// In en, this message translates to:
+  /// **'In'**
+  String get adminProductStockTypeIn;
+
+  /// No description provided for @adminProductStockTypeOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Out'**
+  String get adminProductStockTypeOut;
+
+  /// No description provided for @adminProductStockQuantityField.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get adminProductStockQuantityField;
+
+  /// No description provided for @adminProductStockQuantityInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid quantity'**
+  String get adminProductStockQuantityInvalid;
+
+  /// No description provided for @adminProductStockReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get adminProductStockReason;
+
+  /// No description provided for @adminProductReasonPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase'**
+  String get adminProductReasonPurchase;
+
+  /// No description provided for @adminProductReasonReturn.
+  ///
+  /// In en, this message translates to:
+  /// **'Return'**
+  String get adminProductReasonReturn;
+
+  /// No description provided for @adminProductReasonManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual adjustment'**
+  String get adminProductReasonManual;
+
+  /// No description provided for @adminProductReasonLoss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get adminProductReasonLoss;
+
+  /// No description provided for @adminProductStockNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get adminProductStockNotes;
+
+  /// No description provided for @adminProductStockBeforeAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'{before} → {after}'**
+  String adminProductStockBeforeAfter(int before, int after);
+
+  /// No description provided for @adminProductStockSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Stock updated.'**
+  String get adminProductStockSaved;
+
+  /// No description provided for @adminOrdersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders'**
+  String get adminOrdersTitle;
+
+  /// No description provided for @adminOrdersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders found'**
+  String get adminOrdersEmpty;
+
+  /// No description provided for @adminOrdersFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get adminOrdersFilterAll;
+
+  /// No description provided for @adminOrdersFilterDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get adminOrdersFilterDelivery;
+
+  /// No description provided for @adminOrdersFilterPickup.
+  ///
+  /// In en, this message translates to:
+  /// **'Pickup'**
+  String get adminOrdersFilterPickup;
+
+  /// No description provided for @adminOrdersFilterPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get adminOrdersFilterPeriod;
+
+  /// No description provided for @adminOrderStatusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get adminOrderStatusPending;
+
+  /// No description provided for @adminOrderStatusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get adminOrderStatusConfirmed;
+
+  /// No description provided for @adminOrderStatusPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get adminOrderStatusPreparing;
+
+  /// No description provided for @adminOrderStatusOutForDelivery.
+  ///
+  /// In en, this message translates to:
+  /// **'Out for delivery'**
+  String get adminOrderStatusOutForDelivery;
+
+  /// No description provided for @adminOrderStatusDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivered'**
+  String get adminOrderStatusDelivered;
+
+  /// No description provided for @adminOrderStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get adminOrderStatusCancelled;
+
+  /// No description provided for @adminOrderDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{number}'**
+  String adminOrderDetailTitle(String number);
+
+  /// No description provided for @adminOrderCustomerSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get adminOrderCustomerSection;
+
+  /// No description provided for @adminOrderItemsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Order items'**
+  String get adminOrderItemsSection;
+
+  /// No description provided for @adminOrderPaymentSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get adminOrderPaymentSection;
+
+  /// No description provided for @adminOrderHistorySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Status history'**
+  String get adminOrderHistorySection;
+
+  /// No description provided for @adminOrderDeliverySection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get adminOrderDeliverySection;
+
+  /// No description provided for @adminOrderSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get adminOrderSubtotal;
+
+  /// No description provided for @adminOrderDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get adminOrderDiscount;
+
+  /// No description provided for @adminOrderTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get adminOrderTotal;
+
+  /// No description provided for @adminOrderPickupLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'In-store pickup'**
+  String get adminOrderPickupLabel;
+
+  /// No description provided for @adminOrderDeliveryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery'**
+  String get adminOrderDeliveryLabel;
+
+  /// No description provided for @adminOrderPaymentPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get adminOrderPaymentPending;
+
+  /// No description provided for @adminOrderPaymentPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid'**
+  String get adminOrderPaymentPaid;
+
+  /// No description provided for @adminOrderPaymentApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get adminOrderPaymentApproved;
+
+  /// No description provided for @adminOrderPixCode.
+  ///
+  /// In en, this message translates to:
+  /// **'PIX Code'**
+  String get adminOrderPixCode;
+
+  /// No description provided for @adminOrderPixExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires {date}'**
+  String adminOrderPixExpires(String date);
+
+  /// No description provided for @adminOrderUpdateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Update status'**
+  String get adminOrderUpdateStatus;
+
+  /// No description provided for @adminOrderStatusNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes (optional)'**
+  String get adminOrderStatusNotes;
+
+  /// No description provided for @adminOrderStatusUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated.'**
+  String get adminOrderStatusUpdated;
+
+  /// No description provided for @adminOrderStatusUpdateError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error updating status.'**
+  String get adminOrderStatusUpdateError;
+
+  /// No description provided for @adminOrderConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm order'**
+  String get adminOrderConfirm;
+
+  /// No description provided for @adminOrderStartPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Start preparing'**
+  String get adminOrderStartPreparing;
+
+  /// No description provided for @adminOrderSendOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Send out for delivery'**
+  String get adminOrderSendOut;
+
+  /// No description provided for @adminOrderMarkDelivered.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as delivered'**
+  String get adminOrderMarkDelivered;
+
+  /// No description provided for @adminOrderCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel order'**
+  String get adminOrderCancel;
+
+  /// No description provided for @adminOrderAddItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Add product'**
+  String get adminOrderAddItem;
+
+  /// No description provided for @adminOrderEditItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit item'**
+  String get adminOrderEditItem;
+
+  /// No description provided for @adminOrderRemoveItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove item'**
+  String get adminOrderRemoveItem;
+
+  /// No description provided for @adminOrderRemoveItemConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this item from the order?'**
+  String get adminOrderRemoveItemConfirm;
+
+  /// No description provided for @adminOrderItemSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Item updated.'**
+  String get adminOrderItemSaved;
+
+  /// No description provided for @adminOrderItemAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Product added.'**
+  String get adminOrderItemAdded;
+
+  /// No description provided for @adminOrderItemRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Item removed.'**
+  String get adminOrderItemRemoved;
+
+  /// No description provided for @adminOrderSearchProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Search product...'**
+  String get adminOrderSearchProduct;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
@@ -386,6 +1064,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get loadMore;
 
   /// No description provided for @search.
   ///

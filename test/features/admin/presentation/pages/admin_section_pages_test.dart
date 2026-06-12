@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:doglio/features/admin/presentation/pages/admin_categories_page.dart';
-import 'package:doglio/features/admin/presentation/pages/admin_orders_page.dart';
-import 'package:doglio/features/admin/presentation/pages/admin_products_page.dart';
 import 'package:doglio/features/admin/presentation/pages/admin_promotions_page.dart';
 import 'package:doglio/generated/l10n/app_localizations.dart';
 
@@ -22,9 +19,6 @@ Widget _app(Widget page) => MaterialApp(
 void main() {
   group('Páginas de seção admin (placeholders)', () {
     final cases = <String, (Widget, String)>{
-      'Produtos': (const AdminProductsPage(), 'Produtos'),
-      'Pedidos': (const AdminOrdersPage(), 'Pedidos'),
-      'Categorias': (const AdminCategoriesPage(), 'Categorias'),
       'Promoções': (const AdminPromotionsPage(), 'Promoções'),
     };
 
