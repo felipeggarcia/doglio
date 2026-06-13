@@ -19,7 +19,18 @@ class EnvironmentConfig {
   static String get apiBaseUrl {
     switch (_currentEnvironment) {
       case Environment.development:
-        return 'http://localhost:8000';
+        return 'http://10.0.2.2/api/v1';
+      case Environment.staging:
+        return 'https://api-staging.doglio.com/api/v1';
+      case Environment.production:
+        return 'https://api.doglio.com/api/v1';
+    }
+  }
+
+  static String get storageBaseUrl {
+    switch (_currentEnvironment) {
+      case Environment.development:
+        return 'http://10.0.2.2';
       case Environment.staging:
         return 'https://api-staging.doglio.com';
       case Environment.production:
@@ -28,8 +39,8 @@ class EnvironmentConfig {
   }
 
   // API Timeout Configuration
-  static int get apiTimeout {
-    return 30; // seconds
+  static Duration get apiTimeout {
+    return const Duration(seconds: 15);
   }
 
   static bool get enableApiLogging {

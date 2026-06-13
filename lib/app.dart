@@ -4,11 +4,14 @@
 /// routing, and global settings for the pet products marketplace.
 library;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/config/environment.dart';
 import 'core/theme/app_theme.dart';
 import 'core/config/router.dart';
+import 'core/utils/app_logger.dart';
 import 'generated/l10n/app_localizations.dart';
 
 /// The root widget for the Doglio Marketplace application
@@ -25,7 +28,6 @@ class DoglioApp extends ConsumerWidget {
       // Theme configuration
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
 
       // Navigation configuration (go_router)
       routerConfig: ref.watch(routerProvider),
@@ -81,15 +83,14 @@ class DoglioAppInitializer {
     await _initializeServices();
   }
 
-  /// Initialize dependency injection
   static Future<void> _initializeDependencies() async {
-    // Initialize GetIt service locator
-    // This will be implemented when we add more features
+    EnvironmentConfig.setEnvironment(
+      kDebugMode ? Environment.development : Environment.production,
+    );
   }
 
-  /// Initialize other application services
   static Future<void> _initializeServices() async {
-    // Initialize shared preferences, local storage, etc.
-    // These will be added as needed
+    AppLogger.init();
+    AppLogger.i('Doglio starting — env: ${EnvironmentConfig.currentEnvironment.name}');
   }
 }
