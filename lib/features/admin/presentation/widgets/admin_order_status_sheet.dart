@@ -52,21 +52,19 @@ class _AdminOrderStatusSheetState extends State<AdminOrderStatusSheet> {
               Text(l10n.adminOrderUpdateStatus,
                   style: theme.textTheme.titleMedium),
               const SizedBox(height: 16),
-              RadioGroup<AdminOrderStatus>(
-                groupValue: _selected,
-                onChanged: (v) => setState(() => _selected = v),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: nextStatuses
-                      .map(
-                        (status) => RadioListTile<AdminOrderStatus>(
-                          value: status,
-                          title: Text(_statusLabel(context, status)),
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                      )
-                      .toList(),
-                ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: nextStatuses
+                    .map(
+                      (status) => RadioListTile<AdminOrderStatus>(
+                        value: status,
+                        groupValue: _selected,
+                        onChanged: (v) => setState(() => _selected = v),
+                        title: Text(_statusLabel(context, status)),
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    )
+                    .toList(),
               ),
               const SizedBox(height: 12),
               TextField(

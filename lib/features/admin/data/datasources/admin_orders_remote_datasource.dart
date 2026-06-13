@@ -2,8 +2,7 @@ library;
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../core/config/api_config.dart';
-import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/http_client.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../domain/entities/admin_order.dart';
 import '../../domain/entities/page_meta.dart';
@@ -13,24 +12,16 @@ class AdminOrdersRemoteDatasource {
   AdminOrdersRemoteDatasource({
     http.Client? httpClient,
     SecureStorage? secureStorage,
-  })  : _httpClient = httpClient ?? http.Client(),
-        _secureStorage = secureStorage ?? SecureStorage();
+  }) : _client = DoglioHttpClient(
+          httpClient: httpClient,
+          secureStorage: secureStorage,
+        );
 
-  final http.Client _httpClient;
-  final SecureStorage _secureStorage;
-
-  Future<Map<String, String>> _authHeaders() async {
-    final token = await _secureStorage.getToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Host': ApiConfig.virtualHost,
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
-  }
+  final DoglioHttpClient _client;
 
   /// GET /admin/orders — lista paginada com filtros opcionais.
   Future<(List<AdminOrderModel>, PageMeta)> getOrders({
+    String? search,
     AdminOrderStatus? status,
     String? deliveryType,
     DateTime? dateFrom,
@@ -41,6 +32,7 @@ class AdminOrdersRemoteDatasource {
     final query = <String, String>{
       'page': '$page',
       'per_page': '$perPage',
+      'search': ?search,
       'status': ?status?.toApi(),
       'delivery_type': ?deliveryType,
       if (dateFrom != null)
@@ -53,16 +45,11 @@ class AdminOrdersRemoteDatasource {
             '${dateTo.day.toString().padLeft(2, '0')}',
     };
 
-    final uri = Uri.parse('${ApiConfig.baseUrl}/admin/orders')
-        .replace(queryParameters: query);
-
-    final response = await _httpClient
-        .get(uri, headers: await _authHeaders())
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      _throwFor(response);
-    }
+    final response = await _client.send(
+      'GET',
+      '/admin/orders',
+      queryParams: query,
+    );
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
     final data = (body['data'] as List<dynamic>)
@@ -75,14 +62,7 @@ class AdminOrdersRemoteDatasource {
 
   /// GET /admin/orders/{id} — detalhe com customer e status_history.
   Future<AdminOrderModel> getOrderDetail(String id) async {
-    final uri = Uri.parse('${ApiConfig.baseUrl}/admin/orders/$id');
-    final response = await _httpClient
-        .get(uri, headers: await _authHeaders())
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      _throwFor(response);
-    }
+    final response = await _client.send('GET', '/admin/orders/$id');
     return _parseSingle(response.body);
   }
 
@@ -97,17 +77,11 @@ class AdminOrdersRemoteDatasource {
       'notes': ?notes,
     };
 
-    final response = await _httpClient
-        .patch(
-          Uri.parse('${ApiConfig.baseUrl}/admin/orders/$id/status'),
-          headers: await _authHeaders(),
-          body: jsonEncode(body),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      _throwFor(response);
-    }
+    final response = await _client.send(
+      'PATCH',
+      '/admin/orders/$id/status',
+      body: body,
+    );
     return _parseSingle(response.body);
   }
 
@@ -117,17 +91,11 @@ class AdminOrdersRemoteDatasource {
     required String productId,
     required int quantity,
   }) async {
-    final response = await _httpClient
-        .post(
-          Uri.parse('${ApiConfig.baseUrl}/admin/orders/$orderId/items'),
-          headers: await _authHeaders(),
-          body: jsonEncode({'product_id': productId, 'quantity': quantity}),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      _throwFor(response);
-    }
+    final response = await _client.send(
+      'POST',
+      '/admin/orders/$orderId/items',
+      body: {'product_id': productId, 'quantity': quantity},
+    );
     return _parseSingle(response.body);
   }
 
@@ -137,18 +105,11 @@ class AdminOrdersRemoteDatasource {
     String itemId, {
     required int quantity,
   }) async {
-    final response = await _httpClient
-        .put(
-          Uri.parse(
-              '${ApiConfig.baseUrl}/admin/orders/$orderId/items/$itemId'),
-          headers: await _authHeaders(),
-          body: jsonEncode({'quantity': quantity}),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      _throwFor(response);
-    }
+    final response = await _client.send(
+      'PUT',
+      '/admin/orders/$orderId/items/$itemId',
+      body: {'quantity': quantity},
+    );
     return _parseSingle(response.body);
   }
 
@@ -157,20 +118,8 @@ class AdminOrdersRemoteDatasource {
     String orderId,
     String itemId,
   ) async {
-    // DELETE sem Content-Type para não enviar body JSON desnecessário.
-    final headers = await _authHeaders();
-    headers.remove('Content-Type');
-    final response = await _httpClient
-        .delete(
-          Uri.parse(
-              '${ApiConfig.baseUrl}/admin/orders/$orderId/items/$itemId'),
-          headers: headers,
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      _throwFor(response);
-    }
+    final response =
+        await _client.send('DELETE', '/admin/orders/$orderId/items/$itemId');
     return _parseSingle(response.body);
   }
 
@@ -188,41 +137,5 @@ class AdminOrdersRemoteDatasource {
       lastPage: (meta['last_page'] as num?)?.toInt() ?? 1,
       total: (meta['total'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  /// 422 vira [ValidationException]; demais erros usam a `message` da API.
-  Never _throwFor(http.Response response) {
-    if (response.statusCode == 422) {
-      throw ValidationException(
-        _errorMessage(response),
-        errors: _parseValidationErrors(response),
-      );
-    }
-    throw Exception(_errorMessage(response));
-  }
-
-  Map<String, List<String>> _parseValidationErrors(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final errors = body['errors'];
-      if (errors is Map<String, dynamic>) {
-        return errors.map(
-          (field, messages) => MapEntry(
-            field,
-            (messages as List<dynamic>).map((m) => m.toString()).toList(),
-          ),
-        );
-      }
-    } catch (_) {}
-    return const {};
-  }
-
-  String _errorMessage(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final msg = body['message'];
-      if (msg is String && msg.isNotEmpty) return msg;
-    } catch (_) {}
-    return 'Erro ${response.statusCode}';
   }
 }

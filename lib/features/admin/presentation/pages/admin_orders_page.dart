@@ -6,14 +6,49 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/utils/l10n_helper.dart';
 import '../../domain/entities/admin_order.dart';
+import '../../domain/entities/admin_order_filters.dart';
 import '../providers/admin_orders_provider.dart';
+import '../widgets/admin_order_filters_sheet.dart';
 
-/// Listagem de pedidos admin com filtros de status, tipo de entrega e período.
-class AdminOrdersPage extends ConsumerWidget {
+/// Listagem de pedidos admin com busca, filtro avançado e paginação.
+class AdminOrdersPage extends ConsumerStatefulWidget {
   const AdminOrdersPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AdminOrdersPage> createState() => _AdminOrdersPageState();
+}
+
+class _AdminOrdersPageState extends ConsumerState<AdminOrdersPage> {
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _openDetail(AdminOrder order) async {
+    await context.pushNamed(
+      'admin-order-detail',
+      pathParameters: {'id': order.id},
+      extra: order,
+    );
+    if (!mounted) return;
+    await ref.read(adminOrdersProvider.notifier).refresh();
+  }
+
+  Future<void> _openFilters(AdminOrdersState state) async {
+    final result = await showModalBottomSheet<AdminOrderFilters>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => AdminOrderFiltersSheet(initial: state.filters),
+    );
+    if (!mounted || result == null) return;
+    ref.read(adminOrdersProvider.notifier).applyFilters(result);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(adminOrdersProvider);
     final notifier = ref.read(adminOrdersProvider.notifier);
 
@@ -21,154 +56,114 @@ class AdminOrdersPage extends ConsumerWidget {
       appBar: AppBar(title: Text(context.l10n.adminOrdersTitle)),
       body: Column(
         children: [
-          _Filters(state: state, notifier: notifier),
+          _SearchField(
+            controller: _searchController,
+            hint: context.l10n.adminOrdersSearchHint,
+            onChanged: notifier.setSearch,
+          ),
+          _FiltersRow(
+            state: state,
+            onFiltersPressed: () => _openFilters(state),
+            onClear: () => notifier.applyFilters(
+              AdminOrderFilters(search: state.filters.search),
+            ),
+          ),
           const Divider(height: 1),
-          Expanded(child: _Body(state: state, notifier: notifier)),
+          Expanded(
+            child: _Body(
+              state: state,
+              notifier: notifier,
+              onOrderTap: _openDetail,
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-// ─── Filtros ─────────────────────────────────────────────────────────────────
+// ─── Busca ────────────────────────────────────────────────────────────────────
 
-class _Filters extends StatelessWidget {
-  const _Filters({required this.state, required this.notifier});
+class _SearchField extends StatelessWidget {
+  const _SearchField({
+    required this.controller,
+    required this.hint,
+    required this.onChanged,
+  });
 
-  final AdminOrdersState state;
-  final AdminOrdersNotifier notifier;
+  final TextEditingController controller;
+  final String hint;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          hintText: hint,
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Linha de filtros ─────────────────────────────────────────────────────────
+
+class _FiltersRow extends StatelessWidget {
+  const _FiltersRow({
+    required this.state,
+    required this.onFiltersPressed,
+    required this.onClear,
+  });
+
+  final AdminOrdersState state;
+  final VoidCallback onFiltersPressed;
+  final VoidCallback onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final count = state.filters.activeFilterCount;
+    final active = count > 0;
+    final label = active
+        ? '${context.l10n.adminOrdersFiltersButton} ($count)'
+        : context.l10n.adminOrdersFiltersButton;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+      child: Row(
         children: [
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              spacing: 8,
-              children: [
-                _chip(
-                  context,
-                  l10n.adminOrdersFilterAll,
-                  state.statusFilter == null,
-                  () => notifier.setStatusFilter(null),
-                ),
-                for (final s in AdminOrderStatus.values)
-                  _chip(
-                    context,
-                    _statusLabel(context, s),
-                    state.statusFilter == s,
-                    () => notifier.setStatusFilter(
-                        state.statusFilter == s ? null : s),
-                  ),
-              ],
+          ActionChip(
+            avatar: Icon(
+              Icons.tune,
+              size: 18,
+              color: active ? scheme.onPrimary : scheme.onSurface,
             ),
-          ),
-          const SizedBox(height: 8),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              spacing: 8,
-              children: [
-                _chip(
-                  context,
-                  l10n.adminOrdersFilterAll,
-                  state.deliveryTypeFilter == null,
-                  () => notifier.setDeliveryTypeFilter(null),
-                ),
-                _chip(
-                  context,
-                  l10n.adminOrdersFilterDelivery,
-                  state.deliveryTypeFilter == 'delivery',
-                  () => notifier.setDeliveryTypeFilter(
-                    state.deliveryTypeFilter == 'delivery' ? null : 'delivery',
-                  ),
-                ),
-                _chip(
-                  context,
-                  l10n.adminOrdersFilterPickup,
-                  state.deliveryTypeFilter == 'pickup',
-                  () => notifier.setDeliveryTypeFilter(
-                    state.deliveryTypeFilter == 'pickup' ? null : 'pickup',
-                  ),
-                ),
-                _PeriodChip(state: state, notifier: notifier),
-              ],
+            label: Text(label),
+            backgroundColor:
+                active ? scheme.primary : scheme.surfaceContainerHighest,
+            labelStyle: TextStyle(
+              color: active ? scheme.onPrimary : scheme.onSurface,
+              fontWeight: FontWeight.w600,
             ),
+            side: BorderSide(color: active ? scheme.primary : scheme.outline),
+            onPressed: onFiltersPressed,
           ),
+          if (active) ...[
+            const SizedBox(width: 8),
+            TextButton(
+              onPressed: onClear,
+              child: Text(context.l10n.clearFilters),
+            ),
+          ],
         ],
       ),
-    );
-  }
-
-  Widget _chip(
-    BuildContext context,
-    String label,
-    bool selected,
-    VoidCallback onTap,
-  ) {
-    final scheme = Theme.of(context).colorScheme;
-    return ChoiceChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      showCheckmark: false,
-      selectedColor: scheme.primary,
-      backgroundColor: scheme.surfaceContainerHighest,
-      labelStyle: TextStyle(
-        color: selected ? scheme.onPrimary : scheme.onSurface,
-        fontWeight: FontWeight.w600,
-      ),
-      side: BorderSide(color: selected ? scheme.primary : scheme.outline),
-    );
-  }
-}
-
-class _PeriodChip extends StatelessWidget {
-  const _PeriodChip({required this.state, required this.notifier});
-
-  final AdminOrdersState state;
-  final AdminOrdersNotifier notifier;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final hasRange = state.dateRange != null;
-
-    return ActionChip(
-      avatar: Icon(
-        Icons.calendar_today_outlined,
-        size: 16,
-        color: hasRange ? scheme.onPrimary : scheme.onSurface,
-      ),
-      label: Text(
-        hasRange
-            ? '${DateFormat('dd/MM').format(state.dateRange!.start)} – '
-                '${DateFormat('dd/MM').format(state.dateRange!.end)}'
-            : context.l10n.adminOrdersFilterPeriod,
-      ),
-      backgroundColor:
-          hasRange ? scheme.primary : scheme.surfaceContainerHighest,
-      labelStyle: TextStyle(
-        color: hasRange ? scheme.onPrimary : scheme.onSurface,
-        fontWeight: FontWeight.w600,
-      ),
-      side: BorderSide(color: hasRange ? scheme.primary : scheme.outline),
-      onPressed: () async {
-        final now = DateTime.now();
-        final range = await showDateRangePicker(
-          context: context,
-          firstDate: DateTime(2020),
-          lastDate: now,
-          initialDateRange: state.dateRange,
-        );
-        notifier.setDateRange(range);
-      },
     );
   }
 }
@@ -176,10 +171,15 @@ class _PeriodChip extends StatelessWidget {
 // ─── Body ─────────────────────────────────────────────────────────────────────
 
 class _Body extends StatelessWidget {
-  const _Body({required this.state, required this.notifier});
+  const _Body({
+    required this.state,
+    required this.notifier,
+    required this.onOrderTap,
+  });
 
   final AdminOrdersState state;
   final AdminOrdersNotifier notifier;
+  final void Function(AdminOrder) onOrderTap;
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +225,10 @@ class _Body extends StatelessWidget {
               onPressed: notifier.loadMore,
             );
           }
-          return _OrderTile(order: state.orders[index]);
+          return _OrderTile(
+            order: state.orders[index],
+            onTap: () => onOrderTap(state.orders[index]),
+          );
         },
       ),
     );
@@ -235,8 +238,9 @@ class _Body extends StatelessWidget {
 // ─── Tile ─────────────────────────────────────────────────────────────────────
 
 class _OrderTile extends StatelessWidget {
-  const _OrderTile({required this.order});
+  const _OrderTile({required this.order, required this.onTap});
   final AdminOrder order;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -294,11 +298,7 @@ class _OrderTile extends StatelessWidget {
       ),
       trailing: const Icon(Icons.chevron_right),
       isThreeLine: true,
-      onTap: () => context.pushNamed(
-        'admin-order-detail',
-        pathParameters: {'id': order.id},
-        extra: order,
-      ),
+      onTap: onTap,
     );
   }
 }

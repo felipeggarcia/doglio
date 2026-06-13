@@ -1,12 +1,12 @@
 library;
 
-import 'package:flutter/material.dart' show DateTimeRange;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import '../../../../core/errors/failures.dart';
 import '../../data/datasources/admin_orders_remote_datasource.dart';
 import '../../data/repositories/admin_orders_repository_impl.dart';
 import '../../domain/entities/admin_order.dart';
+import '../../domain/entities/admin_order_filters.dart';
 import '../../domain/entities/page_meta.dart';
 import '../../domain/usecases/add_order_item_use_case.dart';
 import '../../domain/usecases/get_admin_order_detail_use_case.dart';
@@ -24,9 +24,7 @@ class AdminOrdersState {
     this.isLoading = false,
     this.isLoadingMore = false,
     this.errorMessage,
-    this.statusFilter,
-    this.deliveryTypeFilter,
-    this.dateRange,
+    this.filters = AdminOrderFilters.empty,
   });
 
   final List<AdminOrder> orders;
@@ -34,11 +32,7 @@ class AdminOrdersState {
   final bool isLoading;
   final bool isLoadingMore;
   final String? errorMessage;
-  final AdminOrderStatus? statusFilter;
-
-  /// 'delivery' | 'pickup' | null (todos)
-  final String? deliveryTypeFilter;
-  final DateTimeRange? dateRange;
+  final AdminOrderFilters filters;
 
   bool get hasMore => meta.hasMore;
 
@@ -48,9 +42,7 @@ class AdminOrdersState {
     bool? isLoading,
     bool? isLoadingMore,
     Object? errorMessage = _sentinel,
-    Object? statusFilter = _sentinel,
-    Object? deliveryTypeFilter = _sentinel,
-    Object? dateRange = _sentinel,
+    Object? filters = _sentinel,
   }) =>
       AdminOrdersState(
         orders: orders ?? this.orders,
@@ -59,14 +51,7 @@ class AdminOrdersState {
         isLoadingMore: isLoadingMore ?? this.isLoadingMore,
         errorMessage:
             errorMessage == _sentinel ? this.errorMessage : errorMessage as String?,
-        statusFilter: statusFilter == _sentinel
-            ? this.statusFilter
-            : statusFilter as AdminOrderStatus?,
-        deliveryTypeFilter: deliveryTypeFilter == _sentinel
-            ? this.deliveryTypeFilter
-            : deliveryTypeFilter as String?,
-        dateRange:
-            dateRange == _sentinel ? this.dateRange : dateRange as DateTimeRange?,
+        filters: filters == _sentinel ? this.filters : filters as AdminOrderFilters,
       );
 
   static const _sentinel = Object();
@@ -85,18 +70,17 @@ class AdminOrdersNotifier extends AutoDisposeNotifier<AdminOrdersState> {
 
   // ─── Filtros ─────────────────────────────────────────────────────────────────
 
-  void setStatusFilter(AdminOrderStatus? status) {
-    state = state.copyWith(statusFilter: status);
+  /// Atualiza apenas o campo de busca, preservando os demais filtros.
+  void setSearch(String search) {
+    state = state.copyWith(filters: state.filters.copyWith(search: search));
     _loadFirstPage();
   }
 
-  void setDeliveryTypeFilter(String? type) {
-    state = state.copyWith(deliveryTypeFilter: type);
-    _loadFirstPage();
-  }
-
-  void setDateRange(DateTimeRange? range) {
-    state = state.copyWith(dateRange: range);
+  /// Aplica os filtros do modal; preserva o campo de busca atual.
+  void applyFilters(AdminOrderFilters filters) {
+    state = state.copyWith(
+      filters: filters.copyWith(search: state.filters.search),
+    );
     _loadFirstPage();
   }
 
@@ -107,10 +91,11 @@ class AdminOrdersNotifier extends AutoDisposeNotifier<AdminOrdersState> {
   Future<void> _loadFirstPage() async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     final result = await _getOrders(
-      status: state.statusFilter,
-      deliveryType: state.deliveryTypeFilter,
-      dateFrom: state.dateRange?.start,
-      dateTo: state.dateRange?.end,
+      search: _normalizedSearch(),
+      status: state.filters.status,
+      deliveryType: state.filters.deliveryType,
+      dateFrom: state.filters.dateFrom,
+      dateTo: state.filters.dateTo,
       page: 1,
     );
     result.fold(
@@ -127,10 +112,11 @@ class AdminOrdersNotifier extends AutoDisposeNotifier<AdminOrdersState> {
     if (state.isLoadingMore || !state.hasMore) return;
     state = state.copyWith(isLoadingMore: true);
     final result = await _getOrders(
-      status: state.statusFilter,
-      deliveryType: state.deliveryTypeFilter,
-      dateFrom: state.dateRange?.start,
-      dateTo: state.dateRange?.end,
+      search: _normalizedSearch(),
+      status: state.filters.status,
+      deliveryType: state.filters.deliveryType,
+      dateFrom: state.filters.dateFrom,
+      dateTo: state.filters.dateTo,
       page: state.meta.currentPage + 1,
     );
     result.fold(
@@ -147,6 +133,17 @@ class AdminOrdersNotifier extends AutoDisposeNotifier<AdminOrdersState> {
         );
       },
     );
+  }
+
+  /// Normaliza separadores (vírgula, ponto-e-vírgula, espaços) em vírgulas
+  /// para o backend interpretar múltiplos números de pedido.
+  String? _normalizedSearch() {
+    final raw = state.filters.search.trim();
+    if (raw.isEmpty) return null;
+    return raw
+        .split(RegExp(r'[,;\s]+'))
+        .where((s) => s.isNotEmpty)
+        .join(',');
   }
 }
 
@@ -230,8 +227,13 @@ class AdminOrderDetailNotifier
     result.fold(
       (f) => state = state.copyWith(isMutating: false, errorMessage: f.userMessage),
       (updated) {
-        state = state.copyWith(isMutating: false, order: updated);
-        // Invalida a lista para o tile refletir o novo status.
+        // Se o PATCH não retornar customer.name (backend pode omitir),
+        // preserva o customer que já estava em memória para não crashar a UI.
+        final existing = state.order;
+        final merged = existing != null && updated.customer.name.isEmpty
+            ? updated.copyWith(customer: existing.customer)
+            : updated;
+        state = state.copyWith(isMutating: false, order: merged);
         try {
           ref.invalidate(adminOrdersProvider);
         } catch (_) {}

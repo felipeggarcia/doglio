@@ -11,6 +11,7 @@ class GetAdminOrdersUseCase {
   final AdminOrdersRepository _repository;
 
   Future<Either<Failure, (List<AdminOrder>, PageMeta)>> call({
+    String? search,
     AdminOrderStatus? status,
     String? deliveryType,
     DateTime? dateFrom,
@@ -18,6 +19,7 @@ class GetAdminOrdersUseCase {
     int page = 1,
   }) =>
       _repository.getOrders(
+        search: search,
         status: status,
         deliveryType: deliveryType,
         dateFrom: dateFrom,

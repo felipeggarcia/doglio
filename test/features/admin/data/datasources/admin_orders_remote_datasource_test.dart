@@ -114,15 +114,15 @@ void main() {
       expect(uri.queryParameters.containsKey('date_from'), isFalse);
     });
 
-    test('lança exceção em não-200', () async {
+    test('lança UnauthorizedException em 401', () async {
       when(() => http_.get(any(), headers: any(named: 'headers'))).thenAnswer(
         (_) async =>
             http.Response(jsonEncode({'message': 'Não autorizado'}), 401),
       );
 
-      expect(
-        () => datasource.getOrders(),
-        throwsA(predicate((e) => e.toString().contains('Não autorizado'))),
+      await expectLater(
+        datasource.getOrders(),
+        throwsA(isA<UnauthorizedException>()),
       );
     });
   });

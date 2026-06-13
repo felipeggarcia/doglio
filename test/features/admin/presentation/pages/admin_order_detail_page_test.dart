@@ -310,5 +310,27 @@ void main() {
 
       expect(find.text('Adicionar produto'), findsNothing);
     });
+
+    // Regressão: customer.name[0] lançava RangeError quando o backend retornava
+    // customer sem nome (ex.: resposta do PATCH /status sem o campo name).
+    testWidgets('renderiza seção cliente sem crash quando name está vazio',
+        (tester) async {
+      final order = AdminOrder(
+        id: 'ord1',
+        orderNumber: '00042',
+        status: AdminOrderStatus.confirmed,
+        totalAmount: '50.00',
+        deliveryType: 'pickup',
+        customer: const AdminOrderCustomer(
+            id: 'c1', name: '', email: 'anon@x.com'),
+        items: const [],
+        createdAt: DateTime(2026, 6, 10),
+      );
+      await tester.pumpWidget(_app(AdminOrderDetailState(order: order)));
+      await tester.pump();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('anon@x.com'), findsOneWidget);
+    });
   });
 }

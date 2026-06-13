@@ -7,6 +7,7 @@ import '../entities/page_meta.dart';
 
 abstract interface class AdminOrdersRepository {
   Future<Either<Failure, (List<AdminOrder>, PageMeta)>> getOrders({
+    String? search,
     AdminOrderStatus? status,
     String? deliveryType,
     DateTime? dateFrom,

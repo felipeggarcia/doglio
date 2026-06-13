@@ -220,26 +220,14 @@ class _CustomerSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionTitle(context.l10n.adminOrderCustomerSection),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              backgroundColor: scheme.primaryContainer,
-              foregroundColor: scheme.onPrimaryContainer,
-              child: Text(customer.name[0].toUpperCase()),
-            ),
-            const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(customer.name,
-                    style:
-                        const TextStyle(fontWeight: FontWeight.w600)),
-                Text(customer.email,
-                    style: TextStyle(
-                        color: scheme.onSurfaceVariant,
-                        fontSize: 13)),
-              ],
-            ),
+            Text(customer.name,
+                style: const TextStyle(fontWeight: FontWeight.w600)),
+            Text(customer.email,
+                style: TextStyle(
+                    color: scheme.onSurfaceVariant, fontSize: 13)),
           ],
         ),
       ],

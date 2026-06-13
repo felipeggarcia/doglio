@@ -165,7 +165,7 @@ void main() {
       expect(result.getLeft().toNullable(), isA<ValidationFailure>());
     });
 
-    test('Left(UnknownFailure) em ValidationException sem errors estruturados',
+    test('Left(ValidationFailure) em ValidationException sem errors estruturados',
         () async {
       when(() => datasource.addOrderItem(
             any(),
@@ -177,7 +177,7 @@ void main() {
 
       final result = await repository.addOrderItem(
           'ord1', productId: 'p1', quantity: 999);
-      expect(result.getLeft().toNullable(), isA<UnknownFailure>());
+      expect(result.getLeft().toNullable(), isA<ValidationFailure>());
     });
   });
 

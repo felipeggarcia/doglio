@@ -16,6 +16,7 @@ class AdminOrdersRepositoryImpl implements AdminOrdersRepository {
 
   @override
   Future<Either<Failure, (List<AdminOrder>, PageMeta)>> getOrders({
+    String? search,
     AdminOrderStatus? status,
     String? deliveryType,
     DateTime? dateFrom,
@@ -24,6 +25,7 @@ class AdminOrdersRepositoryImpl implements AdminOrdersRepository {
   }) =>
       _guard(() async {
         final (models, meta) = await _datasource.getOrders(
+          search: search,
           status: status,
           deliveryType: deliveryType,
           dateFrom: dateFrom,
@@ -96,11 +98,17 @@ class AdminOrdersRepositoryImpl implements AdminOrdersRepository {
     try {
       return Right(await action());
     } on ValidationException catch (e) {
-      return Left(
-        e.errors.isNotEmpty
-            ? ValidationFailure(e.errors)
-            : UnknownFailure(e.message),
-      );
+      return Left(ValidationFailure(e.errors));
+    } on UnauthorizedException {
+      return const Left(UnauthorizedFailure());
+    } on ForbiddenException {
+      return const Left(ForbiddenFailure());
+    } on NotFoundException {
+      return const Left(NotFoundFailure());
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.statusCode, e.message));
     } on TimeoutException {
       return const Left(TimeoutFailure());
     } on SocketException catch (e) {
