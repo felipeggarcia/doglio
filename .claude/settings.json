@@ -3,7 +3,25 @@
     "allow": [
       "Bash(flutter test *)",
       "Bash(dart analyze *)",
-      "Bash(grep -v \"//\\\\|\\\\.dart:1:\")"
+      "Bash(grep -v \"//\\\\|\\\\.dart:1:\")",
+      "PowerShell(flutter pub get)",
+      "PowerShell(flutter gen-l10n)",
+      "PowerShell(flutter analyze)",
+      "Bash(flutter clean *)",
+      "Bash(flutter pub *)",
+      "Bash(Select-String -Pattern \"All tests|failed\")",
+      "Bash(Select-Object -Last 3)",
+      "Bash(Get-ChildItem -Path \"c:\\\\projects\\\\flutter\\\\doglio\\\\lib\" -Directory)",
+      "Bash(Find-Item -Path \"c:\\\\projects\\\\flutter\\\\doglio\\\\lib\\\\features\\\\auth\" -Directory)",
+      "Bash(Find-Item -Path \"c:\\\\projects\\\\flutter\\\\doglio\" -Name \"*.md\")",
+      "Bash(Select-Object FullName)",
+      "Bash(grep -v \"^test\\\\\\\\\")",
+      "Bash(grep -v \"^   info.*test\\\\\\\\\")",
+      "Bash(grep \"lib\\\\\\\\\")",
+      "Bash(Select-String \"lib\\\\\\\\\")",
+      "Bash(del \"c:\\\\projects\\\\flutter\\\\doglio\\\\lib\\\\core\\\\network\\\\api_exception.dart\")",
+      "PowerShell(cd c:\\\\projects\\\\flutter\\\\doglio; flutter analyze 2>&1 | Where-Object { $_ -match \"error\\\\s+-|warning\\\\s+-\" } | Select-Object -First 20)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
