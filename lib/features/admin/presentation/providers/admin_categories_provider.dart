@@ -106,14 +106,14 @@ class AdminCategoriesNotifier extends AutoDisposeNotifier<AdminCategoriesState> 
   Future<Either<Failure, AdminCategory>> createCategory(
       AdminCategory category) async {
     final result = await _createCategory(category);
-    result.fold((_) {}, (_) => _load());
+    result.fold((_) {}, (_) => unawaited(_load()));
     return result;
   }
 
   Future<Either<Failure, AdminCategory>> updateCategory(
       AdminCategory category) async {
     final result = await _updateCategory(category);
-    result.fold((_) {}, (_) => _load());
+    result.fold((_) {}, (_) => unawaited(_load()));
     return result;
   }
 

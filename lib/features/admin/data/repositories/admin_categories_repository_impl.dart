@@ -3,6 +3,7 @@ library;
 import 'dart:async';
 import 'dart:io';
 import 'package:fpdart/fpdart.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/admin_category.dart';
 import '../../domain/repositories/admin_categories_repository.dart';
@@ -58,6 +59,18 @@ class AdminCategoriesRepositoryImpl implements AdminCategoriesRepository {
   Future<Either<Failure, T>> _guard<T>(Future<T> Function() action) async {
     try {
       return Right(await action());
+    } on ValidationException catch (e) {
+      return Left(ValidationFailure(e.errors));
+    } on UnauthorizedException {
+      return const Left(UnauthorizedFailure());
+    } on ForbiddenException {
+      return const Left(ForbiddenFailure());
+    } on NotFoundException {
+      return const Left(NotFoundFailure());
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.statusCode, e.message));
     } on TimeoutException {
       return const Left(TimeoutFailure());
     } on SocketException catch (e) {

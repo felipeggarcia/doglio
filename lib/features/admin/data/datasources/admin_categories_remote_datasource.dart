@@ -2,7 +2,7 @@ library;
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../core/config/api_config.dart';
+import '../../../../core/network/http_client.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../models/admin_category_model.dart';
 
@@ -10,21 +10,12 @@ class AdminCategoriesRemoteDatasource {
   AdminCategoriesRemoteDatasource({
     http.Client? httpClient,
     SecureStorage? secureStorage,
-  })  : _httpClient = httpClient ?? http.Client(),
-        _secureStorage = secureStorage ?? SecureStorage();
+  }) : _client = DoglioHttpClient(
+          httpClient: httpClient,
+          secureStorage: secureStorage,
+        );
 
-  final http.Client _httpClient;
-  final SecureStorage _secureStorage;
-
-  Future<Map<String, String>> _authHeaders() async {
-    final token = await _secureStorage.getToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Host': ApiConfig.virtualHost,
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
-  }
+  final DoglioHttpClient _client;
 
   /// GET /admin/categories — retorna a lista completa (sem paginação).
   Future<List<AdminCategoryModel>> getCategories({
@@ -36,16 +27,11 @@ class AdminCategoriesRemoteDatasource {
       if (isActive != null) 'is_active': isActive ? '1' : '0',
     };
 
-    final uri = Uri.parse('${ApiConfig.baseUrl}/admin/categories')
-        .replace(queryParameters: query.isEmpty ? null : query);
-
-    final response = await _httpClient
-        .get(uri, headers: await _authHeaders())
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+    final response = await _client.send(
+      'GET',
+      '/admin/categories',
+      queryParams: query.isEmpty ? null : query,
+    );
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
     return (body['data'] as List<dynamic>)
@@ -55,51 +41,28 @@ class AdminCategoriesRemoteDatasource {
   }
 
   /// POST /admin/categories.
-  Future<AdminCategoryModel> createCategory(
-      AdminCategoryModel category) async {
-    final response = await _httpClient
-        .post(
-          Uri.parse('${ApiConfig.baseUrl}/admin/categories'),
-          headers: await _authHeaders(),
-          body: jsonEncode(category.toJson()),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+  Future<AdminCategoryModel> createCategory(AdminCategoryModel category) async {
+    final response = await _client.send(
+      'POST',
+      '/admin/categories',
+      body: category.toJson(),
+    );
     return _parseSingle(response.body);
   }
 
   /// PUT /admin/categories/{id}.
-  Future<AdminCategoryModel> updateCategory(
-      AdminCategoryModel category) async {
-    final response = await _httpClient
-        .put(
-          Uri.parse('${ApiConfig.baseUrl}/admin/categories/${category.id}'),
-          headers: await _authHeaders(),
-          body: jsonEncode(category.toJson()),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+  Future<AdminCategoryModel> updateCategory(AdminCategoryModel category) async {
+    final response = await _client.send(
+      'PUT',
+      '/admin/categories/${category.id}',
+      body: category.toJson(),
+    );
     return _parseSingle(response.body);
   }
 
   /// DELETE /admin/categories/{id}.
   Future<void> deleteCategory(String id) async {
-    final response = await _httpClient
-        .delete(
-          Uri.parse('${ApiConfig.baseUrl}/admin/categories/$id'),
-          headers: await _authHeaders(),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception(_errorMessage(response));
-    }
+    await _client.send('DELETE', '/admin/categories/$id');
   }
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -107,14 +70,5 @@ class AdminCategoriesRemoteDatasource {
   AdminCategoryModel _parseSingle(String responseBody) {
     final body = jsonDecode(responseBody) as Map<String, dynamic>;
     return AdminCategoryModel.fromJson(body['data'] as Map<String, dynamic>);
-  }
-
-  String _errorMessage(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final msg = body['message'];
-      if (msg is String && msg.isNotEmpty) return msg;
-    } catch (_) {}
-    return 'Erro ${response.statusCode}';
   }
 }

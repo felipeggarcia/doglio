@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
+import 'package:doglio/core/errors/exceptions.dart';
 import 'package:doglio/core/storage/secure_storage.dart';
 import 'package:doglio/features/admin/data/datasources/admin_categories_remote_datasource.dart';
 import 'package:doglio/features/admin/data/models/admin_category_model.dart';
@@ -77,7 +78,7 @@ void main() {
       expect(captured.queryParameters.containsKey('is_active'), isFalse);
     });
 
-    test('lança exceção com message do servidor quando não-200', () async {
+    test('lança UnauthorizedException em 401', () async {
       when(() => http_.get(any(), headers: any(named: 'headers'))).thenAnswer(
         (_) async => http.Response(
           jsonEncode({'message': 'Não autorizado.'}),
@@ -85,9 +86,9 @@ void main() {
         ),
       );
 
-      expect(
-        () => datasource.getCategories(),
-        throwsA(predicate((e) => e.toString().contains('Não autorizado.'))),
+      await expectLater(
+        datasource.getCategories(),
+        throwsA(isA<UnauthorizedException>()),
       );
     });
   });
