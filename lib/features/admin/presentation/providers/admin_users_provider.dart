@@ -166,13 +166,13 @@ class AdminUsersNotifier extends AutoDisposeNotifier<AdminUsersState> {
     required String password,
   }) async {
     final result = await _createUser(user, password: password);
-    result.fold((_) {}, (_) => _loadFirstPage());
+    result.fold((_) {}, (_) => unawaited(_loadFirstPage()));
     return result;
   }
 
   Future<Either<Failure, AdminUser>> updateUser(AdminUser user) async {
     final result = await _updateUser(user);
-    result.fold((_) {}, (_) => _loadFirstPage());
+    result.fold((_) {}, (_) => unawaited(_loadFirstPage()));
     return result;
   }
 

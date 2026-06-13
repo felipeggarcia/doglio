@@ -3,7 +3,7 @@ library;
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../../core/config/api_config.dart';
+import '../../../../core/network/http_client.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../domain/entities/page_meta.dart';
 import '../models/admin_user_model.dart';
@@ -12,24 +12,14 @@ class AdminUsersRemoteDatasource {
   AdminUsersRemoteDatasource({
     http.Client? httpClient,
     SecureStorage? secureStorage,
-  })  : _httpClient = httpClient ?? http.Client(),
-        _secureStorage = secureStorage ?? SecureStorage();
+  }) : _client = DoglioHttpClient(
+          httpClient: httpClient,
+          secureStorage: secureStorage,
+        );
 
-  final http.Client _httpClient;
-  final SecureStorage _secureStorage;
-
-  Future<Map<String, String>> _authHeaders() async {
-    final token = await _secureStorage.getToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Host': ApiConfig.virtualHost,
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
-  }
+  final DoglioHttpClient _client;
 
   /// GET /admin/users com filtros e paginação.
-  /// Retorna a lista de models + os metadados da página.
   Future<(List<AdminUserModel>, PageMeta)> getUsers({
     String? search,
     String? role,
@@ -37,7 +27,6 @@ class AdminUsersRemoteDatasource {
     int page = 1,
     int perPage = 20,
   }) async {
-    // Monta os query params dinamicamente: só inclui o que foi informado.
     final query = <String, String>{
       'page': '$page',
       'per_page': '$perPage',
@@ -46,17 +35,11 @@ class AdminUsersRemoteDatasource {
       if (isActive != null) 'is_active': isActive ? '1' : '0',
     };
 
-    final uri = Uri.parse('${ApiConfig.baseUrl}/admin/users')
-        .replace(queryParameters: query);
-
-    final response =
-        await _httpClient.get(uri, headers: await _authHeaders()).timeout(
-              ApiConfig.timeout,
-            );
-
-    if (response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+    final response = await _client.send(
+      'GET',
+      '/admin/users',
+      queryParams: query,
+    );
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
     final data = (body['data'] as List<dynamic>)
@@ -72,48 +55,27 @@ class AdminUsersRemoteDatasource {
     AdminUserModel user, {
     required String password,
   }) async {
-    final response = await _httpClient
-        .post(
-          Uri.parse('${ApiConfig.baseUrl}/admin/users'),
-          headers: await _authHeaders(),
-          body: jsonEncode({...user.toJson(), 'password': password}),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+    final response = await _client.send(
+      'POST',
+      '/admin/users',
+      body: {...user.toJson(), 'password': password},
+    );
     return _parseSingle(response.body);
   }
 
   /// PUT /admin/users/{id}.
   Future<AdminUserModel> updateUser(AdminUserModel user) async {
-    final response = await _httpClient
-        .put(
-          Uri.parse('${ApiConfig.baseUrl}/admin/users/${user.id}'),
-          headers: await _authHeaders(),
-          body: jsonEncode(user.toJson()),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) {
-      throw Exception(_errorMessage(response));
-    }
+    final response = await _client.send(
+      'PUT',
+      '/admin/users/${user.id}',
+      body: user.toJson(),
+    );
     return _parseSingle(response.body);
   }
 
   /// DELETE /admin/users/{id}.
   Future<void> deleteUser(String id) async {
-    final response = await _httpClient
-        .delete(
-          Uri.parse('${ApiConfig.baseUrl}/admin/users/$id'),
-          headers: await _authHeaders(),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      throw Exception(_errorMessage(response));
-    }
+    await _client.send('DELETE', '/admin/users/$id');
   }
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
@@ -130,17 +92,5 @@ class AdminUsersRemoteDatasource {
       lastPage: (meta['last_page'] as num?)?.toInt() ?? 1,
       total: (meta['total'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  /// Extrai a `message` do corpo de erro do backend; cai para o status code.
-  String _errorMessage(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final msg = body['message'];
-      if (msg is String && msg.isNotEmpty) return msg;
-    } catch (_) {
-      // corpo não-JSON: ignora e usa o fallback
-    }
-    return 'Erro ${response.statusCode}';
   }
 }
