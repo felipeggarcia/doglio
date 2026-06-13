@@ -38,12 +38,11 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # HTTP & Network
-  dio: ^5.7.0                     # Modern HTTP client (substitui http)
   cached_network_image: ^3.3.1    # Image caching
 
   # State Management
-  flutter_riverpod: ^2.5.1        # Riverpod for Flutter (pode usar sem code generation)
-  # riverpod_annotation: ^2.3.5   # Annotations (desabilitado até resolver conflitos de build)
+  flutter_riverpod: ^2.5.1        # Riverpod for Flutter
+  riverpod_annotation: ^2.3.5     # Annotations for code generation
 
   # Navegação
   go_router: ^17.2.3              # Declarative routing
@@ -74,7 +73,8 @@ dev_dependencies:
   build_runner: ^2.15.0           # Code generation runner
   freezed: ^3.2.5                 # Immutable classes generator
   json_serializable: ^6.8.0       # JSON serialization generator (versão compatível)
-  # riverpod_generator: ^2.4.3    # Riverpod providers generator (conflito temporário - pode usar Riverpod sem geração)
+  # riverpod_generator: ^2.4.3 — incompatível com build_runner ^2.15.0 (build ^2 vs ^4)
+  # Migrar com flutter_riverpod → ^3.x quando estiver pronto.
 
   # Testing
   mockito: ^5.4.4                 # Mocking framework
@@ -82,8 +82,8 @@ dev_dependencies:
 
   # Linting
   flutter_lints: ^6.0.0           # Flutter recommended lints
-  # custom_lint: ^0.7.4           # Custom lint rules (conflito temporário com analyzer)
-  # riverpod_lint: ^2.3.15        # Riverpod-specific lints (depende de custom_lint)
+  # custom_lint + riverpod_lint requerem analyzer ^7.x, incompatível com build_runner >=2.15.0 (analyzer >=8.x)
+  # Manter desabilitado até custom_lint 0.8+ resolver o conflito de analyzer.
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
