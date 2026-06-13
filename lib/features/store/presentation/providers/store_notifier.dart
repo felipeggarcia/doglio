@@ -1,6 +1,9 @@
 library;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../../core/providers/shared_preferences_provider.dart';
+import '../../data/datasources/store_local_datasource.dart';
 import '../../data/datasources/store_remote_datasource.dart';
 import '../../data/repositories/store_repository_impl.dart';
 import '../../domain/entities/product.dart';
@@ -65,8 +68,15 @@ class StoreNotifier extends Notifier<StoreState> {
 
   @override
   StoreState build() {
+    SharedPreferences? prefs;
+    try {
+      prefs = ref.read(sharedPreferencesProvider);
+    } catch (_) {
+      // Provider not overridden (e.g. in tests) — run without cache.
+    }
     final repo = StoreRepositoryImpl(
       remoteDatasource: StoreRemoteDatasourceImpl(),
+      localDatasource: prefs != null ? StoreLocalDatasourceImpl(prefs) : null,
     );
     _getProducts = GetProductsUseCase(repo);
     _getCategories = GetCategoriesUseCase(repo);
