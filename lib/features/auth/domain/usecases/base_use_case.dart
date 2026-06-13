@@ -8,19 +8,16 @@ library;
 ///
 /// This implements the Command pattern and provides
 /// consistent error handling across all use cases.
-abstract class UseCase<Type, Params> {
+abstract class UseCase<Result, Params> {
   const UseCase();
 
-  /// Executes the use case with the given parameters
-  Future<Type> call(Params params);
+  Future<Result> call(Params params);
 }
 
-/// Base class for use cases that don't require parameters
-abstract class UseCaseNoParams<Type> {
+abstract class UseCaseNoParams<Result> {
   const UseCaseNoParams();
 
-  /// Executes the use case without parameters
-  Future<Type> call();
+  Future<Result> call();
 }
 
 /// Parameters validation mixin

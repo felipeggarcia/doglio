@@ -1,98 +1,73 @@
 /// Custom exceptions for Doglio Marketplace
-///
-/// This file defines all custom exceptions that can occur
-/// throughout the application layers.
 library;
 
-/// Base class for all custom exceptions
 abstract class DoglioException implements Exception {
   const DoglioException(this.message);
-
   final String message;
 
   @override
-  String toString() => 'DoglioException: $message';
+  String toString() => '$runtimeType: $message';
 }
 
-/// Server-related exceptions
 class ServerException extends DoglioException {
-  const ServerException(super.message);
-
-  @override
-  String toString() => 'ServerException: $message';
+  const ServerException(super.message, {this.statusCode = 500});
+  final int statusCode;
 }
 
-/// Network-related exceptions
 class NetworkException extends DoglioException {
-  const NetworkException(super.message);
-
-  @override
-  String toString() => 'NetworkException: $message';
+  const NetworkException([super.message = 'Sem conexão com a internet.']);
 }
 
-/// Authentication-related exceptions
 class AuthException extends DoglioException {
   const AuthException(super.message);
-
-  @override
-  String toString() => 'AuthException: $message';
 }
 
-/// Validation-related exceptions
+/// 401 — token ausente ou expirado.
+class UnauthorizedException extends DoglioException {
+  const UnauthorizedException([super.message = 'Sessão expirada. Faça login novamente.']);
+}
+
+/// 403 — sem permissão.
+class ForbiddenException extends DoglioException {
+  const ForbiddenException([super.message = 'Acesso negado.']);
+}
+
+/// 404 — recurso não existe.
+class NotFoundException extends DoglioException {
+  const NotFoundException([super.message = 'Recurso não encontrado.']);
+}
+
+/// 422 — erros de validação do backend.
 class ValidationException extends DoglioException {
   const ValidationException(super.message, {this.errors = const {}});
-
-  /// Erros estruturados do backend (422): `{campo: [mensagens]}`.
   final Map<String, List<String>> errors;
-
-  @override
-  String toString() => 'ValidationException: $message';
 }
 
-/// Cache-related exceptions
+/// 429 — rate limit.
+class RateLimitException extends DoglioException {
+  const RateLimitException([super.message = 'Muitas tentativas. Aguarde um momento.']);
+}
+
 class CacheException extends DoglioException {
   const CacheException(super.message);
-
-  @override
-  String toString() => 'CacheException: $message';
 }
 
-/// Database-related exceptions
 class DatabaseException extends DoglioException {
   const DatabaseException(super.message);
-
-  @override
-  String toString() => 'DatabaseException: $message';
 }
 
-/// Permission-related exceptions
 class PermissionException extends DoglioException {
   const PermissionException(super.message);
-
-  @override
-  String toString() => 'PermissionException: $message';
 }
 
-/// Product-related exceptions
 class ProductException extends DoglioException {
   const ProductException(super.message);
-
-  @override
-  String toString() => 'ProductException: $message';
 }
 
-/// Cart-related exceptions
 class CartException extends DoglioException {
   const CartException(super.message);
-
-  @override
-  String toString() => 'CartException: $message';
 }
 
-/// Payment-related exceptions
 class PaymentException extends DoglioException {
   const PaymentException(super.message);
-
-  @override
-  String toString() => 'PaymentException: $message';
 }

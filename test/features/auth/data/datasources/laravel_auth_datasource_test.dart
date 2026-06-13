@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mocktail/mocktail.dart';
 import 'package:doglio/core/storage/secure_storage.dart';
-import 'package:doglio/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:doglio/features/auth/data/datasources/laravel_auth_datasource.dart';
 import 'package:doglio/features/auth/domain/repositories/auth_repository.dart';
 
