@@ -1,5 +1,6 @@
 library;
 
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import '../../domain/entities/admin_category.dart';
 import '../../domain/entities/admin_product.dart';
 import '../providers/admin_categories_provider.dart';
 import '../providers/admin_products_provider.dart';
+import '../providers/admin_promotions_provider.dart';
 import '../widgets/admin_category_picker_sheet.dart';
 import '../widgets/admin_product_images_field.dart';
 
@@ -78,26 +80,32 @@ class _AdminProductFormPageState extends ConsumerState<AdminProductFormPage> {
     final l10n = context.l10n;
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _isEditing ? l10n.adminProductEditTitle : l10n.adminProductCreateTitle,
-        ),
-        actions: [
-          if (_isEditing)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              tooltip: l10n.delete,
-              onPressed: _saving ? null : _handleDelete,
-            ),
-        ],
+    final appBar = AppBar(
+      title: Text(
+        _isEditing ? l10n.adminProductEditTitle : l10n.adminProductCreateTitle,
       ),
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: [
+      actions: [
+        if (_isEditing)
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            tooltip: l10n.delete,
+            onPressed: _saving ? null : _handleDelete,
+          ),
+      ],
+      bottom: _isEditing
+          ? TabBar(tabs: [
+              Tab(text: l10n.adminProductTabData),
+              Tab(text: l10n.adminProductTabPromotions),
+            ])
+          : null,
+    );
+
+    final formBody = SafeArea(
+      child: Form(
+        key: _formKey,
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
               AuthFormField(
                 controller: _name,
                 label: l10n.adminFieldName,
@@ -198,7 +206,25 @@ class _AdminProductFormPageState extends ConsumerState<AdminProductFormPage> {
             ],
           ),
         ),
-      ),
+      );
+
+    if (_isEditing) {
+      return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: appBar,
+          body: TabBarView(
+            children: [
+              formBody,
+              _ProductPromotionsTab(product: widget.product!),
+            ],
+          ),
+        ),
+      );
+    }
+    return Scaffold(
+      appBar: appBar,
+      body: formBody,
     );
   }
 
@@ -439,6 +465,118 @@ class _StockSection extends StatelessWidget {
               : null,
           child: Text(l10n.adminProductStockManage),
         ),
+      ),
+    );
+  }
+}
+
+// ─── Aba de promoções do produto ──────────────────────────────────────────────
+
+class _ProductPromotionsTab extends ConsumerWidget {
+  const _ProductPromotionsTab({required this.product});
+
+  final AdminProduct product;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
+    final asyncPromos = ref.watch(adminProductPromotionsProvider(product.id));
+    final scheme = Theme.of(context).colorScheme;
+
+    return asyncPromos.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(e.toString(), textAlign: TextAlign.center),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => ref
+                  .read(adminProductPromotionsProvider(product.id).notifier)
+                  .refresh(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: scheme.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              child: Text(l10n.retry),
+            ),
+          ],
+        ),
+      ),
+      data: (promos) => Stack(
+        children: [
+          promos.isEmpty
+              ? Center(child: Text(l10n.adminProductPromotionsEmpty))
+              : ListView.separated(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                  itemCount: promos.length,
+                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  itemBuilder: (context, index) {
+                    final p = promos[index];
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: scheme.primaryContainer,
+                        child: Icon(
+                          Icons.local_offer_outlined,
+                          color: scheme.onPrimaryContainer,
+                          size: 18,
+                        ),
+                      ),
+                      title: Text(p.name,
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      subtitle: Text(
+                        p.type.toApi() == 'percentage'
+                            ? '${p.discountValue}%'
+                            : 'R\$ ${p.discountValue}',
+                      ),
+                      trailing: Icon(
+                        p.isCurrentlyActive
+                            ? Icons.circle
+                            : Icons.circle_outlined,
+                        size: 10,
+                        color: p.isCurrentlyActive
+                            ? Colors.green
+                            : scheme.outline,
+                      ),
+                      onTap: () async {
+                        await context.pushNamed(
+                          'admin-promotion-form',
+                          extra: p,
+                        );
+                        if (context.mounted) {
+                          unawaited(ref
+                              .read(adminProductPromotionsProvider(product.id)
+                                  .notifier)
+                              .refresh());
+                        }
+                      },
+                    );
+                  },
+                ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton.extended(
+              heroTag: 'promo-fab-${product.id}',
+              backgroundColor: scheme.primary,
+              foregroundColor: Colors.white,
+              icon: const Icon(Icons.add),
+              label: Text(l10n.adminPromotionNew),
+              onPressed: () async {
+                await context.pushNamed(
+                  'admin-promotion-form',
+                  extra: product,
+                );
+                if (context.mounted) {
+                  ref.invalidate(adminProductPromotionsProvider(product.id));
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

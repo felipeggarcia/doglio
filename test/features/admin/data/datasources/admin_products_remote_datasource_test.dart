@@ -255,7 +255,7 @@ void main() {
       expect(captured.path, endsWith('/admin/products/p1'));
     });
 
-    test('erro usa a message do backend', () async {
+    test('lança NotFoundException em 404', () async {
       when(() => httpClient.delete(any(), headers: any(named: 'headers')))
           .thenAnswer(
         (_) async => http.Response(
@@ -264,9 +264,9 @@ void main() {
         ),
       );
 
-      expect(
-        () => datasource.deleteProduct('p1'),
-        throwsA(predicate((e) => e.toString().contains('Não encontrado.'))),
+      await expectLater(
+        datasource.deleteProduct('p1'),
+        throwsA(isA<NotFoundException>()),
       );
     });
   });

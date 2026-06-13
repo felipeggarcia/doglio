@@ -28,6 +28,22 @@ class _AdminProductsPageState extends ConsumerState<AdminProductsPage> {
     super.dispose();
   }
 
+  Future<void> _openCreate() async {
+    await context.pushNamed('admin-product-create');
+    if (!mounted) return;
+    await ref.read(adminProductsProvider.notifier).refresh();
+  }
+
+  Future<void> _openEdit(AdminProduct product) async {
+    await context.pushNamed(
+      'admin-product-edit',
+      pathParameters: {'id': product.id},
+      extra: product,
+    );
+    if (!mounted) return;
+    await ref.read(adminProductsProvider.notifier).refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(adminProductsProvider);
@@ -36,7 +52,7 @@ class _AdminProductsPageState extends ConsumerState<AdminProductsPage> {
     return Scaffold(
       appBar: AppBar(title: Text(context.l10n.adminProducts)),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.pushNamed('admin-product-create'),
+        onPressed: _openCreate,
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.add),
@@ -51,7 +67,13 @@ class _AdminProductsPageState extends ConsumerState<AdminProductsPage> {
           ),
           _Filters(state: state, notifier: notifier),
           const Divider(height: 1),
-          Expanded(child: _Body(state: state, notifier: notifier)),
+          Expanded(
+            child: _Body(
+              state: state,
+              notifier: notifier,
+              onProductTap: _openEdit,
+            ),
+          ),
         ],
       ),
     );
@@ -205,10 +227,15 @@ class _AdvancedFiltersChip extends StatelessWidget {
 }
 
 class _Body extends StatelessWidget {
-  const _Body({required this.state, required this.notifier});
+  const _Body({
+    required this.state,
+    required this.notifier,
+    required this.onProductTap,
+  });
 
   final AdminProductsState state;
   final AdminProductsNotifier notifier;
+  final void Function(AdminProduct) onProductTap;
 
   @override
   Widget build(BuildContext context) {
@@ -256,7 +283,10 @@ class _Body extends StatelessWidget {
           if (index >= state.products.length) {
             return _LoadMoreButton(state: state, notifier: notifier);
           }
-          return _ProductTile(product: state.products[index]);
+          return _ProductTile(
+            product: state.products[index],
+            onTap: () => onProductTap(state.products[index]),
+          );
         },
       ),
     );
@@ -264,9 +294,10 @@ class _Body extends StatelessWidget {
 }
 
 class _ProductTile extends StatelessWidget {
-  const _ProductTile({required this.product});
+  const _ProductTile({required this.product, required this.onTap});
 
   final AdminProduct product;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -295,11 +326,7 @@ class _ProductTile extends StatelessWidget {
           ),
         ],
       ),
-      onTap: () => context.pushNamed(
-        'admin-product-edit',
-        pathParameters: {'id': product.id},
-        extra: product,
-      ),
+      onTap: onTap,
     );
   }
 }

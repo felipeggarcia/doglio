@@ -172,7 +172,7 @@ class AdminProductsNotifier extends AutoDisposeNotifier<AdminProductsState> {
   }) async {
     final result =
         await _createProduct(product, newImagePaths: newImagePaths);
-    result.fold((_) {}, (_) => _loadFirstPage());
+    result.fold((_) {}, (_) => unawaited(_loadFirstPage()));
     return result;
   }
 
@@ -188,7 +188,7 @@ class AdminProductsNotifier extends AutoDisposeNotifier<AdminProductsState> {
       removeImageIds: removeImageIds,
       imageOrder: imageOrder,
     );
-    result.fold((_) {}, (_) => _loadFirstPage());
+    result.fold((_) {}, (_) => unawaited(_loadFirstPage()));
     return result;
   }
 

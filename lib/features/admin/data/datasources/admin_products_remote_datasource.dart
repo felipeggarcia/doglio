@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../../../../core/config/api_config.dart';
-import '../../../../core/errors/exceptions.dart';
+import '../../../../core/network/http_client.dart';
 import '../../../../core/storage/secure_storage.dart';
 import '../../domain/entities/admin_product_filters.dart';
 import '../../domain/entities/page_meta.dart';
@@ -19,29 +19,12 @@ class AdminProductsRemoteDatasource {
   AdminProductsRemoteDatasource({
     http.Client? httpClient,
     SecureStorage? secureStorage,
-  })  : _httpClient = httpClient ?? http.Client(),
-        _secureStorage = secureStorage ?? SecureStorage();
+  }) : _client = DoglioHttpClient(
+          httpClient: httpClient,
+          secureStorage: secureStorage,
+        );
 
-  final http.Client _httpClient;
-  final SecureStorage _secureStorage;
-
-  Future<Map<String, String>> _authHeaders() async {
-    final token = await _secureStorage.getToken();
-    return {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Host': ApiConfig.virtualHost,
-      if (token != null) 'Authorization': 'Bearer $token',
-    };
-  }
-
-  /// Headers para multipart: sem Content-Type — o MultipartRequest define
-  /// `multipart/form-data; boundary=...` sozinho (setar manualmente quebra).
-  Future<Map<String, String>> _multipartHeaders() async {
-    final headers = await _authHeaders();
-    headers.remove('Content-Type');
-    return headers;
-  }
+  final DoglioHttpClient _client;
 
   /// GET /admin/products com filtros e paginação.
   Future<(List<AdminProductModel>, PageMeta)> getProducts({
@@ -63,8 +46,8 @@ class AdminProductsRemoteDatasource {
       if (filters.outOfStock != null)
         'out_of_stock': filters.outOfStock! ? '1' : '0',
       if (filters.categoryIds.isNotEmpty) 'category_ids[]': filters.categoryIds,
-      if (filters.priceMin != null) 'price_min': filters.priceMin!,
-      if (filters.priceMax != null) 'price_max': filters.priceMax!,
+      if (filters.priceMin != null) 'price_min': filters.priceMin,
+      if (filters.priceMax != null) 'price_max': filters.priceMax,
       if (filters.dateFrom != null)
         'date_from': dateFormat.format(filters.dateFrom!),
       if (filters.dateTo != null) 'date_to': dateFormat.format(filters.dateTo!),
@@ -72,14 +55,13 @@ class AdminProductsRemoteDatasource {
       'sort_order': filters.sortDesc ? 'desc' : 'asc',
     };
 
+    // category_ids[] needs List values — build URI manually then strip base URL
+    // so send() can re-prepend it (Uri.replace(queryParameters: null) preserves params).
     final uri = Uri.parse('${ApiConfig.baseUrl}/admin/products')
         .replace(queryParameters: query);
+    final endpoint = uri.toString().substring(ApiConfig.baseUrl.length);
 
-    final response = await _httpClient
-        .get(uri, headers: await _authHeaders())
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) _throwFor(response);
+    final response = await _client.send('GET', endpoint);
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
     final data = (body['data'] as List<dynamic>)
@@ -95,15 +77,13 @@ class AdminProductsRemoteDatasource {
     AdminProductModel product, {
     required List<String> imagePaths,
   }) async {
-    final response = await _sendMultipart(
-      Uri.parse('${ApiConfig.baseUrl}/admin/products'),
-      fields: product.toMultipartFields(),
-      imagePaths: imagePaths,
+    final response = await _client.sendMultipart(
+      await _buildMultipartRequest(
+        Uri.parse('${ApiConfig.baseUrl}/admin/products'),
+        fields: product.toMultipartFields(),
+        imagePaths: imagePaths,
+      ),
     );
-
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      _throwFor(response);
-    }
     return _parseSingle(response.body);
   }
 
@@ -114,32 +94,23 @@ class AdminProductsRemoteDatasource {
     required List<String> removeImageIds,
     List<String> imageOrder = const [],
   }) async {
-    final response = await _sendMultipart(
-      Uri.parse('${ApiConfig.baseUrl}/admin/products/${product.id}'),
-      fields: product.toMultipartFields(
-        forUpdate: true,
-        removeImageIds: removeImageIds,
-        imageOrder: imageOrder,
+    final response = await _client.sendMultipart(
+      await _buildMultipartRequest(
+        Uri.parse('${ApiConfig.baseUrl}/admin/products/${product.id}'),
+        fields: product.toMultipartFields(
+          forUpdate: true,
+          removeImageIds: removeImageIds,
+          imageOrder: imageOrder,
+        ),
+        imagePaths: imagePaths,
       ),
-      imagePaths: imagePaths,
     );
-
-    if (response.statusCode != 200) _throwFor(response);
     return _parseSingle(response.body);
   }
 
   /// DELETE /admin/products/{id} (soft delete).
   Future<void> deleteProduct(String id) async {
-    final response = await _httpClient
-        .delete(
-          Uri.parse('${ApiConfig.baseUrl}/admin/products/$id'),
-          headers: await _authHeaders(),
-        )
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200 && response.statusCode != 204) {
-      _throwFor(response);
-    }
+    await _client.send('DELETE', '/admin/products/$id');
   }
 
   /// GET /admin/products/{id}/stock — histórico paginado.
@@ -148,14 +119,11 @@ class AdminProductsRemoteDatasource {
     int page = 1,
     int perPage = 20,
   }) async {
-    final uri = Uri.parse('${ApiConfig.baseUrl}/admin/products/$id/stock')
-        .replace(queryParameters: {'page': '$page', 'per_page': '$perPage'});
-
-    final response = await _httpClient
-        .get(uri, headers: await _authHeaders())
-        .timeout(ApiConfig.timeout);
-
-    if (response.statusCode != 200) _throwFor(response);
+    final response = await _client.send(
+      'GET',
+      '/admin/products/$id/stock',
+      queryParams: {'page': '$page', 'per_page': '$perPage'},
+    );
 
     final body = jsonDecode(response.body) as Map<String, dynamic>;
     final data = (body['data'] as List<dynamic>)
@@ -184,17 +152,12 @@ class AdminProductsRemoteDatasource {
       if (notes != null && notes.isNotEmpty) 'notes': notes,
     };
 
-    final response = await _httpClient
-        .post(
-          Uri.parse('${ApiConfig.baseUrl}/admin/products/$id/stock'),
-          headers: await _authHeaders(),
-          body: jsonEncode(body),
-        )
-        .timeout(ApiConfig.timeout);
+    final response = await _client.send(
+      'POST',
+      '/admin/products/$id/stock',
+      body: body,
+    );
 
-    if (response.statusCode != 201 && response.statusCode != 200) {
-      _throwFor(response);
-    }
     final decoded = jsonDecode(response.body) as Map<String, dynamic>;
     return StockMovementModel.fromJson(
       decoded['data'] as Map<String, dynamic>? ?? const {},
@@ -203,20 +166,17 @@ class AdminProductsRemoteDatasource {
 
   // ─── Helpers ──────────────────────────────────────────────────────────────
 
-  /// Envia multipart sempre como POST (method spoofing no campo `_method`).
-  Future<http.Response> _sendMultipart(
+  /// Builds a multipart POST request without auth headers (sendMultipart injects them).
+  Future<http.MultipartRequest> _buildMultipartRequest(
     Uri uri, {
     required Map<String, String> fields,
     required List<String> imagePaths,
   }) async {
-    final request = http.MultipartRequest('POST', uri)
-      ..headers.addAll(await _multipartHeaders())
-      ..fields.addAll(fields);
+    final request = http.MultipartRequest('POST', uri)..fields.addAll(fields);
     for (final path in imagePaths) {
       request.files.add(await http.MultipartFile.fromPath('images[]', path));
     }
-    final streamed = await _httpClient.send(request).timeout(ApiConfig.timeout);
-    return http.Response.fromStream(streamed);
+    return request;
   }
 
   AdminProductModel _parseSingle(String responseBody) {
@@ -231,46 +191,5 @@ class AdminProductsRemoteDatasource {
       lastPage: (meta['last_page'] as num?)?.toInt() ?? 1,
       total: (meta['total'] as num?)?.toInt() ?? 0,
     );
-  }
-
-  /// 422 vira [ValidationException] com os erros por campo; o restante
-  /// (inclui IMAGE_LIMIT_EXCEEDED/INSUFFICIENT_STOCK) usa a `message` da API.
-  Never _throwFor(http.Response response) {
-    if (response.statusCode == 422) {
-      throw ValidationException(
-        _errorMessage(response),
-        errors: _parseValidationErrors(response),
-      );
-    }
-    throw Exception(_errorMessage(response));
-  }
-
-  Map<String, List<String>> _parseValidationErrors(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final errors = body['errors'];
-      if (errors is Map<String, dynamic>) {
-        return errors.map(
-          (field, messages) => MapEntry(
-            field,
-            (messages as List<dynamic>).map((m) => m.toString()).toList(),
-          ),
-        );
-      }
-    } catch (_) {
-      // corpo não-JSON ou formato inesperado: sem erros estruturados
-    }
-    return const {};
-  }
-
-  String _errorMessage(http.Response response) {
-    try {
-      final body = jsonDecode(response.body) as Map<String, dynamic>;
-      final msg = body['message'];
-      if (msg is String && msg.isNotEmpty) return msg;
-    } catch (_) {
-      // corpo não-JSON: ignora e usa o fallback
-    }
-    return 'Erro ${response.statusCode}';
   }
 }

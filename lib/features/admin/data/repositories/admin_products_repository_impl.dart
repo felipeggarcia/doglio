@@ -107,11 +107,17 @@ class AdminProductsRepositoryImpl implements AdminProductsRepository {
     try {
       return Right(await action());
     } on ValidationException catch (e) {
-      return Left(
-        e.errors.isNotEmpty
-            ? ValidationFailure(e.errors)
-            : UnknownFailure(e.message),
-      );
+      return Left(ValidationFailure(e.errors));
+    } on UnauthorizedException {
+      return const Left(UnauthorizedFailure());
+    } on ForbiddenException {
+      return const Left(ForbiddenFailure());
+    } on NotFoundException {
+      return const Left(NotFoundFailure());
+    } on NetworkException catch (e) {
+      return Left(NetworkFailure(e.message));
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.statusCode, e.message));
     } on TimeoutException {
       return const Left(TimeoutFailure());
     } on SocketException catch (e) {
