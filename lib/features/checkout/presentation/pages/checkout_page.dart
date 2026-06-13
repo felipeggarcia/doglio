@@ -261,7 +261,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
       cardLastFour = digits.length >= 4 ? digits.substring(digits.length - 4) : null;
     }
 
-    ref
+    await ref
         .read(checkoutProvider.notifier)
         .placeOrder(
           paymentMethodId: _selectedPaymentMethodId!,
