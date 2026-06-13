@@ -729,6 +729,30 @@ abstract class AppLocalizations {
   /// **'No orders found'**
   String get adminOrdersEmpty;
 
+  /// No description provided for @adminOrdersSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by order number'**
+  String get adminOrdersSearchHint;
+
+  /// No description provided for @adminOrdersFiltersButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get adminOrdersFiltersButton;
+
+  /// No description provided for @adminOrdersFiltersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order filters'**
+  String get adminOrdersFiltersTitle;
+
+  /// No description provided for @adminOrdersFiltersDeliveryType.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery type'**
+  String get adminOrdersFiltersDeliveryType;
+
   /// No description provided for @adminOrdersFilterAll.
   ///
   /// In en, this message translates to:
@@ -986,6 +1010,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search product...'**
   String get adminOrderSearchProduct;
+
+  /// No description provided for @adminPromotionNew.
+  ///
+  /// In en, this message translates to:
+  /// **'New promotion'**
+  String get adminPromotionNew;
+
+  /// No description provided for @adminPromotionCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New promotion'**
+  String get adminPromotionCreateTitle;
+
+  /// No description provided for @adminPromotionEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit promotion'**
+  String get adminPromotionEditTitle;
+
+  /// No description provided for @adminPromotionsSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search promotion'**
+  String get adminPromotionsSearchHint;
+
+  /// No description provided for @adminPromotionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No promotions found'**
+  String get adminPromotionsEmpty;
+
+  /// No description provided for @adminPromotionTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount type'**
+  String get adminPromotionTypeLabel;
+
+  /// No description provided for @adminPromotionTypePercentage.
+  ///
+  /// In en, this message translates to:
+  /// **'Percentage (%)'**
+  String get adminPromotionTypePercentage;
+
+  /// No description provided for @adminPromotionTypeFixed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed amount (R\$)'**
+  String get adminPromotionTypeFixed;
+
+  /// No description provided for @adminPromotionDiscountValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount value'**
+  String get adminPromotionDiscountValue;
+
+  /// No description provided for @adminPromotionStartsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at'**
+  String get adminPromotionStartsAt;
+
+  /// No description provided for @adminPromotionEndsAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ends at (optional)'**
+  String get adminPromotionEndsAt;
+
+  /// No description provided for @adminPromotionMinQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Min. quantity'**
+  String get adminPromotionMinQuantity;
+
+  /// No description provided for @adminPromotionLinkedProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked products'**
+  String get adminPromotionLinkedProducts;
+
+  /// No description provided for @adminPromotionAddProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Add product'**
+  String get adminPromotionAddProduct;
+
+  /// No description provided for @adminPromotionUseLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Use limit'**
+  String get adminPromotionUseLimit;
+
+  /// No description provided for @adminPromotionUsesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Uses: {count}'**
+  String adminPromotionUsesCount(int count);
+
+  /// No description provided for @adminPromotionCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion created.'**
+  String get adminPromotionCreated;
+
+  /// No description provided for @adminPromotionSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion saved.'**
+  String get adminPromotionSaved;
+
+  /// No description provided for @adminPromotionDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotion deleted.'**
+  String get adminPromotionDeleted;
+
+  /// No description provided for @adminPromotionDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this promotion?'**
+  String get adminPromotionDeleteConfirm;
+
+  /// No description provided for @adminPromotionFilterActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get adminPromotionFilterActive;
+
+  /// No description provided for @adminPromotionFilterExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired'**
+  String get adminPromotionFilterExpired;
+
+  /// No description provided for @adminProductTabData.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get adminProductTabData;
+
+  /// No description provided for @adminProductTabPromotions.
+  ///
+  /// In en, this message translates to:
+  /// **'Promotions'**
+  String get adminProductTabPromotions;
+
+  /// No description provided for @adminProductPromotionsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No promotions linked'**
+  String get adminProductPromotionsEmpty;
+
+  /// No description provided for @adminPromotionUseLimitHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No limit'**
+  String get adminPromotionUseLimitHint;
+
+  /// No description provided for @adminPromotionLinkButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Link'**
+  String get adminPromotionLinkButton;
 
   /// No description provided for @cancel.
   ///

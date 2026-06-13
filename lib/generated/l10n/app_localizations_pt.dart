@@ -343,6 +343,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get adminOrdersEmpty => 'Nenhum pedido encontrado';
 
   @override
+  String get adminOrdersSearchHint => 'Buscar por nº do pedido';
+
+  @override
+  String get adminOrdersFiltersButton => 'Filtros';
+
+  @override
+  String get adminOrdersFiltersTitle => 'Filtros de pedidos';
+
+  @override
+  String get adminOrdersFiltersDeliveryType => 'Tipo de entrega';
+
+  @override
   String get adminOrdersFilterAll => 'Todos';
 
   @override
@@ -474,6 +486,89 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get adminOrderSearchProduct => 'Buscar produto...';
+
+  @override
+  String get adminPromotionNew => 'Nova promoção';
+
+  @override
+  String get adminPromotionCreateTitle => 'Nova promoção';
+
+  @override
+  String get adminPromotionEditTitle => 'Editar promoção';
+
+  @override
+  String get adminPromotionsSearchHint => 'Buscar promoção';
+
+  @override
+  String get adminPromotionsEmpty => 'Nenhuma promoção encontrada';
+
+  @override
+  String get adminPromotionTypeLabel => 'Tipo de desconto';
+
+  @override
+  String get adminPromotionTypePercentage => 'Percentual (%)';
+
+  @override
+  String get adminPromotionTypeFixed => 'Valor fixo (R\$)';
+
+  @override
+  String get adminPromotionDiscountValue => 'Valor do desconto';
+
+  @override
+  String get adminPromotionStartsAt => 'Início';
+
+  @override
+  String get adminPromotionEndsAt => 'Término (opcional)';
+
+  @override
+  String get adminPromotionMinQuantity => 'Qtd. mínima';
+
+  @override
+  String get adminPromotionLinkedProducts => 'Produtos vinculados';
+
+  @override
+  String get adminPromotionAddProduct => 'Adicionar produto';
+
+  @override
+  String get adminPromotionUseLimit => 'Limite de usos';
+
+  @override
+  String adminPromotionUsesCount(int count) {
+    return 'Usos: $count';
+  }
+
+  @override
+  String get adminPromotionCreated => 'Promoção criada.';
+
+  @override
+  String get adminPromotionSaved => 'Promoção salva.';
+
+  @override
+  String get adminPromotionDeleted => 'Promoção removida.';
+
+  @override
+  String get adminPromotionDeleteConfirm => 'Remover esta promoção?';
+
+  @override
+  String get adminPromotionFilterActive => 'Ativas';
+
+  @override
+  String get adminPromotionFilterExpired => 'Expiradas';
+
+  @override
+  String get adminProductTabData => 'Dados';
+
+  @override
+  String get adminProductTabPromotions => 'Promoções';
+
+  @override
+  String get adminProductPromotionsEmpty => 'Nenhuma promoção vinculada';
+
+  @override
+  String get adminPromotionUseLimitHint => 'Sem limite';
+
+  @override
+  String get adminPromotionLinkButton => 'Vincular';
 
   @override
   String get cancel => 'Cancelar';
@@ -1610,6 +1705,18 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
   String get adminOrdersEmpty => 'Nenhum pedido encontrado';
 
   @override
+  String get adminOrdersSearchHint => 'Buscar por nº do pedido';
+
+  @override
+  String get adminOrdersFiltersButton => 'Filtros';
+
+  @override
+  String get adminOrdersFiltersTitle => 'Filtros de pedidos';
+
+  @override
+  String get adminOrdersFiltersDeliveryType => 'Tipo de entrega';
+
+  @override
   String get adminOrdersFilterAll => 'Todos';
 
   @override
@@ -1741,6 +1848,89 @@ class AppLocalizationsPtBr extends AppLocalizationsPt {
 
   @override
   String get adminOrderSearchProduct => 'Buscar produto...';
+
+  @override
+  String get adminPromotionNew => 'Nova promoção';
+
+  @override
+  String get adminPromotionCreateTitle => 'Nova promoção';
+
+  @override
+  String get adminPromotionEditTitle => 'Editar promoção';
+
+  @override
+  String get adminPromotionsSearchHint => 'Buscar promoção';
+
+  @override
+  String get adminPromotionsEmpty => 'Nenhuma promoção encontrada';
+
+  @override
+  String get adminPromotionTypeLabel => 'Tipo de desconto';
+
+  @override
+  String get adminPromotionTypePercentage => 'Percentual (%)';
+
+  @override
+  String get adminPromotionTypeFixed => 'Valor fixo (R\$)';
+
+  @override
+  String get adminPromotionDiscountValue => 'Valor do desconto';
+
+  @override
+  String get adminPromotionStartsAt => 'Início';
+
+  @override
+  String get adminPromotionEndsAt => 'Término (opcional)';
+
+  @override
+  String get adminPromotionMinQuantity => 'Qtd. mínima';
+
+  @override
+  String get adminPromotionLinkedProducts => 'Produtos vinculados';
+
+  @override
+  String get adminPromotionAddProduct => 'Adicionar produto';
+
+  @override
+  String get adminPromotionUseLimit => 'Limite de usos';
+
+  @override
+  String adminPromotionUsesCount(int count) {
+    return 'Usos: $count';
+  }
+
+  @override
+  String get adminPromotionCreated => 'Promoção criada.';
+
+  @override
+  String get adminPromotionSaved => 'Promoção salva.';
+
+  @override
+  String get adminPromotionDeleted => 'Promoção removida.';
+
+  @override
+  String get adminPromotionDeleteConfirm => 'Remover esta promoção?';
+
+  @override
+  String get adminPromotionFilterActive => 'Ativas';
+
+  @override
+  String get adminPromotionFilterExpired => 'Expiradas';
+
+  @override
+  String get adminProductTabData => 'Dados';
+
+  @override
+  String get adminProductTabPromotions => 'Promoções';
+
+  @override
+  String get adminProductPromotionsEmpty => 'Nenhuma promoção vinculada';
+
+  @override
+  String get adminPromotionUseLimitHint => 'Sem limite';
+
+  @override
+  String get adminPromotionLinkButton => 'Vincular';
 
   @override
   String get cancel => 'Cancelar';

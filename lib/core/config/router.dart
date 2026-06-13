@@ -21,7 +21,9 @@ import '../../features/admin/presentation/pages/admin_order_detail_page.dart';
 import '../../features/admin/domain/entities/admin_category.dart';
 import '../../features/admin/presentation/pages/admin_categories_page.dart';
 import '../../features/admin/presentation/pages/admin_category_form_page.dart';
+import '../../features/admin/domain/entities/admin_promotion.dart';
 import '../../features/admin/presentation/pages/admin_promotions_page.dart';
+import '../../features/admin/presentation/pages/admin_promotion_form_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -254,6 +256,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       name: 'admin-category-edit',
       builder: (context, state) =>
           AdminCategoryFormPage(category: state.extra as AdminCategory?),
+    ),
+    GoRoute(
+      path: '/admin/promotions/new',
+      name: 'admin-promotion-form',
+      builder: (context, state) {
+        final extra = state.extra;
+        return AdminPromotionFormPage(
+          promotion: extra is AdminPromotion ? extra : null,
+          initialLinkedProduct: extra is AdminProduct ? extra : null,
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.adminPromotions,
